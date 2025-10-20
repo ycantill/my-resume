@@ -1,4 +1,4 @@
-import { ref, get, set, onValue, off } from 'firebase/database';
+import { ref, get, onValue, off } from 'firebase/database';
 import { database } from './firebase-config.ts';
 import { useState, useEffect, useCallback } from 'react';
 import type { ResumeData, UsePersonaDataResult, ResumeDataError } from './types.ts';
@@ -25,75 +25,9 @@ export async function getPersonaData(personaId: string): Promise<ResumeData | nu
 }
 
 /**
- * Guarda los datos de una persona en Realtime Database
- * @param personaId - ID de la persona
- * @param data - Datos de la persona
- * @returns true si se guardó correctamente
- */
-export async function setPersonaData(personaId: string, data: ResumeData): Promise<boolean> {
-  try {
-    const personaRef = ref(database, `personas/${personaId}`);
-    await set(personaRef, data);
-    return true;
-  } catch (error) {
-    console.error('Error guardando datos de persona:', error);
-    return false;
-  }
-}
-
-/**
- * Obtiene todas las personas disponibles
- * @returns Lista de personas
- */
-export async function getAllPersonas(): Promise<Array<{ id: string } & ResumeData>> {
-  try {
-    const personasRef = ref(database, 'personas');
-    const snapshot = await get(personasRef);
-    
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      return Object.keys(data).map(id => ({
-        id,
-        ...data[id]
-      }));
-    }
-    
-    return [];
-  } catch (error) {
-    console.error('Error obteniendo todas las personas:', error);
-    return [];
-  }
-}
-
-/**
  * Cache para evitar múltiples llamadas a Firebase
  */
 const cache = new Map<string, ResumeData>();
-
-/**
- * Obtiene datos con cache
- * @param personaId 
- * @returns Datos de la persona o null
- */
-export async function getPersonaDataCached(personaId: string): Promise<ResumeData | null> {
-  if (cache.has(personaId)) {
-    return cache.get(personaId) || null;
-  }
-  
-  const data = await getPersonaData(personaId);
-  if (data) {
-    cache.set(personaId, data);
-  }
-  
-  return data;
-}
-
-/**
- * Limpia el cache
- */
-export function clearCache() {
-  cache.clear();
-}
 
 /**
  * Hook personalizado para obtener datos de una persona en tiempo real
