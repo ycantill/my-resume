@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { usePersonaData } from './firebase-service.js';
+import { useState, useEffect } from 'react';
+import { usePersonaData } from './firebase-service.ts';
 import {
   formatDateRange,
   formatDuration,
   printResume,
   formatLocationLabel,
   normalizePhone,
-  groupWorkEntries,
-  getCountryNameFromLocation
-} from './resume-helpers.js';
+  groupWorkEntries
+} from './resume-helpers.ts';
 import styles from './MyResume.module.css';
+import type { MyResumeProps, Language } from './types.ts';
+import { formatErrorMessage } from './types.ts';
 
-const MyResume = ({ initialLang = 'es', initialPersona = 'yohany' }) => {
-  const [resumeLang, setResumeLang] = useState(initialLang);
-  const [persona, setPersona] = useState(initialPersona);
+const MyResume = ({ initialLang = 'es', initialPersona = 'yohany' }: MyResumeProps) => {
+  const [resumeLang, setResumeLang] = useState<Language>(initialLang);
+  const [persona, setPersona] = useState<string>(initialPersona);
   
   const { data: resumeData, loading, error } = usePersonaData(persona);
 
@@ -21,23 +22,16 @@ const MyResume = ({ initialLang = 'es', initialPersona = 'yohany' }) => {
   useEffect(() => {
     if (resumeData) {
       const t = resumeLang;
-      let title = `${resumeData.basics.name} - ${t === 'en' ? 'Resume' : 'Currículum'}`;
-
-      // Append location country name to title
-      if (resumeData.basics.location) {
-        const name = getCountryNameFromLocation(resumeData.basics.location, t);
-        if (name) title += ` [${name}]`;
-      }
-
+      const title = `${resumeData.basics.name} - ${t === 'en' ? 'Resume' : 'Currículum'}`;
       document.title = title;
     }
   }, [resumeData, resumeLang]);
 
-  const handleLangChange = (e) => {
-    setResumeLang(e.target.value);
+  const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setResumeLang(e.target.value as Language);
   };
 
-  const handlePersonaChange = (e) => {
+  const handlePersonaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPersona(e.target.value);
   };
 
@@ -64,7 +58,17 @@ const MyResume = ({ initialLang = 'es', initialPersona = 'yohany' }) => {
             <h2>❌ Error al cargar currículum</h2>
             <p>No se pudieron cargar los datos desde Firebase.</p>
             <p>Verifica tu configuración de Firebase y conexión a internet.</p>
-            {error && <p>Error: {error}</p>}
+            {error && (
+              <div>
+                <p><strong>Error:</strong> {formatErrorMessage(error, resumeLang)}</p>
+                <details>
+                  <summary>Detalles técnicos</summary>
+                  <p><strong>Código:</strong> {error.code}</p>
+                  <p><strong>Mensaje original:</strong> {error.message}</p>
+                  {error.personaId && <p><strong>Persona ID:</strong> {error.personaId}</p>}
+                </details>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -197,11 +201,11 @@ const MyResume = ({ initialLang = 'es', initialPersona = 'yohany' }) => {
             );
           }
           
-          const duration = formatDuration(job, t);
+          const duration = job.startDate && job.endDate !== undefined ? formatDuration(job as { startDate: string; endDate?: string }, t) : '';
           return (
             <div key={jobIndex} className={styles.job}>
               <h3>
-                {job.name} – {job.position[t]}
+                {job.name} – {job.position?.[t]}
                 {isCurrent && (
                   <span className={styles.currentBadge}>
                     {t === 'en' ? 'Current role' : 'Puesto actual'}
@@ -209,13 +213,13 @@ const MyResume = ({ initialLang = 'es', initialPersona = 'yohany' }) => {
                 )}
               </h3>
               <small>
-                {formatDateRange(job, t)} | {job.location[t]} · {duration}
+                {job.startDate && job.endDate !== undefined ? formatDateRange(job as { startDate: string; endDate?: string }, t) : ''} | {job.location?.[t]} · {duration}
               </small>
-              <p>{job.summary[t]}</p>
+              <p>{job.summary?.[t]}</p>
               <ul>
-                {job.highlights[t].map((h, hIndex) => (
+                {job.highlights?.[t]?.map((h, hIndex) => (
                   <li key={hIndex}>{h}</li>
-                ))}
+                )) || []}
               </ul>
               {job.stack && job.stack.length > 0 && (
                 <div className={styles.jobSkills}>

@@ -1,13 +1,14 @@
 import { ref, get, set, onValue, off } from 'firebase/database';
-import { database } from './firebase-config.js';
+import { database } from './firebase-config.ts';
 import { useState, useEffect, useCallback } from 'react';
+import type { ResumeData, UsePersonaDataResult, ResumeDataError } from './types.ts';
 
 /**
  * Obtiene los datos de una persona desde Realtime Database
- * @param {string} personaId - ID de la persona ('yohany' o 'lenicet')
- * @returns {Promise<Object|null>} - Datos de la persona o null si no existe
+ * @param personaId - ID de la persona ('yohany' o 'lenicet')
+ * @returns Datos de la persona o null si no existe
  */
-export async function getPersonaData(personaId) {
+export async function getPersonaData(personaId: string): Promise<ResumeData | null> {
   try {
     const personaRef = ref(database, `personas/${personaId}`);
     const snapshot = await get(personaRef);
@@ -25,11 +26,11 @@ export async function getPersonaData(personaId) {
 
 /**
  * Guarda los datos de una persona en Realtime Database
- * @param {string} personaId - ID de la persona
- * @param {Object} data - Datos de la persona
- * @returns {Promise<boolean>} - true si se guardó correctamente
+ * @param personaId - ID de la persona
+ * @param data - Datos de la persona
+ * @returns true si se guardó correctamente
  */
-export async function setPersonaData(personaId, data) {
+export async function setPersonaData(personaId: string, data: ResumeData): Promise<boolean> {
   try {
     const personaRef = ref(database, `personas/${personaId}`);
     await set(personaRef, data);
@@ -42,9 +43,9 @@ export async function setPersonaData(personaId, data) {
 
 /**
  * Obtiene todas las personas disponibles
- * @returns {Promise<Array>} - Lista de personas
+ * @returns Lista de personas
  */
-export async function getAllPersonas() {
+export async function getAllPersonas(): Promise<Array<{ id: string } & ResumeData>> {
   try {
     const personasRef = ref(database, 'personas');
     const snapshot = await get(personasRef);
@@ -67,16 +68,16 @@ export async function getAllPersonas() {
 /**
  * Cache para evitar múltiples llamadas a Firebase
  */
-const cache = new Map();
+const cache = new Map<string, ResumeData>();
 
 /**
  * Obtiene datos con cache
- * @param {string} personaId 
- * @returns {Promise<Object|null>}
+ * @param personaId 
+ * @returns Datos de la persona o null
  */
-export async function getPersonaDataCached(personaId) {
+export async function getPersonaDataCached(personaId: string): Promise<ResumeData | null> {
   if (cache.has(personaId)) {
-    return cache.get(personaId);
+    return cache.get(personaId) || null;
   }
   
   const data = await getPersonaData(personaId);
@@ -96,19 +97,22 @@ export function clearCache() {
 
 /**
  * Hook personalizado para obtener datos de una persona en tiempo real
- * @param {string} personaId - ID de la persona
- * @returns {Object} - { data, loading, error }
+ * @param personaId - ID de la persona
+ * @returns { data, loading, error, refetch }
  */
-export function usePersonaData(personaId) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export function usePersonaData(personaId: string): UsePersonaDataResult {
+  const [data, setData] = useState<ResumeData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<ResumeDataError | null>(null);
 
   useEffect(() => {
     if (!personaId) {
       setData(null);
       setLoading(false);
-      setError('No persona ID provided');
+      setError({
+        code: 'INVALID_DATA',
+        message: 'No persona ID provided'
+      });
       return;
     }
 
@@ -128,13 +132,22 @@ export function usePersonaData(personaId) {
           setError(null);
         } else {
           setData(null);
-          setError(`No se encontraron datos para la persona: ${personaId}`);
+          setError({
+            code: 'PERSONA_NOT_FOUND',
+            message: `No se encontraron datos para la persona: ${personaId}`,
+            personaId
+          });
         }
         setLoading(false);
       },
       (error) => {
         console.error('Error cargando desde Firebase:', error);
-        setError(`Error al cargar currículum: ${error.message}`);
+        setError({
+          code: 'FIREBASE_ERROR',
+          message: `Error al cargar currículum: ${error.message}`,
+          personaId,
+          originalError: error
+        });
         setLoading(false);
       }
     );
@@ -157,10 +170,20 @@ export function usePersonaData(personaId) {
         setData(newData);
         cache.set(personaId, newData);
       } else {
-        setError(`No se encontraron datos para la persona: ${personaId}`);
+        setError({
+          code: 'PERSONA_NOT_FOUND',
+          message: `No se encontraron datos para la persona: ${personaId}`,
+          personaId
+        });
       }
     } catch (err) {
-      setError(`Error al cargar currículum: ${err.message}`);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError({
+        code: 'NETWORK_ERROR',
+        message: `Error al cargar currículum: ${errorMessage}`,
+        personaId,
+        originalError: err instanceof Error ? err : undefined
+      });
     } finally {
       setLoading(false);
     }
