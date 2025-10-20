@@ -1,22 +1,22 @@
 import { ref, get, onValue, off } from 'firebase/database';
 import { database } from './firebase-config.ts';
 import { useState, useEffect, useCallback } from 'react';
-import type { ResumeData, UsePersonaDataResult, ResumeDataError } from './types.ts';
+import type { ResumeData, UsePersonDataResult, ResumeDataError } from './types.ts';
 
 /**
  * Obtiene los datos de una persona desde Realtime Database
- * @param personaId - ID de la persona ('yohany' o 'lenicet')
+ * @param personId - ID de la persona ('yohany' o 'lenicet')
  * @returns Datos de la persona o null si no existe
  */
-export async function getPersonaData(personaId: string): Promise<ResumeData | null> {
+export async function getPersonData(personId: string): Promise<ResumeData | null> {
   try {
-    const personaRef = ref(database, `personas/${personaId}`);
-    const snapshot = await get(personaRef);
+    const personRef = ref(database, `persons/${personId}`);
+    const snapshot = await get(personRef);
     
     if (snapshot.exists()) {
       return snapshot.val();
     }
-    console.log('No se encontró documento para:', personaId);
+    console.log('No se encontró documento para:', personId);
     return null;
   } catch (error) {
     console.error('Error obteniendo datos de persona:', error);
@@ -31,21 +31,21 @@ const cache = new Map<string, ResumeData>();
 
 /**
  * Hook personalizado para obtener datos de una persona en tiempo real
- * @param personaId - ID de la persona
- * @returns { data, loading, error, refetch }
+ * @param personId - ID de la persona
+ * @returns Objeto con datos, estado de carga y errores
  */
-export function usePersonaData(personaId: string): UsePersonaDataResult {
+export function usePersonData(personId: string): UsePersonDataResult {
   const [data, setData] = useState<ResumeData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<ResumeDataError | null>(null);
 
   useEffect(() => {
-    if (!personaId) {
+    if (!personId) {
       setData(null);
       setLoading(false);
       setError({
         code: 'INVALID_DATA',
-        message: 'No persona ID provided'
+        message: 'No person ID provided'
       });
       return;
     }
@@ -53,23 +53,23 @@ export function usePersonaData(personaId: string): UsePersonaDataResult {
     setLoading(true);
     setError(null);
 
-    const personaRef = ref(database, `personas/${personaId}`);
+    const personRef = ref(database, `persons/${personId}`);
     
     const unsubscribe = onValue(
-      personaRef,
+      personRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          const personaData = snapshot.val();
+          const personData = snapshot.val();
           // Actualizar cache
-          cache.set(personaId, personaData);
-          setData(personaData);
+          cache.set(personId, personData);
+          setData(personData);
           setError(null);
         } else {
           setData(null);
           setError({
-            code: 'PERSONA_NOT_FOUND',
-            message: `No se encontraron datos para la persona: ${personaId}`,
-            personaId
+            code: 'PERSON_NOT_FOUND',
+            message: `No se encontraron datos para la persona: ${personId}`,
+            personId
           });
         }
         setLoading(false);
@@ -79,7 +79,7 @@ export function usePersonaData(personaId: string): UsePersonaDataResult {
         setError({
           code: 'FIREBASE_ERROR',
           message: `Error al cargar currículum: ${error.message}`,
-          personaId,
+          personId,
           originalError: error
         });
         setLoading(false);
@@ -87,27 +87,27 @@ export function usePersonaData(personaId: string): UsePersonaDataResult {
     );
 
     // Cleanup function
-    return () => off(personaRef, 'value', unsubscribe);
-  }, [personaId]);
+    return () => off(personRef, 'value', unsubscribe);
+  }, [personId]);
 
   const refetch = useCallback(async () => {
-    if (!personaId) return;
+    if (!personId) return;
     
     setLoading(true);
     setError(null);
     
     try {
       // Limpiar cache para esta persona
-      cache.delete(personaId);
-      const newData = await getPersonaData(personaId);
+      cache.delete(personId);
+      const newData = await getPersonData(personId);
       if (newData) {
         setData(newData);
-        cache.set(personaId, newData);
+        cache.set(personId, newData);
       } else {
         setError({
-          code: 'PERSONA_NOT_FOUND',
-          message: `No se encontraron datos para la persona: ${personaId}`,
-          personaId
+          code: 'PERSON_NOT_FOUND',
+          message: `No se encontraron datos para la persona: ${personId}`,
+          personId
         });
       }
     } catch (err) {
@@ -115,13 +115,13 @@ export function usePersonaData(personaId: string): UsePersonaDataResult {
       setError({
         code: 'NETWORK_ERROR',
         message: `Error al cargar currículum: ${errorMessage}`,
-        personaId,
+        personId,
         originalError: err instanceof Error ? err : undefined
       });
     } finally {
       setLoading(false);
     }
-  }, [personaId]);
+  }, [personId]);
 
   return { data, loading, error, refetch };
 }

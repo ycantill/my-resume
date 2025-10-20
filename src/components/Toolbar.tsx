@@ -4,15 +4,15 @@ import { useLanguage } from '../contexts/LanguageContext.tsx';
 import { printResume } from '../resume-helpers.ts';
 
 interface ToolbarProps {
-  persona: string;
+  person: string;
   onLanguageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onPersonaChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onPersonChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({ 
-  persona, 
+  person, 
   onLanguageChange, 
-  onPersonaChange 
+  onPersonChange 
 }) => {
   const { language } = useLanguage();
   const t = language;
@@ -26,8 +26,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
           <option value="es">Español</option>
         </select>
 
-        <label htmlFor="persona-select">{t === 'en' ? 'Person:' : 'Persona:'}</label>
-        <select id="persona-select" value={persona} onChange={onPersonaChange}>
+        <label htmlFor="person-select">{t === 'en' ? 'Person:' : 'Persona:'}</label>
+        <select id="person-select" value={person} onChange={onPersonChange}>
           <option value="yohany">Yohany</option>
           <option value="lenicet">Lenicet</option>
         </select>

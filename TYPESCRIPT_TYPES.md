@@ -64,9 +64,9 @@ interface GroupedWorkEntry {
 ```typescript
 // Structured error handling
 interface ResumeDataError {
-  code: 'PERSONA_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA';
+  code: 'PERSON_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA';
   message: string;
-  personaId?: string;
+  personId?: string;
   originalError?: Error;
 }
 ```
@@ -81,7 +81,7 @@ const isValidLanguage = (lang: string): lang is Language => {
   return lang === 'en' || lang === 'es';
 };
 
-const isValidPersonaId = (id: string): id is PersonaId => {
+const isValidPersonId = (id: string): id is PersonId => {
   return id === 'yohany' || id === 'lenicet';
 };
 ```
@@ -98,8 +98,8 @@ const formatErrorMessage = (error: ResumeDataError, language: Language): string 
 ### 3. Improved Hook Types
 
 ```typescript
-// Enhanced usePersonaData hook
-interface UsePersonaDataResult {
+// Enhanced usePersonData hook
+interface UsePersonDataResult {
   data: ResumeData | null;
   loading: boolean;
   error: ResumeDataError | null; // Structured error instead of string
@@ -109,9 +109,9 @@ interface UsePersonaDataResult {
 
 ## Data Structure Insights from Firebase JSON
 
-### Personas Structure
+### Persons Structure
 
-The Firebase data shows two personas: `yohany` and `lenicet`, each with complete resume data.
+The Firebase data shows two persons: `yohany` and `lenicet`, each with complete resume data.
 
 ### Work Experience Patterns
 
@@ -140,8 +140,8 @@ Skills are categorized by domain:
 
 ```typescript
 // Component with typed props
-const MyResume: React.FC<MyResumeProps> = ({ initialLang = 'es', initialPersona = 'yohany' }) => {
-  const { data, loading, error } = usePersonaData(initialPersona);
+const MyResume: React.FC<MyResumeProps> = ({ initialLang = 'es', initialPerson = 'yohany' }) => {
+  const { data, loading, error } = usePersonData(initialPerson);
 
   if (error) {
     return <ErrorDisplay error={formatErrorMessage(error, initialLang)} />;

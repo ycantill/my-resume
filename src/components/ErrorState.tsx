@@ -24,7 +24,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error }) => {
                 <summary>Detalles técnicos</summary>
                 <p><strong>Código:</strong> {error.code}</p>
                 <p><strong>Mensaje original:</strong> {error.message}</p>
-                {error.personaId && <p><strong>Persona ID:</strong> {error.personaId}</p>}
+                {error.personId && <p><strong>Person ID:</strong> {error.personId}</p>}
               </details>
             </div>
           )}

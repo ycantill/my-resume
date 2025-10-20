@@ -99,7 +99,7 @@ export interface ResumeData {
   skills: Skill[];
 }
 
-export interface UsePersonaDataResult {
+export interface UsePersonDataResult {
   data: ResumeData | null;
   loading: boolean;
   error: ResumeDataError | null;
@@ -107,7 +107,7 @@ export interface UsePersonaDataResult {
 }
 
 export interface MyResumeProps {
-  initialPersona?: string;
+  initialPerson?: string;
 }
 
 // Language Context types
@@ -122,9 +122,9 @@ export interface LanguageProviderProps {
 }
 
 // Firebase specific types
-export interface FirebasePersonasData {
-  personas: {
-    [personaId: string]: ResumeData;
+export interface FirebasePersonsData {
+  persons: {
+    [personId: string]: ResumeData;
   };
 }
 
@@ -159,8 +159,8 @@ export type CountryCode = 'CO' | 'ES' | 'US' | 'CA' | 'MX' | 'AR' | 'BR' | 'CL' 
 // Network types for social profiles
 export type SocialNetwork = 'LinkedIn' | 'GitHub' | 'Twitter' | 'Website' | 'Portfolio';
 
-// Available personas type
-export type PersonaId = 'yohany' | 'lenicet';
+// Available persons type
+export type PersonId = 'yohany' | 'lenicet';
 
 // Date format type (YYYY-MM)
 export type DateString = `${number}-${string}`;
@@ -179,19 +179,19 @@ export const isValidLanguage = (lang: string): lang is Language => {
   return lang === 'en' || lang === 'es';
 };
 
-export const isValidPersonaId = (id: string): id is PersonaId => {
+export const isValidPersonId = (id: string): id is PersonId => {
   return id === 'yohany' || id === 'lenicet';
 };
 
 // Constants for better type safety
 export const SUPPORTED_LANGUAGES: readonly Language[] = ['en', 'es'] as const;
-export const SUPPORTED_PERSONAS: readonly PersonaId[] = ['yohany', 'lenicet'] as const;
+export const SUPPORTED_PERSONS: readonly PersonId[] = ['yohany', 'lenicet'] as const;
 
 // Error types for better error handling
 export interface ResumeDataError {
-  code: 'PERSONA_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA';
+  code: 'PERSON_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA';
   message: string;
-  personaId?: string;
+  personId?: string;
   originalError?: Error;
 }
 
@@ -200,9 +200,9 @@ export interface ResumeDataError {
  */
 export const formatErrorMessage = (error: ResumeDataError, language: Language): string => {
   const messages = {
-    PERSONA_NOT_FOUND: {
-      en: `Person not found: ${error.personaId || 'unknown'}`,
-      es: `Persona no encontrada: ${error.personaId || 'desconocida'}`
+    PERSON_NOT_FOUND: {
+      en: `Person not found: ${error.personId || 'unknown'}`,
+      es: `Persona no encontrada: ${error.personId || 'desconocida'}`
     },
     FIREBASE_ERROR: {
       en: 'Firebase connection error. Please check your internet connection.',

@@ -7,7 +7,7 @@ React version of the my-resume application, migrated from Lit Element.
 - 📄 Dynamic resume generator with React
 - 🔥 Firebase Realtime Database integration
 - 🌍 Multi-language support (English/Spanish)
-- 👥 Multiple personas support (Yohany/Lenicet)
+- 👥 Multiple persons support (Yohany/Lenicet)
 - 🖨️ Print-optimized layout
 - 📱 Responsive design
 - ⚡ Real-time data updates
@@ -110,7 +110,7 @@ This React version maintains the same functionality as the original Lit Element 
 
 - ✅ Firebase Realtime Database connectivity
 - ✅ Multi-language support (en/es)
-- ✅ Multi-persona support (Yohany/Lenicet)
+- ✅ Multi-person support (Yohany/Lenicet)
 - ✅ Print functionality
 - ✅ Real-time data synchronization
 - ✅ All styling and layout

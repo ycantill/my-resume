@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { usePersonaData } from './firebase-service.ts';
+import { usePersonData } from './firebase-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
 import { useLanguage } from './contexts/LanguageContext.tsx';
 import styles from './MyResume.module.css';
@@ -16,11 +16,11 @@ import {
   Skills
 } from './components/index.ts';
 
-const MyResume = ({ initialPersona = 'yohany' }: MyResumeProps) => {
+const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
   const { language: resumeLang, setLanguage } = useLanguage();
-  const [persona, setPersona] = useState<string>(initialPersona);
+  const [person, setPerson] = useState<string>(initialPerson);
   
-  const { data: resumeData, loading, error } = usePersonaData(persona);
+  const { data: resumeData, loading, error } = usePersonData(person);
 
   // Update document title when data changes
   useEffect(() => {
@@ -35,8 +35,8 @@ const MyResume = ({ initialPersona = 'yohany' }: MyResumeProps) => {
     setLanguage(e.target.value as any);
   };
 
-  const handlePersonaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPersona(e.target.value);
+  const handlePersonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPerson(e.target.value);
   };
 
   // Loading state
@@ -56,9 +56,9 @@ const MyResume = ({ initialPersona = 'yohany' }: MyResumeProps) => {
   return (
     <div className={styles.host}>      
       <Toolbar 
-        persona={persona}
+        person={person}
         onLanguageChange={handleLangChange}
-        onPersonaChange={handlePersonaChange}
+        onPersonChange={handlePersonChange}
       />
 
       <div className={styles.container}>
