@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Resume - 404</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f4f6f8;
+            color: #1a1a1a;
+        }
+        .container {
+            text-align: center;
+            max-width: 500px;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #0077b6;
+            margin-bottom: 1rem;
+        }
+        p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            background: #0077b6;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+        .btn:hover {
+            background: #026aa7;
+        }
+    </style>
+    <script>
+        // Redirect to the main app for GitHub Pages SPA support
+        const path = window.location.pathname;
+        const base = '/my-resume/'; // Update this to match your repo name
+        
+        // If we're not at the base path, redirect to base with hash routing
+        if (path !== base && path !== base.slice(0, -1)) {
+            const redirectPath = path.replace(base, '');
+            window.location.replace(base + '#' + redirectPath);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Página No Encontrada</h1>
+        <p>La página que buscas no existe o ha sido movida.</p>
+        <p>Serás redirigido automáticamente a la aplicación principal.</p>
+        <a href="/my-resume/" class="btn">Ir al Currículum</a>
+    </div>
+</body>
+</html>

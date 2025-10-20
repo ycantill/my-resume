@@ -1,0 +1,550 @@
+/* MyResume.module.css */
+
+.host {
+  display: block;
+  font-family: 'Inter', 'Arial', sans-serif;
+  color: #1a1a1a;
+  background: #f4f6f8;
+  padding: 2rem;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* Loading and error messages */
+.loadingMessage,
+.errorMessage {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #666;
+}
+
+.loadingMessage h2 {
+  color: #2563eb;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.errorMessage h2 {
+  color: #dc2626;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.errorMessage p {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Toolbar at the top */
+.toolbar {
+  max-width: 1000px;
+  margin: 0 auto 1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.toolGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.5rem 1rem;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.toolbar label {
+  font-weight: 600;
+  color: #374151;
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.toolbar select {
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  width: auto;
+  max-width: none;
+  flex: 0 0 auto;
+}
+
+.toolbar button {
+  background: #0077b6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.toolbar button:hover {
+  background: #026aa7;
+}
+
+/* Global link styling */
+.container a {
+  color: #0b74c5;
+  text-decoration: none;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.05s ease;
+}
+.container a:hover {
+  color: #055a99;
+  text-decoration: underline;
+}
+.container a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.25);
+  border-radius: 6px;
+}
+
+.container h1 {
+  font-size: 2.2rem;
+  margin: 0;
+  text-align: left;
+}
+
+.subtitle {
+  color: #0077b6;
+  font-weight: 600;
+  text-align: left;
+}
+
+.contact {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  color: #555;
+  text-align: left;
+}
+
+.contact a { margin: 0 0.5rem; }
+
+.container h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  border-left: 4px solid #0077b6;
+  padding-left: 0.5rem;
+}
+
+.job {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.job h3 {
+  margin: 0;
+  color: #0077b6;
+}
+
+/* Nested roles inside grouped companies */
+.role {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #e5e7eb;
+}
+.role:first-of-type {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0.5rem;
+}
+.roleTitle {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.job small {
+  color: #666;
+}
+
+.container ul {
+  margin: 0.5rem 0 0 1.2rem;
+}
+
+.container li {
+  margin: 0.3rem 0;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  background: #e3f2fd;
+  color: #01579b;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.sectionCard {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Skill category styling */
+.skillCategory {
+  position: relative;
+  padding: 1.25rem;
+}
+
+.skillCategoryName {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+}
+
+.skillLevel {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  background: #e3f2fd;
+  color: #01579b;
+  margin-bottom: 0.75rem;
+}
+
+/* Basics card */
+.basics {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem 1.25rem;
+}
+
+@media (min-width: 720px) {
+  .basics {
+    /* Single-column layout on larger screens as well */
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+}
+
+.basicsHeader h1 { margin-bottom: 0.2rem; }
+.basicsHeader .subtitle { margin: 0; }
+
+.basicsMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contactList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.contactList li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #374151;
+}
+
+.contactList .icon {
+  width: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.muted { color: #6b7280; }
+
+.profileLinks { margin-top: 0.25rem; }
+.iconLinkedin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0A66C2;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.7rem;
+  line-height: 1;
+  letter-spacing: 0.3px;
+  border-radius: 3px;
+  padding: 0.05rem 0.25rem;
+  width: auto;
+}
+.linkChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #eef6ff;
+  color: #0b74c5;
+  border: 1px solid #cfe8ff;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.linkChip:hover {
+  background: #e3f2fd;
+  border-color: #b7dcff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 119, 182, 0.15);
+  text-decoration: none;
+}
+.linkChip:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.linkChip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.25);
+}
+
+/* Badge for current role */
+.currentBadge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #eaf7ea;
+  color: #1b5e20;
+  border: 1px solid #c7e7c7;
+}
+
+.jobSkills {
+  margin-top: 0.75rem;
+}
+
+/* Hide toolbar when printing */
+@media print {
+  .toolbar {
+    display: none !important;
+  }
+
+  .host {
+    background: white !important;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+
+  /* Print tweaks: keep layout crisp, avoid hyphenation */
+  * {
+    box-shadow: none !important;
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+  }
+
+  .container {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0.5rem;
+  }
+
+  /* Basics print adjustments */
+  .basics {
+    background: white !important;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0.5rem 0.5rem 0.75rem;
+    grid-template-columns: 1fr;
+    gap: 0.4rem 0.7rem;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .contactList li { color: #000; }
+  .muted { color: #000; }
+
+  .container h1 {
+    font-size: 1.8rem;
+    text-align: left;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .contact {
+    font-size: 0.85rem;
+    text-align: left;
+  }
+
+  /* Ensure profile icons keep their brand colors when printing */
+  .profileLinks .iconLinkedin {
+    background: #0A66C2 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .profileLinks .icon { color: #0b74c5 !important; }
+
+  /* In print, show profile links using the anchor text (URL), no underline */
+  .profileLinks { display: block !important; }
+  .profileLinks a {
+    color: #0b74c5 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0.1rem 0 !important;
+    display: block !important;
+    text-align: left !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    text-decoration: none !important;
+  }
+  .profileLinks a::after { content: none !important; }
+
+  .container h2 {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    border-left: 4px solid #0077b6;
+    padding-left: 0.3rem;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Allow experience cards to split across pages if needed */
+  .job {
+    background: white !important;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    page-break-inside: auto;
+    break-inside: auto;
+    -webkit-page-break-inside: auto;
+    -webkit-column-break-inside: auto;
+    -webkit-region-break-inside: auto;
+  }
+
+  .job h3,
+  .job small {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Allow roles to split when necessary to avoid leaving large blanks */
+  .role { page-break-inside: auto; break-inside: auto; }
+
+  .job > p {
+    margin: 0.4rem 0 0.6rem;
+    page-break-inside: auto;
+    break-inside: auto;
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .job ul {
+    margin-bottom: 0.5rem;
+    page-break-inside: auto;
+    break-inside: auto;
+    -webkit-column-break-inside: auto;
+  }
+
+  .job ul li {
+    page-break-inside: auto;
+    break-inside: auto;
+  }
+
+  .jobSkills {
+    margin-top: 0.4rem;
+    page-break-inside: auto;
+    break-inside: auto;
+    -webkit-page-break-inside: auto;
+    -webkit-column-break-inside: auto;
+  }
+
+  .jobSkills strong {
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .sectionCard,
+  .skills {
+    background: white !important;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    -webkit-page-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    -webkit-region-break-inside: avoid;
+  }
+
+  /* Skill categories in print */
+  .skillCategory {
+    padding: 0.5rem;
+    background: white !important;
+  }
+
+  .skillCategoryName {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  .skillLevel {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .job h3 { font-size: 1rem; }
+  .job small { font-size: 0.8rem; }
+  .container p, 
+  .container li, 
+  .chip { font-size: 0.8rem; }
+  .chip { padding: 0.2rem 0.5rem; }
+
+  /* Optional manual page break utility */
+  .forcePageBreak {
+    page-break-before: always !important;
+    break-before: page !important;
+    -webkit-column-break-before: always !important;
+  }
+}

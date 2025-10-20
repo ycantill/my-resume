@@ -1,0 +1,14 @@
+# Custom Domain Configuration for GitHub Pages
+# 
+# Instructions:
+# 1. Rename this file to 'CNAME' (without extension)
+# 2. Replace the example domain below with your actual domain
+# 3. Configure your domain's DNS settings:
+#    - For root domain (example.com): A records pointing to GitHub Pages IPs
+#    - For subdomain (www.example.com): CNAME record pointing to your-username.github.io
+#
+# Example:
+# my-resume.com
+#
+# Uncomment and modify the line below:
+# your-domain.com
