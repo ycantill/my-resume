@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from '../MyResume.module.css';
-import type { Language, LocalizedText } from '../types.ts';
+import type { LocalizedText } from '../types.ts';
+import { useLanguage } from '../contexts/LanguageContext.tsx';
 
 interface SummaryProps {
   summary: LocalizedText;
-  language: Language;
 }
 
-const Summary: React.FC<SummaryProps> = ({ summary, language }) => {
+const Summary: React.FC<SummaryProps> = ({ summary }) => {
+  const { language } = useLanguage();
   const t = language;
 
   return (

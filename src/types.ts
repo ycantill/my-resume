@@ -1,4 +1,5 @@
 // Types for the resume data structure based on actual Firebase data
+import { ReactNode } from 'react';
 
 export type Language = 'en' | 'es';
 
@@ -106,8 +107,18 @@ export interface UsePersonaDataResult {
 }
 
 export interface MyResumeProps {
-  initialLang?: Language;
   initialPersona?: string;
+}
+
+// Language Context types
+export interface LanguageContextType {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+}
+
+export interface LanguageProviderProps {
+  children: ReactNode;
+  initialLanguage?: Language;
 }
 
 // Firebase specific types

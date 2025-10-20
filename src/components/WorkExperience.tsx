@@ -1,14 +1,15 @@
 import React from 'react';
 import styles from '../MyResume.module.css';
-import type { GroupedWorkEntry, Language } from '../types.ts';
+import type { GroupedWorkEntry } from '../types.ts';
+import { useLanguage } from '../contexts/LanguageContext.tsx';
 import { formatDateRange, formatDuration } from '../resume-helpers.ts';
 
 interface WorkExperienceProps {
   workItems: GroupedWorkEntry[];
-  language: Language;
 }
 
-const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems, language }) => {
+const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
+  const { language } = useLanguage();
   const t = language;
 
   return (

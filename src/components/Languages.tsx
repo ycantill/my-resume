@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from '../MyResume.module.css';
-import type { LanguageEntry, Language } from '../types.ts';
+import type { LanguageEntry } from '../types.ts';
+import { useLanguage } from '../contexts/LanguageContext.tsx';
 
 interface LanguagesProps {
   languages: LanguageEntry[];
-  language: Language;
 }
 
-const Languages: React.FC<LanguagesProps> = ({ languages, language }) => {
+const Languages: React.FC<LanguagesProps> = ({ languages }) => {
+  const { language } = useLanguage();
   const t = language;
 
   return (

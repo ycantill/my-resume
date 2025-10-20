@@ -1,14 +1,15 @@
 import React from 'react';
 import styles from '../MyResume.module.css';
-import type { Language, ResumeDataError } from '../types.ts';
+import type { ResumeDataError } from '../types.ts';
+import { useLanguage } from '../contexts/LanguageContext.tsx';
 import { formatErrorMessage } from '../types.ts';
 
 interface ErrorStateProps {
   error: ResumeDataError | null;
-  language: Language;
 }
 
-const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
+const ErrorState: React.FC<ErrorStateProps> = ({ error }) => {
+  const { language } = useLanguage();
   return (
     <div className={styles.host}>
       <div className={styles.container}>

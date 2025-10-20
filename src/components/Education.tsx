@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from '../MyResume.module.css';
-import type { Education, Language } from '../types.ts';
+import type { Education } from '../types.ts';
+import { useLanguage } from '../contexts/LanguageContext.tsx';
 
 interface EducationSectionProps {
   education: Education[];
-  language: Language;
 }
 
-const EducationSection: React.FC<EducationSectionProps> = ({ education, language }) => {
+const EducationSection: React.FC<EducationSectionProps> = ({ education }) => {
+  const { language } = useLanguage();
   const t = language;
 
   return (

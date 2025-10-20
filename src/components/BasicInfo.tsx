@@ -1,14 +1,15 @@
 import React from 'react';
 import styles from '../MyResume.module.css';
-import type { ResumeBasics, Language } from '../types.ts';
+import type { ResumeBasics } from '../types.ts';
+import { useLanguage } from '../contexts/LanguageContext.tsx';
 import { formatLocationLabel, normalizePhone } from '../resume-helpers.ts';
 
 interface BasicInfoProps {
   basics: ResumeBasics;
-  language: Language;
 }
 
-const BasicInfo: React.FC<BasicInfoProps> = ({ basics, language }) => {
+const BasicInfo: React.FC<BasicInfoProps> = ({ basics }) => {
+  const { language } = useLanguage();
   const t = language;
   const { location } = basics;
 

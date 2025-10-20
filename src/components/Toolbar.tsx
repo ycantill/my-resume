@@ -1,21 +1,20 @@
 import React from 'react';
 import styles from '../MyResume.module.css';
-import type { Language } from '../types.ts';
+import { useLanguage } from '../contexts/LanguageContext.tsx';
 import { printResume } from '../resume-helpers.ts';
 
 interface ToolbarProps {
-  language: Language;
   persona: string;
   onLanguageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onPersonaChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({ 
-  language, 
   persona, 
   onLanguageChange, 
   onPersonaChange 
 }) => {
+  const { language } = useLanguage();
   const t = language;
 
   return (
