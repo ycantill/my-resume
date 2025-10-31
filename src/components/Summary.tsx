@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from '../MyResume.module.css';
 import type { LocalizedText } from '../types.ts';
 import { useLanguage } from '../contexts/LanguageContext.tsx';
 
@@ -13,9 +12,9 @@ const Summary: React.FC<SummaryProps> = ({ summary }) => {
 
   return (
     <>
-      <h2>{t === 'en' ? 'Summary' : 'Resumen'}</h2>
-      <div className={styles.sectionCard}>
-        <p>{summary[t]}</p>
+      <h2 className="section-title">{t === 'en' ? 'Summary' : 'Resumen'}</h2>
+      <div className="section-card">
+        <p className="text-gray-700 leading-relaxed text-justify">{summary[t]}</p>
       </div>
     </>
   );

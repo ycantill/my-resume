@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { usePersonData } from './firebase-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
 import { useLanguage } from './contexts/LanguageContext.tsx';
-import styles from './MyResume.module.css';
 import type { MyResumeProps } from './types.ts';
 import {
   LoadingState,
@@ -54,20 +53,32 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
   const workItems = groupWorkEntries(data.work);
 
   return (
-    <div className={styles.host}>      
+    <div className="min-h-screen bg-gray-50">      
       <Toolbar 
         person={person}
         onLanguageChange={handleLangChange}
         onPersonChange={handlePersonChange}
       />
 
-      <div className={styles.container}>
-        <BasicInfo basics={data.basics} />
-        <Summary summary={data.basics.summary} />
-        <WorkExperience workItems={workItems} />
-        <EducationSection education={data.education} />
-        <Languages languages={data.languages} />
-        <Skills skills={data.skills} />
+      <div className="resume-container shadow-lg">
+        <div className="section-spacing">
+          <BasicInfo basics={data.basics} />
+        </div>
+        <div className="section-spacing">
+          <Summary summary={data.basics.summary} />
+        </div>
+        <div className="section-spacing">
+          <WorkExperience workItems={workItems} />
+        </div>
+        <div className="section-spacing">
+          <EducationSection education={data.education} />
+        </div>
+        <div className="section-spacing">
+          <Languages languages={data.languages} />
+        </div>
+        <div className="section-spacing">
+          <Skills skills={data.skills} />
+        </div>
       </div>
     </div>
   );

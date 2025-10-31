@@ -100,9 +100,9 @@ This React version maintains the same functionality as the original Lit Element 
 ### Key Changes Made:
 
 1. **Component Architecture**: Converted from Lit Element class to React functional component
-2. **State Management**: Replaced Lit properties with React useState hooks
+2. **State Management**: Replaced Lit properties with React useState hooks and Context API
 3. **Lifecycle**: Converted Lit lifecycle methods to React useEffect hooks
-4. **Styling**: Migrated from Lit CSS to CSS Modules
+4. **Styling**: Migrated from Lit CSS to Tailwind CSS utility-first framework
 5. **Firebase Integration**: Created custom React hooks for Firebase real-time updates
 6. **Event Handling**: Converted to React event handlers
 
@@ -124,12 +124,26 @@ The Firebase configuration is located in `src/firebase-config.js`. Make sure you
 
 ```
 src/
-├── MyResume.jsx          # Main resume component
-├── MyResume.module.css   # Component styles
-├── firebase-config.js    # Firebase configuration
-├── firebase-service.js   # Firebase service with React hooks
-├── resume-helpers.js     # Utility functions for date formatting, etc.
-└── main.jsx             # Application entry point
+├── components/           # Modular resume components
+│   ├── index.ts         # Component exports
+│   ├── LoadingState.tsx # Loading UI
+│   ├── ErrorState.tsx   # Error handling UI
+│   ├── Toolbar.tsx      # Language/person selector
+│   ├── BasicInfo.tsx    # Contact information
+│   ├── Summary.tsx      # Professional summary
+│   ├── WorkExperience.tsx # Job history
+│   ├── Education.tsx    # Education section
+│   ├── Languages.tsx    # Language skills
+│   └── Skills.tsx       # Technical skills
+├── contexts/
+│   └── LanguageContext.tsx # Global language state management
+├── MyResume.jsx         # Main resume component
+├── index.css           # Tailwind CSS configuration and custom components
+├── firebase-config.js   # Firebase configuration
+├── firebase-service.js  # Firebase service with React hooks
+├── types.ts            # TypeScript type definitions
+├── resume-helpers.js    # Utility functions for date formatting, etc.
+└── main.jsx            # Application entry point
 ```
 
 ## License
