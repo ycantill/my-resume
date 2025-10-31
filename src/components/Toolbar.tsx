@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from '../MyResume.module.css';
 import { useLanguage } from '../contexts/LanguageContext.tsx';
 import { printResume } from '../resume-helpers.ts';
 
@@ -18,22 +17,33 @@ const Toolbar: React.FC<ToolbarProps> = ({
   const t = language;
 
   return (
-    <div className={styles.toolbar}>
-      <div className={styles.toolGroup}>
-        <label htmlFor="lang-select">{t === 'en' ? 'Language:' : 'Idioma:'}</label>
-        <select id="lang-select" value={language} onChange={onLanguageChange}>
-          <option value="en">English</option>
-          <option value="es">Español</option>
-        </select>
+    <div className="toolbar sticky top-0 z-10 shadow-sm">
+      <div className="toolbar-content justify-between">
+        <div className="flex items-center space-x-6">
+          <div className="toolbar-group">
+            <label htmlFor="lang-select" className="form-label">
+              {t === 'en' ? 'Language:' : 'Idioma:'}
+            </label>
+            <select id="lang-select" value={language} onChange={onLanguageChange} className="toolbar-select">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
 
-        <label htmlFor="person-select">{t === 'en' ? 'Person:' : 'Persona:'}</label>
-        <select id="person-select" value={person} onChange={onPersonChange}>
-          <option value="yohany">Yohany</option>
-          <option value="lenicet">Lenicet</option>
-        </select>
-      </div>
-      <div className={styles.toolActions}>
-        <button onClick={printResume}>{t === 'en' ? 'Print' : 'Imprimir'}</button>
+          <div className="toolbar-group">
+            <label htmlFor="person-select" className="form-label">
+              {t === 'en' ? 'Person:' : 'Persona:'}
+            </label>
+            <select id="person-select" value={person} onChange={onPersonChange} className="toolbar-select">
+              <option value="yohany">Yohany</option>
+              <option value="lenicet">Lenicet</option>
+            </select>
+          </div>
+        </div>
+        
+        <button onClick={printResume} className="toolbar-button">
+          {t === 'en' ? 'Print' : 'Imprimir'}
+        </button>
       </div>
     </div>
   );
