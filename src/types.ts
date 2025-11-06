@@ -108,6 +108,17 @@ export interface UsePersonDataResult {
 
 export interface MyResumeProps {
   initialPerson?: string;
+  initialLanguage?: Language;
+}
+
+// Router-related types
+export interface RouteParams {
+  language?: string;
+  personId?: string;
+}
+
+export interface AppRouterProps {
+  // No longer needs initialLanguage as it comes from URL
 }
 
 // Language Context types
@@ -136,6 +147,47 @@ export interface DateRange {
 
 export interface LocationDisplayProps {
   location: BasicLocation;
+  language: Language;
+}
+
+// Component props interfaces that receive language
+export interface BasicInfoProps {
+  basics: ResumeBasics;
+  language: Language;
+}
+
+export interface SummaryProps {
+  summary: LocalizedText;
+  language: Language;
+}
+
+export interface WorkExperienceProps {
+  workItems: (WorkEntry | GroupedWorkEntry)[];
+  language: Language;
+}
+
+export interface EducationSectionProps {
+  education: Education[];
+  language: Language;
+}
+
+export interface LanguagesProps {
+  languages: LanguageEntry[];
+  language: Language;
+}
+
+export interface SkillsProps {
+  skills: Skill[];
+  language: Language;
+}
+
+// Loading and Error component props
+export interface LoadingStateProps {
+  language: Language;
+}
+
+export interface ErrorStateProps {
+  error: ResumeDataError | null;
   language: Language;
 }
 

@@ -1,13 +1,7 @@
 import React from 'react';
-import type { Education } from '../types.ts';
-import { useLanguage } from '../contexts/LanguageContext.tsx';
+import type { EducationSectionProps } from '../types.ts';
 
-interface EducationSectionProps {
-  education: Education[];
-}
-
-const EducationSection: React.FC<EducationSectionProps> = ({ education }) => {
-  const { language } = useLanguage();
+const EducationSection: React.FC<EducationSectionProps> = ({ education, language }) => {
   const t = language;
 
   return (

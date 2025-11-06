@@ -73,11 +73,6 @@ export function formatDateRange(job: DateRange, lang: Language): string {
   return `${start} – ${end}`;
 }
 
-// Opens the browser print dialog
-export function printResume(): void {
-  window.print();
-}
-
 // Normalize phone to be used inside a tel: link
 export function normalizePhone(phone: string | null | undefined): string {
   if (!phone) return '';

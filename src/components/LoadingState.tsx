@@ -1,8 +1,9 @@
 import React from 'react';
+import type { LoadingStateProps } from '../types.ts';
 
-interface LoadingStateProps {}
-
-const LoadingState: React.FC<LoadingStateProps> = () => {
+const LoadingState: React.FC<LoadingStateProps> = ({ language }) => {
+  const t = language;
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-xl text-center">
@@ -12,8 +13,15 @@ const LoadingState: React.FC<LoadingStateProps> = () => {
             <div className="w-6 h-6 bg-blue-600 rounded-full animate-pulse"></div>
           </div>
         </div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-3">Cargando currículum...</h2>
-        <p className="text-gray-600 mb-4">Obteniendo datos desde Firebase Realtime Database</p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-3">
+          {t === 'en' ? 'Loading resume...' : 'Cargando currículum...'}
+        </h2>
+        <p className="text-gray-600 mb-4">
+          {t === 'en' 
+            ? 'Fetching data from Firebase Realtime Database' 
+            : 'Obteniendo datos desde Firebase Realtime Database'
+          }
+        </p>
         <div className="flex justify-center space-x-1">
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>

@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { usePersonData } from './firebase-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
-import { useLanguage } from './contexts/LanguageContext.tsx';
-import type { MyResumeProps } from './types.ts';
+import type { MyResumeProps, Language } from './types.ts';
 import {
   LoadingState,
   ErrorState,
-  Toolbar,
   BasicInfo,
   Summary,
   WorkExperience,
@@ -16,36 +15,31 @@ import {
 } from './components/index.ts';
 
 const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
-  const { language: resumeLang, setLanguage } = useLanguage();
-  const [person, setPerson] = useState<string>(initialPerson);
+  const { language, personId } = useParams<{ language?: string; personId?: string }>();
   
-  const { data: resumeData, loading, error } = usePersonData(person);
+  // Use params from route
+  const currentPerson = personId || initialPerson;
+  const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
+  
+  const { data: resumeData, loading, error } = usePersonData(currentPerson);
 
   // Update document title when data changes
   useEffect(() => {
     if (resumeData) {
-      const t = resumeLang;
+      const t = currentLanguage;
       const title = `${resumeData.basics.name} - ${t === 'en' ? 'Resume' : 'Currículum'}`;
       document.title = title;
     }
-  }, [resumeData, resumeLang]);
-
-  const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(e.target.value as any);
-  };
-
-  const handlePersonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPerson(e.target.value);
-  };
+  }, [resumeData, currentLanguage]);
 
   // Loading state
   if (loading) {
-    return <LoadingState />;
+    return <LoadingState language={currentLanguage} />;
   }
 
   // Error state
   if (error || !resumeData) {
-    return <ErrorState error={error} />;
+    return <ErrorState error={error} language={currentLanguage} />;
   }
 
   // Main render with data
@@ -54,30 +48,24 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
 
   return (
     <div className="min-h-screen bg-gray-50">      
-      <Toolbar 
-        person={person}
-        onLanguageChange={handleLangChange}
-        onPersonChange={handlePersonChange}
-      />
-
       <div className="resume-container shadow-lg">
         <div className="section-spacing">
-          <BasicInfo basics={data.basics} />
+          <BasicInfo basics={data.basics} language={currentLanguage} />
         </div>
         <div className="section-spacing">
-          <Summary summary={data.basics.summary} />
+          <Summary summary={data.basics.summary} language={currentLanguage} />
         </div>
         <div className="section-spacing">
-          <WorkExperience workItems={workItems} />
+          <WorkExperience workItems={workItems} language={currentLanguage} />
         </div>
         <div className="section-spacing">
-          <EducationSection education={data.education} />
+          <EducationSection education={data.education} language={currentLanguage} />
         </div>
         <div className="section-spacing">
-          <Languages languages={data.languages} />
+          <Languages languages={data.languages} language={currentLanguage} />
         </div>
         <div className="section-spacing">
-          <Skills skills={data.skills} />
+          <Skills skills={data.skills} language={currentLanguage} />
         </div>
       </div>
     </div>

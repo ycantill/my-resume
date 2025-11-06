@@ -1,13 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import MyResume from './MyResume.tsx'
-import { LanguageProvider } from './contexts/LanguageContext.tsx'
+import AppRouter from './AppRouter.tsx'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <LanguageProvider initialLanguage="en">
-      <MyResume initialPerson="yohany" />
-    </LanguageProvider>
+    <AppRouter initialLanguage="en" />
   </React.StrictMode>,
 )

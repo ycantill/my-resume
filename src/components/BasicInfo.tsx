@@ -1,14 +1,8 @@
 import React from 'react';
-import type { ResumeBasics } from '../types.ts';
-import { useLanguage } from '../contexts/LanguageContext.tsx';
+import type { BasicInfoProps } from '../types.ts';
 import { formatLocationLabel, normalizePhone } from '../resume-helpers.ts';
 
-interface BasicInfoProps {
-  basics: ResumeBasics;
-}
-
-const BasicInfo: React.FC<BasicInfoProps> = ({ basics }) => {
-  const { language } = useLanguage();
+const BasicInfo: React.FC<BasicInfoProps> = ({ basics, language }) => {
   const t = language;
   const { location } = basics;
 

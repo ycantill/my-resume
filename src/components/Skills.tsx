@@ -1,13 +1,7 @@
 import React from 'react';
-import type { Skill } from '../types.ts';
-import { useLanguage } from '../contexts/LanguageContext.tsx';
+import type { SkillsProps } from '../types.ts';
 
-interface SkillsProps {
-  skills: Skill[];
-}
-
-const Skills: React.FC<SkillsProps> = ({ skills }) => {
-  const { language } = useLanguage();
+const Skills: React.FC<SkillsProps> = ({ skills, language }) => {
   const t = language;
 
   return (
