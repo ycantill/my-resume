@@ -23,11 +23,11 @@
   
   /* Header spacing improvements */
   .basics {
-    @apply mb-10 text-center print:mb-8;
+    @apply mb-8 sm:mb-10 text-center print:mb-8;
   }
   
   .contact-info {
-    @apply mt-6 print:mt-4 print:text-sm;
+    @apply mt-4 sm:mt-6 print:mt-4 print:text-sm;
   }
   
   /* Work experience spacing */

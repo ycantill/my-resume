@@ -8,46 +8,51 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ basics, language }) => {
 
   return (
     <section className="basics">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{basics.name}</h1>
-        <p className="text-xl md:text-2xl text-gray-600">{basics.label[t]}</p>
+      <div className="text-center mb-6 sm:mb-8">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">{basics.name}</h1>
+        <p className="text-lg sm:text-xl md:text-2xl text-gray-600 px-4">{basics.label[t]}</p>
       </div>
 
       <div className="contact-info">
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 text-base flex-wrap">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-8 text-sm sm:text-base flex-wrap px-4">
           
           {/* Email */}
-          <div className="flex items-center gap-3 whitespace-nowrap">
-            <span className="icon text-xl" aria-hidden="true">✉️</span>
-            <a href={`mailto:${basics.email}`} className="text-blue-600 hover:text-blue-800 font-medium">{basics.email}</a>
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start">
+            <span className="icon text-lg sm:text-xl flex-shrink-0" aria-hidden="true">✉️</span>
+            <a href={`mailto:${basics.email}`} className="text-blue-600 hover:text-blue-800 font-medium truncate">{basics.email}</a>
           </div>
 
           {/* Phone and Location */}
           {location && (
-            <div className="flex items-center gap-3 whitespace-nowrap">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start">
               {location.phone ? (
                 <>
-                  <span className="icon text-xl" aria-hidden="true">📞</span>
-                  <a href={`tel:${normalizePhone(location.phone)}`} className="text-blue-600 hover:text-blue-800 font-medium">{location.phone}</a>
-                  <span className="text-gray-400 mx-3 text-lg">•</span>
-                  <span className="text-gray-700 font-medium">{formatLocationLabel(location, t)}</span>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <span className="icon text-lg sm:text-xl flex-shrink-0" aria-hidden="true">📞</span>
+                    <a href={`tel:${normalizePhone(location.phone)}`} className="text-blue-600 hover:text-blue-800 font-medium">{location.phone}</a>
+                  </div>
+                  <span className="text-gray-400 mx-2 text-lg hidden sm:inline">•</span>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <span className="icon text-lg sm:text-xl flex-shrink-0 sm:hidden" aria-hidden="true">📍</span>
+                    <span className="text-gray-700 font-medium text-center sm:text-left">{formatLocationLabel(location, t)}</span>
+                  </div>
                 </>
               ) : (
-                <>
-                  <span className="icon text-xl" aria-hidden="true">📍</span>
-                  <span className="text-gray-700 font-medium">{formatLocationLabel(location, t)}</span>
-                </>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className="icon text-lg sm:text-xl flex-shrink-0" aria-hidden="true">📍</span>
+                  <span className="text-gray-700 font-medium text-center sm:text-left">{formatLocationLabel(location, t)}</span>
+                </div>
               )}
             </div>
           )}
 
           {/* Profiles */}
           {basics.profiles.map((p, index) => (
-            <div key={index} className="flex items-center gap-3 whitespace-nowrap">
+            <div key={index} className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start">
               {/linkedin/i.test(p.url)
-                ? <span className="icon-linkedin bg-blue-600 text-white text-sm px-2 py-1 rounded font-semibold" aria-hidden="true">in</span>
-                : <span className="icon text-xl" aria-hidden="true">🔗</span>}
-              <a href={p.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium">
+                ? <span className="icon-linkedin bg-blue-600 text-white text-xs sm:text-sm px-2 py-1 rounded font-semibold flex-shrink-0" aria-hidden="true">in</span>
+                : <span className="icon text-lg sm:text-xl flex-shrink-0" aria-hidden="true">🔗</span>}
+              <a href={p.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium truncate max-w-xs sm:max-w-none">
                 {p.url.replace(/^https?:\/\/(www\.)?/, '')}
               </a>
             </div>
