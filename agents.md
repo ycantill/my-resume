@@ -2,281 +2,105 @@
 
 This document provides context for AI agents working on the My Resume React application.
 
-## Project Overview
+## 📖 Primary Documentation
 
-A dynamic resume generator built with React, TypeScript, and Firebase. Supports multiple persons (Yohany/Lenicet) with multilingual content (English/Spanish).
+**⚠️ IMPORTANT**: All comprehensive project documentation is consolidated in `README.md`. Please refer to the README.md file for:
 
-## Architecture
+- Complete feature list and architecture overview
+- URL structure and routing patterns
+- Component architecture and state management patterns
+- Development guidelines and best practices
+- TypeScript types and interfaces
+- Deployment instructions
+- Firebase configuration
+- Migration history and design philosophy
 
-### Core Technologies
+The README.md contains the single source of truth for all project documentation.
 
-- **React 18** with functional components and hooks
-- **TypeScript** with strict type checking
-- **Vite** for build tooling and development
-- **Firebase Realtime Database** for data storage
-- **Tailwind CSS** for utility-first component styling
+## 🎯 Quick Reference for Agents
 
-### State Management
+### Project Overview
 
-- **React Context** for global language state (`LanguageContext`)
-- **Local state** with `useState` for component-specific data
-- **Custom hooks** for Firebase integration (`usePersonData`)
+A dynamic resume generator built with React, TypeScript, and Firebase featuring **zero UI chrome** design - pure content accessible via semantic URLs only.
 
-## Project Structure
+### Key Architecture Points
+
+- **URL-Centric**: All navigation through direct URLs (`/en/yohany`, `/es/lenicet`)
+- **Props-Driven**: No Context API, language passed as props from URL params
+- **Zero UI Elements**: No toolbars, buttons, or navigation - pure content only
+- **Firebase Integration**: Real-time data through custom hooks
+- **Bilingual Support**: URL-based language selection with browser detection
+
+### Current Component Structure
 
 ```
-src/
-├── contexts/
-│   └── LanguageContext.tsx     # Global language state management
-├── components/                 # Modular resume components
-│   ├── index.ts               # Component exports
-│   ├── LoadingState.tsx       # Loading UI
-│   ├── ErrorState.tsx         # Error handling UI
-│   ├── Toolbar.tsx            # Language/person selector
-│   ├── BasicInfo.tsx          # Contact information
-│   ├── Summary.tsx            # Professional summary
-│   ├── WorkExperience.tsx     # Job history
-│   ├── Education.tsx          # Education section
-│   ├── Languages.tsx          # Language skills
-│   └── Skills.tsx             # Technical skills
-├── types.ts                   # TypeScript type definitions
-├── firebase-config.js         # Firebase configuration
-├── firebase-service.ts        # Firebase integration & hooks
-├── resume-helpers.ts          # Utility functions
-├── MyResume.tsx              # Main container component
-├── index.css                 # Tailwind CSS configuration
-└── main.tsx                  # Application entry point
+App → AppRouter → MyResume → [LoadingState|ErrorState|Resume Components]
 ```
 
-## Key Patterns & Conventions
+All resume components receive `language` as prop and render bilingual content.
 
-### Component Architecture
+### Routing Pattern
 
-- **Functional components** with TypeScript
-- **React.FC** type for component definitions
-- **Props interfaces** defined in `types.ts`
-- **Tailwind CSS** for utility-first styling
+```
+/:language/:person
+- /en/yohany, /es/yohany
+- /en/lenicet, /es/lenicet
+- / → redirects to browser language + default person
+```
+
+### Development Patterns
+
+1. **Component Creation**: Define props interface in `types.ts`, receive language as prop
+2. **URL Parameter Access**: `useParams<{ language?: string; personId?: string }>()`
+3. **Language Handling**: `const t = language; return t === 'en' ? 'English' : 'Español'`
+4. **No Context API**: All state through URL parameters and props
+
+### File Organization
+
+- `src/components/` - All resume components (bilingual)
+- `src/AppRouter.tsx` - Main routing with language detection
+- `src/MyResume.tsx` - Container component
+- `src/types.ts` - All TypeScript interfaces
+- `src/firebase-service.ts` - Firebase integration hooks
+
+## 🔧 Agent Guidelines
+
+### When Working on This Project:
+
+1. **Check README.md First**: All detailed documentation, examples, and patterns are there
+2. **Follow URL-Centric Pattern**: Never add UI navigation elements
+3. **Props Over Context**: Pass language as props, no global state
+4. **Bilingual Everything**: All user-facing text must support en/es
+5. **TypeScript Strict**: Use proper interfaces defined in `types.ts`
+6. **Firebase Read-Only**: Only read operations, no write functionality
+
+### Component Update Pattern:
 
 ```typescript
+// 1. Update interface in types.ts if needed
 interface ComponentProps {
-  data: SomeType;
+  data: DataType;
+  language: Language;
 }
 
-const Component: React.FC<ComponentProps> = ({ data }) => {
-  return <div className="container">{/* content */}</div>;
+// 2. Update component to receive language
+const Component: React.FC<ComponentProps> = ({ data, language }) => {
+  const t = language;
+  return <div>{t === 'en' ? 'English Text' : 'Texto Español'}</div>;
 };
+
+// 3. Pass language from parent
+<Component data={data} language={currentLanguage} />
 ```
 
-### State Management Patterns
+### File Modification Guidelines:
 
-- **React Context** for global state (language)
-- **Custom hooks** for external data (Firebase)
-- **Local state** for component-specific needs
-
-```typescript
-// Global language access
-const { language, setLanguage } = useLanguage();
-
-// Firebase data fetching
-const { data, loading, error } = usePersonData(personId);
-```
-
-### Naming Conventions
-
-- **camelCase** for variables and functions
-- **PascalCase** for components and types
-- **kebab-case** for CSS classes
-- **English** for all variable names (Spanish only for UI text)
-
-## Data Structure
-
-### Firebase Schema
-
-```
-persons/
-├── yohany/
-│   ├── basics/
-│   ├── work/
-│   ├── education/
-│   ├── languages/
-│   └── skills/
-└── lenicet/
-    └── [same structure]
-```
-
-### Localization Pattern
-
-All user-facing content uses `LocalizedText`:
-
-```typescript
-interface LocalizedText {
-  en: string;
-  es: string;
-}
-
-// Usage
-const title = data.label[language]; // 'language' from context
-```
-
-### Work Experience Handling
-
-- **Single roles**: Direct `WorkEntry` objects
-- **Multiple roles**: `GroupedWorkEntry` with `roles[]` array
-- **Helper function**: `groupWorkEntries()` processes the data
-
-## Firebase Integration
-
-### Service Layer (`firebase-service.ts`)
-
-- **`getPersonData()`**: Async data fetching
-- **`usePersonData()`**: React hook with real-time updates
-- **Caching**: In-memory cache for performance
-- **Error handling**: Structured `ResumeDataError` objects
-
-### Database Paths
-
-- **Persons**: `persons/{personId}`
-- **Real-time**: Uses Firebase `onValue` listeners
-- **Read-only**: No write operations implemented
-
-## Error Handling
-
-### Structured Errors
-
-```typescript
-interface ResumeDataError {
-  code: 'PERSON_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA';
-  message: string;
-  personId?: string;
-  originalError?: Error;
-}
-```
-
-### Error Display
-
-- **`ErrorState` component** for user-friendly error messages
-- **Localized error messages** via `formatErrorMessage()`
-- **Technical details** in collapsible sections
-
-## Component Guidelines
-
-### Props and Types
-
-- All props interfaces defined in `types.ts`
-- Use React Context to avoid prop drilling
-- Prefer specific types over `any`
-
-### Event Handling
-
-```typescript
-const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  setValue(e.target.value);
-};
-```
-
-### Styling
-
-- **Tailwind CSS** utility-first framework
-- **Custom component classes** in `@layer components`
-- **Responsive design** with mobile-first approach and Tailwind breakpoints
-
-## Development Patterns
-
-### Component Creation
-
-1. Define props interface in `types.ts`
-2. Create functional component with `React.FC<Props>`
-3. Import required context hooks
-4. Export from `components/index.ts`
-
-### TypeScript Usage
-
-- **Strict mode** enabled
-- **Type guards** for runtime validation
-- **Generic types** for reusable interfaces
-- **Union types** for constrained values
-
-### Testing Considerations
-
-- Components designed for testability
-- Props interfaces enable easy mocking
-- Error states explicitly handled
-
-## Build & Deployment
-
-### Scripts
-
-- `npm run dev` - Development server (Vite)
-- `npm run build` - Production build
-- `npm run preview` - Preview production build
-- `npm run type-check` - TypeScript validation
-
-### Environment
-
-- **Node.js 16+** required
-- **Modern browsers** target (ES2020)
-- **GitHub Pages** deployment ready
-
-## Firebase Configuration
-
-### Required Setup
-
-- Firebase project with Realtime Database
-- Configuration in `firebase-config.js`
-- Database rules for read access
-
-### Data Requirements
-
-- Person objects with complete resume structure
-- Localized content in `en`/`es` format
-- Work experience with optional grouping
-
-## Common Patterns to Follow
-
-### 1. Language Context Usage
-
-```typescript
-const { language } = useLanguage();
-const t = language; // Common pattern for readability
-```
-
-### 2. Firebase Data Fetching
-
-```typescript
-const { data: resumeData, loading, error } = usePersonData(personId);
-
-if (loading) return <LoadingState />;
-if (error) return <ErrorState error={error} />;
-```
-
-### 3. Component Structure
-
-```typescript
-const Component: React.FC<Props> = ({ prop1, prop2 }) => {
-  const { language } = useLanguage();
-
-  return (
-    <section className="section-title">
-      {/* component content */}
-    </section>
-  );
-};
-```
-
-## Performance Considerations
-
-- **Firebase caching** implemented in service layer
-- **Context optimization** to prevent unnecessary re-renders
-- **Component splitting** for better code organization
-- **Tailwind CSS** for optimal bundle size
-
-## Security Notes
-
-- **Read-only Firebase access** - no write operations
-- **Input validation** with TypeScript types
-- **Error boundary** handling with structured errors
-- **XSS protection** via React's default escaping
+- **types.ts**: Add/update interfaces for component props
+- **components/\*.tsx**: Ensure all receive and use language prop
+- **MyResume.tsx**: Main container, passes language to all children
+- **AppRouter.tsx**: Routing logic, language detection, URL validation
+- **README.md**: Update if architecture or major features change
 
 ---
 
-_This document should be updated when making significant architectural changes to maintain accuracy for AI agents._
+**For detailed implementation examples, patterns, and comprehensive documentation, always refer to README.md**

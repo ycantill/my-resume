@@ -1,14 +1,8 @@
 import React from 'react';
-import type { GroupedWorkEntry } from '../types.ts';
-import { useLanguage } from '../contexts/LanguageContext.tsx';
+import type { WorkExperienceProps } from '../types.ts';
 import { formatDateRange, formatDuration } from '../resume-helpers.ts';
 
-interface WorkExperienceProps {
-  workItems: GroupedWorkEntry[];
-}
-
-const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
-  const { language } = useLanguage();
+const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems, language }) => {
   const t = language;
 
   return (

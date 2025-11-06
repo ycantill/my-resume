@@ -1,13 +1,7 @@
 import React from 'react';
-import type { LanguageEntry } from '../types.ts';
-import { useLanguage } from '../contexts/LanguageContext.tsx';
+import type { LanguagesProps } from '../types.ts';
 
-interface LanguagesProps {
-  languages: LanguageEntry[];
-}
-
-const Languages: React.FC<LanguagesProps> = ({ languages }) => {
-  const { language } = useLanguage();
+const Languages: React.FC<LanguagesProps> = ({ languages, language }) => {
   const t = language;
 
   return (

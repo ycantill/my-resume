@@ -1,13 +1,7 @@
 import React from 'react';
-import type { LocalizedText } from '../types.ts';
-import { useLanguage } from '../contexts/LanguageContext.tsx';
+import type { SummaryProps } from '../types.ts';
 
-interface SummaryProps {
-  summary: LocalizedText;
-}
-
-const Summary: React.FC<SummaryProps> = ({ summary }) => {
-  const { language } = useLanguage();
+const Summary: React.FC<SummaryProps> = ({ summary, language }) => {
   const t = language;
 
   return (

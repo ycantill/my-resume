@@ -23,16 +23,16 @@
   
   /* Header spacing improvements */
   .basics {
-    @apply mb-10 text-center print:mb-8;
+    @apply mb-8 sm:mb-10 text-center print:mb-8;
   }
   
   .contact-info {
-    @apply mt-6 print:mt-4 print:text-sm;
+    @apply mt-4 sm:mt-6 print:mt-4 print:text-sm;
   }
   
   /* Work experience spacing */
   .job {
-    @apply bg-white rounded-xl p-6 mb-8 shadow-sm border border-gray-100 print:shadow-none print:border-0 print:mb-6 print:p-4;
+    @apply mb-8 print:mb-6;
   }
   
   .job-role {
@@ -89,6 +89,10 @@
     @apply border border-gray-300 rounded-lg px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500;
   }
   
+  .form-label {
+    @apply text-sm font-medium text-gray-700;
+  }
+  
   /* Legacy classes for compatibility */
   .resume-section {
     @apply mb-6 break-inside-avoid;
@@ -130,6 +134,37 @@
   .resume-section {
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+  
+  /* Prevent job roles from breaking between pages */
+  .job-role {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    position: relative;
+  }
+  
+  /* Ensure job containers don't break */
+  .job {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  /* Improve timeline elements for print */
+  .job-role::before {
+    content: "";
+    position: absolute;
+    left: -1.5px;
+    top: 8px;
+    width: 12px;
+    height: 12px;
+    background-color: #3b82f6;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  
+  /* Hide the original absolute positioned dot in print */
+  .job-role .absolute {
+    display: none !important;
   }
   
   .skill-chip {
