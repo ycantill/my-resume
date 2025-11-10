@@ -23,6 +23,18 @@ const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
   const hasValidPerson = initialPerson && isValidPersonId(initialPerson);
   const validatedPerson = hasValidPerson ? initialPerson as PersonId : null;
 
+  // Handle GitHub Pages routing - check if there's a stored route from 404.html
+  React.useEffect(() => {
+    const storedRoute = sessionStorage.getItem('github-pages-route');
+    if (storedRoute) {
+      sessionStorage.removeItem('github-pages-route');
+      // Only redirect if it's a valid language route
+      if (storedRoute === 'es' || storedRoute === 'en') {
+        window.location.replace(`${basename}/${storedRoute}`);
+      }
+    }
+  }, [basename]);
+
   return (
     <Router basename={basename}>
       <Routes>
