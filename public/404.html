@@ -1,93 +1,26 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Resume</title>
-    <style>
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background: #f4f6f8;
-            color: #1a1a1a;
-        }
-        .container {
-            text-align: center;
-            max-width: 500px;
-            padding: 2rem;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        }
-        h1 {
-            color: #0077b6;
-            margin-bottom: 1rem;
-        }
-        p {
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-        .btn {
-            display: inline-block;
-            background: #0077b6;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background 0.2s ease;
-        }
-        .btn:hover {
-            background: #026aa7;
-        }
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #0077b6;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
     <script>
-        // Enhanced redirect for GitHub Pages SPA support
-        (function() {
-            const path = window.location.pathname;
-            const base = '/my-resume/';
-            const search = window.location.search;
-            
-            // Extract the intended route from the current path
-            let intendedRoute = path.replace(base, '').replace(/^\/+|\/+$/g, '');
-            
-            // Handle different scenarios
-            if (!intendedRoute || intendedRoute === '') {
-                // Root access - redirect to main app
-                window.location.replace(base + search);
-            } else if (intendedRoute === 'es' || intendedRoute === 'en') {
-                // Valid language route - preserve it in sessionStorage and redirect
-                sessionStorage.setItem('github-pages-route', intendedRoute);
-                window.location.replace(base + search);
-            } else {
-                // Invalid route - redirect to base
-                window.location.replace(base + search);
-            }
-        })();
+        // Simple redirect for GitHub Pages SPA support
+        // This handles direct access to routes like /my-resume/es or /my-resume/en
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+        const repoName = 'my-resume';
+        
+        // If the path is /my-resume/[something], redirect to /my-resume/#/[something]
+        if (pathSegments[0] === repoName && pathSegments.length > 1) {
+            const route = pathSegments.slice(1).join('/');
+            window.location.replace('/' + repoName + '/#/' + route);
+        } else {
+            // Otherwise redirect to the base
+            window.location.replace('/' + repoName + '/');
+        }
     </script>
 </head>
 <body>
-    <div class="container">
-        <div class="spinner"></div>
-        <h1>🔄 Redirigiendo...</h1>
-        <p>Serás redirigido automáticamente a la aplicación.</p>
-        <a href="/my-resume/" class="btn">Ir al Currículum</a>
-    </div>
+    <p>Redirecting...</p>
 </body>
 </html>

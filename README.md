@@ -63,13 +63,15 @@ VITE_PERSON=lenicet npm run dev
 ### New Simplified Structure
 
 ```
-/:language
+/#/:language
 
 Examples:
-- /en  → Resume in English (person set via VITE_PERSON)
-- /es  → Resume in Spanish (person set via VITE_PERSON)
-- /    → Redirects to browser language
+- /#/en  → Resume in English (person set via VITE_PERSON)
+- /#/es  → Resume in Spanish (person set via VITE_PERSON)
+- /    → Redirects to browser language with hash routing
 ```
+
+**Note**: The application uses hash routing for GitHub Pages compatibility. Direct URLs like `/es` automatically redirect to `/#/es`.
 
 ### Fallback Behavior
 
@@ -314,10 +316,13 @@ npm run dev                     # Shows fallback page
 
 ### Automatic Redirections
 
-- **Root (`/`)** → `/[browser-language]`
-- **Invalid routes** → `/en` (fallback)
+- **Root (`/`)** → `/#/[browser-language]`
+- **Direct language URLs** → Hash routing equivalent:
+  - `/es` → `/#/es`
+  - `/en` → `/#/en`
+- **Invalid routes** → `/#/en` (fallback)
 
-**Note**: Legacy person-based URLs (`/en/person`) are no longer supported. Use environment variable instead.
+**Note**: GitHub Pages redirects are handled via `404.html` which converts clean URLs to hash routing.
 
 ### Supported Languages
 
