@@ -44,7 +44,7 @@ jobs:
         run: npm ci
 
       - name: Build application
-        run: VITE_PERSON=yohany npm run build
+        run: VITE_PERSON=yohany npm run build:github
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
