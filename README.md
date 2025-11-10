@@ -1,10 +1,6 @@
 # My Resume
 
-React version of the my-resume application, migrated from Lit Element with ultra-minimal design philosophy.
-
-# My Resume
-
-React version of the my-resume application with ultra-minimal design philosophy.
+React version of the my-resume application with ultra-minimal design philosophy and environment-based configuration.
 
 ## 🎯 Philosophy
 
@@ -13,13 +9,14 @@ Zero UI chrome design - pure, professional resume content accessible via semanti
 ## ✨ Features
 
 - 📄 **Dynamic Resume Generator**: React + Firebase integration
-- 🌍 **Multi-language Support**: English/Spanish via URL routing (`/en/person`, `/es/person`)
-- 👥 **Multiple Persons**: Support for Yohany/Lenicet
+- 🌍 **Multi-language Support**: English/Spanish via URL routing (`/en`, `/es`)
+- 👥 **Environment-Based Person Selection**: Configure person via `VITE_PERSON` variable
 - 🔗 **URL-Centric Navigation**: Direct URLs only
 - 📱 **Responsive Design**: Print-optimized
 - ⚡ **Real-time Updates**: Firebase Realtime Database
 - 🎨 **Modern Styling**: Tailwind CSS
 - 🌐 **Browser Language Detection**: Automatic language selection
+- 🚨 **Fallback Page**: Helpful guidance when configuration is missing
 
 ## 🚀 Quick Start
 
@@ -38,31 +35,54 @@ npm install
 
 ### Configuration
 
-Update `src/firebase-config.js` with your Firebase configuration.
+1. **Firebase Setup**: Update `src/firebase-config.js` with your Firebase configuration.
+
+2. **Person Configuration**: Set the person to display via environment variable:
+
+```bash
+# For development
+VITE_PERSON=yohany npm run dev
+
+# For building
+VITE_PERSON=lenicet npm run build
+```
 
 ### Development
 
 ```bash
+# Show fallback page (no person configured)
 npm run dev
+
+# Show specific person's resume
+VITE_PERSON=yohany npm run dev
+VITE_PERSON=lenicet npm run dev
 ```
 
 ## 🛣️ URL Structure
 
-### Access Pattern
+### New Simplified Structure
 
 ```
-/:language/:person
+/:language
 
 Examples:
-- /en/yohany  → Yohany's resume in English
-- /es/lenicet → Lenicet's resume in Spanish
-- /          → Redirects to browser language + default person
+- /en  → Resume in English (person set via VITE_PERSON)
+- /es  → Resume in Spanish (person set via VITE_PERSON)
+- /    → Redirects to browser language
 ```
+
+### Fallback Behavior
+
+When `VITE_PERSON` is not set, the application displays a helpful fallback page explaining:
+
+- How to set the environment variable
+- Available persons (`yohany`, `lenicet`)
+- Example commands for development and building
 
 ### Supported Values
 
 - **Languages**: `en` (English), `es` (Spanish)
-- **Persons**: `yohany`, `lenicet`
+- **Persons**: `yohany`, `lenicet` (set via `VITE_PERSON`)
 
 ## 🏗️ Architecture
 
@@ -83,21 +103,26 @@ Examples:
 ### Component Structure
 
 ```
-App → AppRouter → MyResume → Resume Components
+App → AppRouter → [PersonRequiredFallback | MyResume] → Resume Components
 ```
 
-All components receive `language` as prop for bilingual rendering.
+- **Without VITE_PERSON**: Shows fallback page explaining configuration
+- **With VITE_PERSON**: Shows resume components receiving `language` as prop
 
 ## 🔧 Development
 
 ### Available Scripts
 
 ```bash
-npm run dev          # Development server
-npm run build        # Production build
+npm run dev          # Development server (shows fallback without VITE_PERSON)
+npm run build        # Production build (requires VITE_PERSON for full functionality)
 npm run preview      # Preview build
 npm run lint         # ESLint
 npm run type-check   # TypeScript validation
+
+# Environment-specific commands
+VITE_PERSON=yohany npm run dev    # Development with specific person
+VITE_PERSON=lenicet npm run build # Build for specific person
 ```
 
 ### Component Pattern
@@ -119,20 +144,58 @@ const Component: React.FC<ComponentProps> = ({ data, language }) => {
 ```
 src/
 ├── components/           # Resume components
-├── AppRouter.tsx        # Main routing
+│   ├── PersonRequiredFallback.tsx # Fallback when VITE_PERSON not set
+│   ├── LoadingState.tsx  # Loading UI
+│   ├── ErrorState.tsx    # Error handling
+│   └── [other components...]
+├── AppRouter.tsx        # Main routing (handles person validation)
 ├── MyResume.tsx         # Container component
 ├── firebase-service.ts  # Firebase integration
 ├── types.ts            # TypeScript definitions
-└── main.tsx            # Entry point
+└── main.tsx            # Entry point (reads VITE_PERSON)
 ```
 
 ## 🚀 Deployment
 
+### Environment Configuration
+
+For production deployment, you must specify the person to display:
+
+```bash
+# Build for specific person
+VITE_PERSON=yohany npm run build
+VITE_PERSON=lenicet npm run build
+```
+
 ### GitHub Pages (Recommended)
 
-1. Repository Settings → Pages → Source: "GitHub Actions"
-2. Update `vite.config.js` base path
-3. Push to `main` branch triggers auto-deployment
+**Automatic Deployment with Person Configuration:**
+
+1. Set up GitHub Actions with environment variable
+2. Repository Settings → Pages → Source: "GitHub Actions"
+3. Configure deployment script to include `VITE_PERSON`
+
+**Example GitHub Action:**
+
+```yaml
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: VITE_PERSON=yohany npm run build
+      - uses: actions/deploy-pages@v2
+        with:
+          artifact_name: dist
+```
 
 ### Firebase Database Structure
 
@@ -162,6 +225,14 @@ All user-facing content uses bilingual format:
 ## 🖨️ Printing
 
 Navigate to desired URL and use browser print function (`Ctrl+P` / `Cmd+P`).
+
+## 📄 License
+
+MIT License - Feel free to use this project as a template for your own resume application.
+
+---
+
+**Built with ❤️ using React, TypeScript, and modern web technologies.**
 
 ## 📄 License
 
@@ -223,22 +294,30 @@ npm run dev
 ### Primary Access Pattern
 
 ```
-/:language/:person
+/:language
 
 Examples:
-- /en/yohany  → Yohany's resume in English
-- /es/yohany  → Yohany's resume in Spanish
-- /en/lenicet → Lenicet's resume in English
-- /es/lenicet → Lenicet's resume in Spanish
+- /en → Resume in English (person determined by VITE_PERSON)
+- /es → Resume in Spanish (person determined by VITE_PERSON)
+```
+
+### Environment-Based Person Selection
+
+The person whose resume is displayed is determined at build/start time via the `VITE_PERSON` environment variable:
+
+```bash
+# Development examples
+VITE_PERSON=yohany npm run dev  # Shows Yohany's resume
+VITE_PERSON=lenicet npm run dev # Shows Lenicet's resume
+npm run dev                     # Shows fallback page
 ```
 
 ### Automatic Redirections
 
-- **Root (`/`)** → `/[browser-language]/yohany`
-- **Legacy URLs** → Modern format with browser language:
-  - `/yohany` → `/[browser-language]/yohany`
-  - `/lenicet` → `/[browser-language]/lenicet`
-- **Invalid routes** → `/en/yohany` (fallback)
+- **Root (`/`)** → `/[browser-language]`
+- **Invalid routes** → `/en` (fallback)
+
+**Note**: Legacy person-based URLs (`/en/person`) are no longer supported. Use environment variable instead.
 
 ### Supported Languages
 
@@ -262,8 +341,8 @@ Examples:
 ### Navigation Methods
 
 - **Primary**: Direct URL access or bookmarks
-- **Language Switching**: Change URL from `/en/person` to `/es/person`
-- **Person Switching**: Change URL from `/lang/yohany` to `/lang/lenicet`
+- **Language Switching**: Change URL from `/en` to `/es`
+- **Person Switching**: Restart application with different `VITE_PERSON` value
 - **Browser Navigation**: Full support for back/forward buttons
 
 ### Printing
@@ -358,15 +437,16 @@ src/
 │   ├── Skills.tsx       # Technical skills
 │   ├── LoadingState.tsx # Loading UI (bilingual)
 │   ├── ErrorState.tsx   # Error handling (bilingual)
+│   ├── PersonRequiredFallback.tsx # Fallback page for missing VITE_PERSON
 │   └── index.ts         # Component exports
-├── AppRouter.tsx        # Main routing logic
+├── AppRouter.tsx        # Main routing logic + person validation
 ├── MyResume.tsx         # Container component
 ├── firebase-config.js   # Firebase configuration
 ├── firebase-service.ts  # Firebase integration
 ├── resume-helpers.ts    # Utility functions
 ├── types.ts            # TypeScript definitions
 ├── index.css           # Tailwind configuration
-└── main.tsx            # Application entry point
+└── main.tsx            # Application entry point + VITE_PERSON reading
 ```
 
 ### TypeScript Types
@@ -426,9 +506,22 @@ const Component: React.FC<ComponentProps> = ({ data, language }) => {
 #### URL Parameter Access
 
 ```typescript
-const { language, personId } = useParams<{ language?: string; personId?: string }>();
+// Reading language from URL (person comes from environment)
+const { language } = useParams<{ language?: string }>();
 const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
-const currentPerson = personId || 'yohany';
+
+// Reading person from app startup
+const currentPerson = initialPerson; // passed via props from main.tsx
+```
+
+#### Environment Variable Access
+
+```typescript
+// In main.tsx - reading VITE_PERSON
+const initialPerson = (import.meta.env.VITE_PERSON as string) || undefined;
+
+// Passing to AppRouter
+<AppRouter initialPerson={initialPerson} />
 ```
 
 ## 🚀 Deployment
@@ -534,11 +627,12 @@ This React version represents a complete architectural evolution:
 - ✅ Props-driven component architecture
 - ✅ Browser language detection
 
-#### **Phase 5: Zero UI Chrome**
+#### **Phase 6: Environment-Based Configuration**
 
-- ✅ Eliminated all UI elements
-- ✅ Pure content-only interface
-- ✅ URL-centric user experience
+- ✅ Person selection via environment variables
+- ✅ Eliminated person URL routing
+- ✅ Added fallback page for missing configuration
+- ✅ Simplified URL structure to language-only
 
 ### Bundle Size Optimization
 
@@ -582,9 +676,22 @@ This React version represents a complete architectural evolution:
 
 **Language Not Displaying:**
 
-- Check URL format: `/en/person` or `/es/person`
+- Check URL format: `/en` or `/es`
+- Verify person is set via `VITE_PERSON` environment variable
 - Verify person exists in Firebase data
 - Check browser language detection for root URL
+
+**Person Not Loading:**
+
+- Ensure `VITE_PERSON` is set: `VITE_PERSON=yohany npm run dev`
+- Verify person ID is valid (`yohany` or `lenicet`)
+- Check fallback page for helpful configuration instructions
+
+**Fallback Page Appearing:**
+
+- This indicates `VITE_PERSON` is not set or invalid
+- Set environment variable: `VITE_PERSON=yohany npm run dev`
+- Check available persons in fallback page instructions
 
 **Print Layout Issues:**
 
@@ -594,8 +701,9 @@ This React version represents a complete architectural evolution:
 
 **URL Redirection Problems:**
 
-- Legacy URLs automatically redirect
-- Invalid routes fallback to `/en/yohany`
+- Legacy person-based URLs are no longer supported
+- Use environment variable for person selection instead
+- Invalid routes fallback to `/en`
 - Check browser console for navigation errors
 
 ## 📄 License
