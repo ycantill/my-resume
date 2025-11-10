@@ -118,7 +118,8 @@ export interface RouteParams {
 }
 
 export interface AppRouterProps {
-  // No longer needs initialLanguage as it comes from URL
+  // Optional initial person (provided at app startup via env or bootstrap)
+  initialPerson?: string;
 }
 
 // Language Context types

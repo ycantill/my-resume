@@ -15,12 +15,12 @@ import {
 } from './components/index.ts';
 
 const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
-  const { language, personId } = useParams<{ language?: string; personId?: string }>();
-  
-  // Use params from route
-  const currentPerson = personId || initialPerson;
+  const { language } = useParams<{ language?: string }>();
+
+  // Person is provided via initialPerson prop (startup variable); language is still taken from URL
+  const currentPerson = initialPerson;
   const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
-  
+
   const { data: resumeData, loading, error } = usePersonData(currentPerson);
 
   // Update document title when data changes

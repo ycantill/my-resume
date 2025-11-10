@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import MyResume from './MyResume';
+import { PersonRequiredFallback } from './components/index';
 import type { AppRouterProps, PersonId, Language } from './types';
-import { isValidPersonId, isValidLanguage, SUPPORTED_PERSONS, SUPPORTED_LANGUAGES } from './types';
+import { isValidPersonId, isValidLanguage, SUPPORTED_LANGUAGES } from './types';
 
-const AppRouter: React.FC<AppRouterProps> = () => {
+const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
   // Detect basename based on environment
   const basename = import.meta.env.PROD ? '/my-resume' : '';
 
@@ -17,70 +18,60 @@ const AppRouter: React.FC<AppRouterProps> = () => {
   };
 
   const defaultLanguage = getBrowserLanguage();
-  const defaultPerson = SUPPORTED_PERSONS[0];
+  
+  // Check if initialPerson is provided and valid
+  const hasValidPerson = initialPerson && isValidPersonId(initialPerson);
+  const validatedPerson = hasValidPerson ? initialPerson as PersonId : null;
 
   return (
     <Router basename={basename}>
       <Routes>
-        {/* Default route - redirect to browser language and first person */}
+        {/* Default route - redirect to browser language */}
         <Route 
           path="/" 
-          element={<Navigate to={`/${defaultLanguage}/${defaultPerson}`} replace />} 
+          element={<Navigate to={`/${defaultLanguage}`} replace />} 
         />
-        
-        {/* Language + Person routes */}
+
+        {/* Language-only route - shows resume if person is provided, fallback otherwise */}
         <Route 
-          path="/:language/:personId" 
-          element={<LanguagePersonRoute />} 
+          path="/:language" 
+          element={<LanguageRoute initialPerson={validatedPerson} />} 
         />
-        
-        {/* Legacy person-only routes - redirect to default language */}
-        <Route 
-          path="/:personId" 
-          element={<LegacyPersonRoute />} 
-        />
-        
-        {/* Catch all - redirect to default */}
+
+        {/* Catch all - redirect to default language */}
         <Route 
           path="*" 
-          element={<Navigate to={`/${defaultLanguage}/${defaultPerson}`} replace />} 
+          element={<Navigate to={`/${defaultLanguage}`} replace />} 
         />
       </Routes>
     </Router>
   );
 };
 
-// Component that handles language + person route validation
-const LanguagePersonRoute: React.FC = () => {
-  const { language, personId } = useParams<{ language: string; personId: string }>();
-  
-  // Validate language and personId
-  if (!language || !isValidLanguage(language) || !personId || !isValidPersonId(personId)) {
+
+// Component that handles language-only routes and shows resume or fallback
+const LanguageRoute: React.FC<{ initialPerson: PersonId | null }> = ({ initialPerson }) => {
+  const { language } = useParams<{ language: string }>();
+
+  // Validate language
+  if (!language || !isValidLanguage(language)) {
     const defaultLanguage = SUPPORTED_LANGUAGES[0];
-    const defaultPerson = SUPPORTED_PERSONS[0];
-    return <Navigate to={`/${defaultLanguage}/${defaultPerson}`} replace />;
+    return <Navigate to={`/${defaultLanguage}`} replace />;
   }
-  
+
+  const validatedLanguage = language as Language;
+
+  // If no person is provided, show the fallback page
+  if (!initialPerson) {
+    return <PersonRequiredFallback language={validatedLanguage} />;
+  }
+
+  // Show the resume with the provided person
   return (
-    <LanguageProvider initialLanguage={language as Language}>
-      <MyResume initialPerson={personId as PersonId} initialLanguage={language as Language} />
+    <LanguageProvider initialLanguage={validatedLanguage}>
+      <MyResume initialPerson={initialPerson} initialLanguage={validatedLanguage} />
     </LanguageProvider>
   );
-};
-
-// Component that handles legacy person-only routes
-const LegacyPersonRoute: React.FC = () => {
-  const { personId } = useParams<{ personId: string }>();
-  
-  // Validate personId and redirect to default language
-  if (!personId || !isValidPersonId(personId)) {
-    const defaultLanguage = SUPPORTED_LANGUAGES[0];
-    const defaultPerson = SUPPORTED_PERSONS[0];
-    return <Navigate to={`/${defaultLanguage}/${defaultPerson}`} replace />;
-  }
-  
-  const defaultLanguage = SUPPORTED_LANGUAGES[0];
-  return <Navigate to={`/${defaultLanguage}/${personId}`} replace />;
 };
 
 export default AppRouter;
