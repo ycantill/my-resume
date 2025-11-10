@@ -10,11 +10,13 @@ import type { ResumeData, UsePersonDataResult, ResumeDataError } from './types.t
  */
 export async function getPersonData(personId: string): Promise<ResumeData | null> {
   try {
-    const personRef = ref(database, `persons/${personId}`);
-    const snapshot = await get(personRef);
+    const peopleRef = ref(database, 'people');
+    const snapshot = await get(peopleRef);
     
     if (snapshot.exists()) {
-      return snapshot.val();
+      const people = snapshot.val();
+      const person = people.find((p: ResumeData) => p.name === personId);
+      return person || null;
     }
     console.log('No se encontró documento para:', personId);
     return null;
@@ -53,17 +55,28 @@ export function usePersonData(personId: string): UsePersonDataResult {
     setLoading(true);
     setError(null);
 
-    const personRef = ref(database, `persons/${personId}`);
+    const peopleRef = ref(database, 'people');
     
     const unsubscribe = onValue(
-      personRef,
+      peopleRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          const personData = snapshot.val();
-          // Actualizar cache
-          cache.set(personId, personData);
-          setData(personData);
-          setError(null);
+          const people = snapshot.val();
+          const person = people.find((p: ResumeData) => p.name === personId);
+          
+          if (person) {
+            // Actualizar cache
+            cache.set(personId, person);
+            setData(person);
+            setError(null);
+          } else {
+            setData(null);
+            setError({
+              code: 'PERSON_NOT_FOUND',
+              message: `No se encontraron datos para la persona: ${personId}`,
+              personId
+            });
+          }
         } else {
           setData(null);
           setError({
@@ -87,7 +100,7 @@ export function usePersonData(personId: string): UsePersonDataResult {
     );
 
     // Cleanup function
-    return () => off(personRef, 'value', unsubscribe);
+    return () => off(peopleRef, 'value', unsubscribe);
   }, [personId]);
 
   const refetch = useCallback(async () => {

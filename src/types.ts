@@ -95,6 +95,7 @@ export interface Skill {
 }
 
 export interface ResumeData {
+  name: string;              // New: person identifier
   personal: PersonalInfo;
   basics: ResumeBasics;
   work: WorkEntry[];
@@ -138,10 +139,8 @@ export interface LanguageProviderProps {
 }
 
 // Firebase specific types
-export interface FirebasePersonsData {
-  persons: {
-    [personId: string]: ResumeData;
-  };
+export interface FirebasePeopleData {
+  people: ResumeData[];      // Changed: now it's an array instead of object
 }
 
 // Utility types for component props

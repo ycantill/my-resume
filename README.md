@@ -202,16 +202,35 @@ jobs:
 ### Firebase Database Structure
 
 ```
-persons/
-├── yohany/
-│   ├── basics/
-│   ├── work/
-│   ├── education/
-│   ├── languages/
-│   └── skills/
-└── lenicet/
-    └── [same structure]
+people/
+├── [
+│   {
+│     "name": "yohany",
+│     "personal": { ... },
+│     "basics": { ... },
+│     "work": [ ... ],
+│     "education": [ ... ],
+│     "languages": [ ... ],
+│     "skills": [ ... ]
+│   },
+│   {
+│     "name": "lenicet",
+│     "personal": { ... },
+│     "basics": { ... },
+│     "work": [ ... ],
+│     "education": [ ... ],
+│     "languages": [ ... ],
+│     "skills": [ ... ]
+│   }
+│ ]
 ```
+
+**Key Changes in Database Structure:**
+
+- Changed from `persons` object to `people` array
+- Each person object includes a `name` property for identification
+- Separated `personal` (contact info) from `basics` (bio/summary)
+- Firebase service searches array by `name` field instead of using object keys
 
 All user-facing content uses bilingual format:
 
@@ -601,19 +620,30 @@ const firebaseConfig = {
 ### Database Structure
 
 ```
-persons/
-├── yohany/
-│   ├── personal/         # Contact information (email, phone, location)
-│   ├── basics/           # Basic information (name, label, summary, profiles)
-│   ├── work/            # Work experience
-│   ├── education/       # Education background
-│   ├── languages/       # Language skills
-│   └── skills/          # Technical skills
-└── lenicet/
-    └── [same structure]
+people/
+├── [
+│   {
+│     "name": "yohany",
+│     "personal": { ... },    # Contact information (email, phone, location)
+│     "basics": { ... },      # Basic information (name, label, summary, profiles)
+│     "work": [ ... ],        # Work experience
+│     "education": [ ... ],   # Education background
+│     "languages": [ ... ],   # Language skills
+│     "skills": [ ... ]       # Technical skills
+│   },
+│   {
+│     "name": "lenicet",
+│     "personal": { ... },
+│     "basics": { ... },
+│     "work": [ ... ],
+│     "education": [ ... ],
+│     "languages": [ ... ],
+│     "skills": [ ... ]
+│   }
+│ ]
 ```
 
-**Note**: The database structure has been updated to separate personal contact information (`personal`) from basic information (`basics`).
+**Note**: The database structure has evolved from `persons` object to `people` array, with each person identified by a `name` property. Personal contact information (`personal`) is separated from basic information (`basics`).
 
 ### Data Localization
 
