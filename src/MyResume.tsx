@@ -50,7 +50,7 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
     <div className="min-h-screen bg-gray-50">      
       <div className="resume-container shadow-lg">
         <div className="section-spacing">
-          <BasicInfo basics={data.basics} language={currentLanguage} />
+          <BasicInfo personal={data.personal} basics={data.basics} language={currentLanguage} />
         </div>
         <div className="section-spacing">
           <Summary summary={data.basics.summary} language={currentLanguage} />

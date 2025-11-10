@@ -468,6 +468,31 @@ interface LocalizedText {
   es: string;
 }
 
+// Personal contact information (separated from basics)
+interface PersonalInfo {
+  email: string;
+  phone: string;
+  location: BasicLocation;
+}
+
+// Basic resume information
+interface ResumeBasics {
+  name: string;
+  label: LocalizedText;
+  summary: LocalizedText;
+  profiles: ContactProfile[];
+}
+
+// Complete resume data structure
+interface ResumeData {
+  personal: PersonalInfo; // New: separated contact info
+  basics: ResumeBasics; // Updated: no longer contains contact info
+  work: WorkEntry[];
+  education: Education[];
+  languages: LanguageEntry[];
+  skills: Skill[];
+}
+
 // Component props pattern
 interface ComponentProps {
   data: DataType;
@@ -578,7 +603,8 @@ const firebaseConfig = {
 ```
 persons/
 ├── yohany/
-│   ├── basics/           # Personal information
+│   ├── personal/         # Contact information (email, phone, location)
+│   ├── basics/           # Basic information (name, label, summary, profiles)
 │   ├── work/            # Work experience
 │   ├── education/       # Education background
 │   ├── languages/       # Language skills
@@ -586,6 +612,8 @@ persons/
 └── lenicet/
     └── [same structure]
 ```
+
+**Note**: The database structure has been updated to separate personal contact information (`personal`) from basic information (`basics`).
 
 ### Data Localization
 

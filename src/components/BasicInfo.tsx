@@ -2,9 +2,9 @@ import React from 'react';
 import type { BasicInfoProps } from '../types.ts';
 import { formatLocationLabel, normalizePhone } from '../resume-helpers.ts';
 
-const BasicInfo: React.FC<BasicInfoProps> = ({ basics, language }) => {
+const BasicInfo: React.FC<BasicInfoProps> = ({ personal, basics, language }) => {
   const t = language;
-  const { location } = basics;
+  const { location } = personal;
 
   return (
     <section className="basics">
@@ -19,17 +19,17 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ basics, language }) => {
           {/* Email */}
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start">
             <span className="icon text-lg sm:text-xl flex-shrink-0" aria-hidden="true">✉️</span>
-            <a href={`mailto:${basics.email}`} className="text-blue-600 hover:text-blue-800 font-medium truncate">{basics.email}</a>
+            <a href={`mailto:${personal.email}`} className="text-blue-600 hover:text-blue-800 font-medium truncate">{personal.email}</a>
           </div>
 
           {/* Phone and Location */}
           {location && (
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start">
-              {location.phone ? (
+              {personal.phone ? (
                 <>
                   <div className="flex items-center gap-2 sm:gap-3">
                     <span className="icon text-lg sm:text-xl flex-shrink-0" aria-hidden="true">📞</span>
-                    <a href={`tel:${normalizePhone(location.phone)}`} className="text-blue-600 hover:text-blue-800 font-medium">{location.phone}</a>
+                    <a href={`tel:${normalizePhone(personal.phone)}`} className="text-blue-600 hover:text-blue-800 font-medium">{personal.phone}</a>
                   </div>
                   <span className="text-gray-400 mx-2 text-lg hidden sm:inline">•</span>
                   <div className="flex items-center gap-2 sm:gap-3">
