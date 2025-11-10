@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Resume - 404</title>
+    <title>My Resume</title>
     <style>
         body {
             font-family: 'Inter', Arial, sans-serif;
@@ -43,24 +43,50 @@
         .btn:hover {
             background: #026aa7;
         }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0077b6;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     <script>
-        // Redirect to the main app for GitHub Pages SPA support
-        const path = window.location.pathname;
-        const base = '/my-resume/'; // Update this to match your repo name
-        
-        // If we're not at the base path, redirect to base with hash routing
-        if (path !== base && path !== base.slice(0, -1)) {
-            const redirectPath = path.replace(base, '');
-            window.location.replace(base + '#' + redirectPath);
-        }
+        // Enhanced redirect for GitHub Pages SPA support
+        (function() {
+            const path = window.location.pathname;
+            const base = '/my-resume/';
+            const search = window.location.search;
+            
+            // Extract the intended route from the current path
+            let intendedRoute = path.replace(base, '').replace(/^\/+|\/+$/g, '');
+            
+            // Handle different scenarios
+            if (!intendedRoute || intendedRoute === '') {
+                // Root access - redirect to main app
+                window.location.replace(base + search);
+            } else if (intendedRoute === 'es' || intendedRoute === 'en') {
+                // Valid language route - preserve it in sessionStorage and redirect
+                sessionStorage.setItem('github-pages-route', intendedRoute);
+                window.location.replace(base + search);
+            } else {
+                // Invalid route - redirect to base
+                window.location.replace(base + search);
+            }
+        })();
     </script>
 </head>
 <body>
     <div class="container">
-        <h1>🔍 Página No Encontrada</h1>
-        <p>La página que buscas no existe o ha sido movida.</p>
-        <p>Serás redirigido automáticamente a la aplicación principal.</p>
+        <div class="spinner"></div>
+        <h1>🔄 Redirigiendo...</h1>
+        <p>Serás redirigido automáticamente a la aplicación.</p>
         <a href="/my-resume/" class="btn">Ir al Currículum</a>
     </div>
 </body>
