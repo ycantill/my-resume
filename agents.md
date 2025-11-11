@@ -73,6 +73,12 @@ All resume components receive `language` as prop and render bilingual content.
 4. **Bilingual Everything**: All user-facing text must support en/es
 5. **TypeScript Strict**: Use proper interfaces defined in `types.ts`
 6. **Firebase Read-Only**: Only read operations, no write functionality
+7. **📝 Update Documentation**: After implementing important changes, update README.md to reflect:
+   - New features or architectural changes
+   - Modified environment variables or configuration
+   - Changes to component structure or routing
+   - New development patterns or best practices
+   - Updated deployment instructions
 
 ### Component Update Pattern:
 
@@ -99,7 +105,24 @@ const Component: React.FC<ComponentProps> = ({ data, language }) => {
 - **components/\*.tsx**: Ensure all receive and use language prop
 - **MyResume.tsx**: Main container, passes language to all children
 - **AppRouter.tsx**: Routing logic, language detection, URL validation
-- **README.md**: Update if architecture or major features change
+- **README.md**:
+  - ⚠️ **ALWAYS update after important changes**
+  - Document new features, configuration changes, or architectural modifications
+  - Keep examples and code snippets current
+  - Update environment variables section when adding new vars
+  - Maintain accuracy in troubleshooting and deployment sections
+
+### Documentation Update Triggers:
+
+Update README.md when making changes to:
+
+- ✅ Environment variables (`.env.example`, Firebase config)
+- ✅ Component architecture or routing structure
+- ✅ New npm scripts or build commands
+- ✅ Firebase database structure or security rules
+- ✅ Deployment process or configuration
+- ✅ Development setup or prerequisites
+- ✅ Error handling or fallback mechanisms
 
 ---
 

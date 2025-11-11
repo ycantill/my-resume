@@ -36,16 +36,22 @@ npm install
 
 ### Configuration
 
-1. **Firebase Setup**: Update `src/firebase-config.js` with your Firebase configuration.
+1. **Firebase Setup**:
 
-2. **Person Configuration**: Set the person to display via environment variable:
+   Copy the example environment file:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Update `.env.local` with your Firebase configuration:
+   - Get your Firebase config from [Firebase Console](https://console.firebase.google.com) → Project Settings → General
+   - Copy the config object and stringify it as JSON for `VITE_FIREBASE_CONFIG`
+
+2. **Person Configuration**: Set the person to display via environment variable in `.env.local`:
 
 ```bash
-# For development
-VITE_PERSON=yohany npm run dev
-
-# For building
-VITE_PERSON=lenicet npm run build
+VITE_PERSON=yohany  # or lenicet
 ```
 
 ### Development
@@ -329,14 +335,9 @@ Apply these rules to protect private data:
 Create a `.env.local` file for local development:
 
 ```bash
-# Firebase Configuration
-VITE_FIREBASE_API_KEY=your_api_key_here
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_DATABASE_URL=https://your_project.firebaseio.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
+# Firebase Configuration (Single JSON string)
+# Get this from your Firebase Console → Project Settings → General
+VITE_FIREBASE_CONFIG={"apiKey":"YOUR_API_KEY","authDomain":"your-project.firebaseapp.com","databaseURL":"https://your-project-default-rtdb.firebaseio.com","projectId":"your-project-id","storageBucket":"your-project.firebasestorage.app","messagingSenderId":"123456789012","appId":"1:123456789012:web:abcdef1234567890abcdef","measurementId":"G-XXXXXXXXXX"}
 
 # Application Configuration
 VITE_PERSON=yohany
@@ -347,7 +348,17 @@ VITE_PERSON=yohany
 VITE_SHOW_PRIVATE_INFO=false
 ```
 
-**Note**: See `.env.example` for template.
+**Quick Setup:**
+
+1. Copy the example file:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. Update `VITE_FIREBASE_CONFIG` with your Firebase project configuration (found in Firebase Console)
+
+**Note**: The `.env.local` file is ignored by git for security. See `.env.example` for template.
 
 ````
 
@@ -373,424 +384,7 @@ All user-facing content uses bilingual format:
 
 Navigate to desired URL and use browser print function (`Ctrl+P` / `Cmd+P`).
 
-## 📄 License
-
-MIT License - Feel free to use this project as a template for your own resume application.
-
----
-
-**Built with ❤️ using React, TypeScript, and modern web technologies.**
-
-## 📄 License
-
-MIT
-
-## ✨ Features
-
-- 📄 **Dynamic Resume Generator**: React-based with real-time Firebase integration
-- 🌍 **Multi-language Support**: English/Spanish via URL routing (`/en/person`, `/es/person`)
-- 👥 **Multiple Persons**: Support for different individuals (Yohany/Lenicet)
-- 🔗 **URL-Centric Navigation**: Complete navigation through direct URLs only
-- 📱 **Responsive Design**: Mobile-first approach with print optimization
-- ⚡ **Real-time Updates**: Firebase Realtime Database integration
-- 🎨 **Modern Styling**: Tailwind CSS utility-first framework
-- ✨ **Zero UI Chrome**: Pure content focus without any interface elements
-- 🌐 **Browser Language Detection**: Automatic language selection on first visit
-- 🔄 **Legacy URL Support**: Backward compatibility with automatic redirection
-- 🖨️ **Print-Optimized**: Professional layout for direct browser printing
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js (version 16 or higher)
-- npm or yarn
-- Firebase project with Realtime Database
-
-### Installation
-
-1. **Clone the repository:**
-
-```bash
-git clone <repository-url>
-cd my-resume
-```
-
-2. **Install dependencies:**
-
-```bash
-npm install
-```
-
-3. **Configure Firebase:**
-   - Update `src/firebase-config.js` with your Firebase configuration
-   - Ensure Realtime Database is set up with appropriate data structure
-
-4. **Start development server:**
-
-```bash
-npm run dev
-```
-
-5. **Open browser:**
-   - Navigate to `http://localhost:3000`
-   - Will automatically redirect to `/en/yohany` or your browser language
-
-## 🛣️ URL Structure & Navigation
-
-### Primary Access Pattern
-
-```
-/:language
-
-Examples:
-- /en → Resume in English (person determined by VITE_PERSON)
-- /es → Resume in Spanish (person determined by VITE_PERSON)
-```
-
-### Environment-Based Person Selection
-
-The person whose resume is displayed is determined at build/start time via the `VITE_PERSON` environment variable:
-
-```bash
-# Development examples
-VITE_PERSON=yohany npm run dev  # Shows Yohany's resume
-VITE_PERSON=lenicet npm run dev # Shows Lenicet's resume
-npm run dev                     # Shows fallback page
-```
-
-### Automatic Redirections
-
-- **Root (`/`)** → `/#/[browser-language]`
-- **Direct language URLs** → Hash routing equivalent:
-  - `/es` → `/#/es`
-  - `/en` → `/#/en`
-- **Invalid routes** → `/#/en` (fallback)
-
-**Note**: GitHub Pages redirects are handled via `404.html` which converts clean URLs to hash routing.
-
-### Supported Languages
-
-- `en` - English
-- `es` - Spanish (Español)
-
-### Supported Persons
-
-- `yohany` - Default person
-- `lenicet` - Secondary person
-
-## 💡 User Experience
-
-### Ultra-Minimal Interface
-
-- **Zero UI Elements**: No navigation, toolbars, or buttons
-- **Pure Content**: Focus entirely on resume information
-- **Professional Presentation**: Clean, distraction-free layout
-- **Direct Access**: Every combination accessible via specific URL
-
-### Navigation Methods
-
-- **Primary**: Direct URL access or bookmarks
-- **Language Switching**: Change URL from `/en` to `/es`
-- **Person Switching**: Restart application with different `VITE_PERSON` value
-- **Browser Navigation**: Full support for back/forward buttons
-
-### Printing
-
-1. Navigate to desired resume URL
-2. Use browser print function:
-   - **Windows/Linux**: `Ctrl + P`
-   - **Mac**: `Cmd + P`
-   - **Menu**: Browser Menu → Print
-3. Layout automatically optimizes for professional printing
-
-## 🏗️ Architecture
-
-### Technology Stack
-
-- **React 18**: Functional components with hooks
-- **TypeScript**: Strict typing for better development experience
-- **Vite**: Fast build tool and development server
-- **React Router**: URL-based navigation and language routing
-- **Firebase**: Realtime Database for dynamic content
-- **Tailwind CSS**: Utility-first styling framework
-
-### State Management Philosophy
-
-- **URL as Single Source of Truth**: All state derived from URL parameters
-- **Props-Driven Components**: No Context API, clean data flow
-- **Real-time Firebase**: External data through custom hooks
-- **Minimal State**: Only component-level state where necessary
-
-### Component Architecture
-
-```
-App
-├── AppRouter (URL routing & language detection)
-└── MyResume (Main container)
-    ├── LoadingState (Bilingual loading UI)
-    ├── ErrorState (Bilingual error handling)
-    └── Resume Components (All receive language as props)
-        ├── BasicInfo (Name, title, social profiles)
-        ├── PersonalContact (Email, phone, location - optional)
-        ├── Summary (Professional summary)
-        ├── WorkExperience (Job history with role grouping)
-        ├── Education (Academic background)
-        ├── Languages (Language skills)
-        └── Skills (Technical skills by category)
-```
-
-### Key Technical Decisions
-
-#### 1. URL-Centric Design
-
-- **Before**: UI dropdowns + React Context for language/person state
-- **After**: URL parameters only, props-driven components
-- **Benefits**: Bookmarkable, shareable, SEO-friendly, stateless
-
-#### 2. Zero UI Chrome Approach
-
-- **Eliminated**: All toolbars, navigation elements, dropdowns
-- **Result**: Pure content focus, professional appearance
-- **Access**: Direct URLs only for ultimate simplicity
-
-#### 3. Props vs Context
-
-- **Before**: React Context API for global language state
-- **After**: Language passed as props from URL parameters
-- **Benefits**: Clearer data flow, easier testing, better performance
-
-## 🔧 Development
-
-### Available Scripts
-
-```bash
-npm run dev          # Development server
-npm run build        # Production build
-npm run build:github # GitHub Pages build
-npm run preview      # Preview production build
-npm run lint         # ESLint checking
-npm run lint:fix     # ESLint with auto-fix
-npm run format       # Prettier formatting
-npm run type-check   # TypeScript validation
-```
-
-### Project Structure
-
-```
-src/
-├── components/           # Resume components
-│   ├── BasicInfo.tsx    # Name, title, and social profiles
-│   ├── PersonalContact.tsx # Private contact info (email, phone, location)
-│   ├── Summary.tsx      # Professional summary
-│   ├── WorkExperience.tsx # Job history
-│   ├── Education.tsx    # Education section
-│   ├── Languages.tsx    # Language skills
-│   ├── Skills.tsx       # Technical skills
-│   ├── LoadingState.tsx # Loading UI (bilingual)
-│   ├── ErrorState.tsx   # Error handling (bilingual)
-│   ├── PersonRequiredFallback.tsx # Fallback page for missing VITE_PERSON
-│   └── index.ts         # Component exports
-├── AppRouter.tsx        # Main routing logic + person validation
-├── MyResume.tsx         # Container component
-├── firebase-config.js   # Firebase configuration
-├── firebase-service.ts  # Firebase integration (public & private data)
-├── resume-helpers.ts    # Utility functions
-├── types.ts            # TypeScript definitions
-├── index.css           # Tailwind configuration
-└── main.tsx            # Application entry point + VITE_PERSON reading
-public/
-├── 404.html            # GitHub Pages redirect handler
-├── CNAME.template      # Custom domain template
-firebase-rules.json     # Firebase security rules
-.env.example            # Environment variables template
-```
-
-### TypeScript Types
-
-#### Core Types
-
-```typescript
-// Language support
-type Language = 'en' | 'es';
-
-// Localized content
-interface LocalizedText {
-  en: string;
-  es: string;
-}
-
-// Personal contact information (private, optional)
-interface PersonalInfo {
-  email: string;
-  phone: string;
-  location: BasicLocation;
-}
-
-// Basic resume information (public)
-interface ResumeBasics {
-  name: string;
-  label: LocalizedText;
-  summary: LocalizedText;
-  profiles: ContactProfile[];
-}
-
-// Complete resume data structure (public only)
-interface ResumeData {
-  name: string; // Person identifier
-  basics: ResumeBasics; // Public information
-  work: WorkEntry[];
-  education: Education[];
-  languages: LanguageEntry[];
-  skills: Skill[];
-  // Note: personal contact info NOT included in public data
-}
-
-// Component props pattern
-interface ComponentProps {
-  data: DataType;
-  language: Language;
-}
-```
-
-#### Work Experience Handling
-
-- **Single Role**: Direct `WorkEntry` objects
-- **Multiple Roles**: `GroupedWorkEntry` with `roles[]` array
-- **Helper Function**: `groupWorkEntries()` processes mixed data
-
-### Development Patterns
-
-#### Component Creation
-
-```typescript
-// 1. Define props interface in types.ts
-export interface ComponentProps {
-  data: DataType;
-  language: Language;
-}
-
-// 2. Create component receiving language
-const Component: React.FC<ComponentProps> = ({ data, language }) => {
-  const t = language;
-
-  return (
-    <section>
-      <h2>{t === 'en' ? 'Title' : 'Título'}</h2>
-      {/* component content */}
-    </section>
-  );
-};
-
-// 3. Use from parent with URL language
-<Component data={data} language={currentLanguage} />
-```
-
-#### URL Parameter Access
-
-```typescript
-// Reading language from URL (person comes from environment)
-const { language } = useParams<{ language?: string }>();
-const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
-
-// Reading person from app startup
-const currentPerson = initialPerson; // passed via props from main.tsx
-```
-
-#### Environment Variable Access
-
-```typescript
-// In main.tsx - reading VITE_PERSON
-const initialPerson = (import.meta.env.VITE_PERSON as string) || undefined;
-
-// Passing to AppRouter
-<AppRouter initialPerson={initialPerson} />
-```
-
-## 🚀 Deployment
-
-### GitHub Pages (Recommended)
-
-**Automatic Deployment:**
-
-1. Push to `main` branch triggers GitHub Actions
-2. Builds application and deploys to GitHub Pages
-3. Available at `https://yourusername.github.io/my-resume/`
-
-**Manual Setup:**
-
-1. Repository Settings → Pages → Source: "GitHub Actions"
-2. Update `vite.config.js` base path to match repository name
-3. Push changes to trigger deployment
-
-**Custom Domain (Optional):**
-
-1. Rename `public/CNAME.template` to `public/CNAME`
-2. Add your domain to the file
-3. Configure DNS settings
-
-### Other Platforms
-
-The build output (`dist/`) is compatible with any static hosting service:
-
-- Netlify, Vercel, Firebase Hosting, etc.
-- Simply upload the `dist/` folder after running `npm run build`
-
-## 🔥 Firebase Configuration
-
-### Setup Requirements
-
-```javascript
-// src/firebase-config.js
-const firebaseConfig = {
-  apiKey: 'your-api-key',
-  authDomain: 'your-project.firebaseapp.com',
-  databaseURL: 'https://your-project.firebaseio.com',
-  projectId: 'your-project-id',
-  // ... other config
-};
-```
-
-### Database Structure
-
-```
-people/
-├── [
-│   {
-│     "name": "yohany",
-│     "basics": { ... },      # Basic information (name, label, summary, profiles)
-│     "work": [ ... ],        # Work experience
-│     "education": [ ... ],   # Education background
-│     "languages": [ ... ],   # Language skills
-│     "skills": [ ... ]       # Technical skills
-│   },
-│   {
-│     "name": "lenicet",
-│     "basics": { ... },
-│     "work": [ ... ],
-│     "education": [ ... ],
-│     "languages": [ ... ],
-│     "skills": [ ... ]
-│   }
-│ ]
-```
-
-**Note**: The database structure has evolved to use `public/people` array for public data and `private/contact` array for private contact information. Personal contact information is now completely separated and optional.
-
-### Data Localization
-
-All user-facing content uses the `LocalizedText` pattern:
-
-```json
-{
-  "label": {
-    "en": "Software Engineer",
-    "es": "Ingeniero de Software"
-  }
-}
-```
-
-## 📈 Migration History
+## Migration History
 
 ### Evolution from Lit Element
 
@@ -865,27 +459,30 @@ This React version represents a complete architectural evolution:
 
 **Firebase Connection Errors:**
 
-- Verify `firebase-config.js` settings
+- Verify `VITE_FIREBASE_CONFIG` is set in `.env.local`
+- Check the JSON format is valid (use a JSON validator)
 - Check database rules allow read access
 - Ensure internet connectivity
 
 **Language Not Displaying:**
 
 - Check URL format: `/en` or `/es`
-- Verify person is set via `VITE_PERSON` environment variable
+- Verify `VITE_PERSON` is set in `.env.local`
 - Verify person exists in Firebase data
 - Check browser language detection for root URL
 
 **Person Not Loading:**
 
-- Ensure `VITE_PERSON` is set: `VITE_PERSON=yohany npm run dev`
+- Ensure `VITE_PERSON` is set in `.env.local`
 - Verify person ID is valid (`yohany` or `lenicet`)
 - Check fallback page for helpful configuration instructions
+- Restart dev server after changing `.env.local`
 
 **Fallback Page Appearing:**
 
-- This indicates `VITE_PERSON` is not set or invalid
-- Set environment variable: `VITE_PERSON=yohany npm run dev`
+- This indicates `VITE_PERSON` is not set in `.env.local`
+- Add `VITE_PERSON=yohany` to `.env.local`
+- Restart the development server
 - Check available persons in fallback page instructions
 
 **Print Layout Issues:**

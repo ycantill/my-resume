@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { usePersonData, getPersonContactData } from './firebase-service.ts';
+import { isFirebaseConfigured } from './firebase-config.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
-import type { MyResumeProps, Language, PersonalInfo } from './types.ts';
+import type { MyResumeProps, Language, PersonalInfo, ResumeDataError } from './types.ts';
 import {
   LoadingState,
   ErrorState,
@@ -21,6 +22,15 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
   // Person is provided via initialPerson prop (startup variable); language is still taken from URL
   const currentPerson = initialPerson;
   const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
+
+  // Verificar si Firebase está configurado
+  if (!isFirebaseConfigured()) {
+    const configError: ResumeDataError = {
+      code: 'INVALID_DATA',
+      message: 'VITE_FIREBASE_CONFIG environment variable is not defined'
+    };
+    return <ErrorState error={configError} language={currentLanguage} />;
+  }
 
   const { data: resumeData, loading, error } = usePersonData(currentPerson);
   const [contactData, setContactData] = useState<PersonalInfo | null>(null);

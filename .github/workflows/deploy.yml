@@ -6,7 +6,7 @@ name: My Resume Workflow
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: ['main']
+    branches: ['main', 'devops']
   pull_request:
     branches: ['main']
 
@@ -25,10 +25,16 @@ concurrency:
   group: 'pages'
   cancel-in-progress: false
 
+env:
+  # Setting an environment variable with the value of a configuration variable
+  PERSON: ${{ vars.VITE_PERSON }}
+  SHOW_PRIVATE_INFO: ${{ vars.VITE_SHOW_PRIVATE_INFO }}
+  FIREBASE_CONFIG: ${{ vars.VITE_FIREBASE_CONFIG }}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # Build job
-  build:
+  build:    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,7 +50,7 @@ jobs:
         run: npm ci
 
       - name: Build application
-        run: npm run build:github:yohany
+        run: VITE_SHOW_PRIVATE_INFO=$SHOW_PRIVATE_INFO VITE_PERSON=$PERSON VITE_FIREBASE_CONFIG=$FIREBASE_CONFIG npm run build:github
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
