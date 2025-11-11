@@ -1,22 +1,34 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getDatabase, Database } from 'firebase/database';
 
-// Tu configuración de Firebase (obtenla de la consola de Firebase)
-const firebaseConfig = {
-  apiKey: "AIzaSyB40xZG9S-2abcMC3jmGzqEt61DwhOYEtw",
-  authDomain: "my-resume-1a1ca.firebaseapp.com",
-  databaseURL: "https://my-resume-1a1ca-default-rtdb.firebaseio.com",
-  projectId: "my-resume-1a1ca",
-  storageBucket: "my-resume-1a1ca.firebasestorage.app",
-  messagingSenderId: "407313525537",
-  appId: "1:407313525537:web:fecd46b30ec6944c236c60",
-  measurementId: "G-VPF69NL9JG"
+// Configuración de Firebase desde una única variable de entorno (JSON string)
+const firebaseConfigString = import.meta.env.VITE_FIREBASE_CONFIG;
+
+let app: FirebaseApp | null = null;
+let database: Database | null = null;
+
+// Solo inicializar si la configuración existe
+if (firebaseConfigString) {
+  try {
+    // Parse de la configuración
+    const firebaseConfig = JSON.parse(firebaseConfigString);
+    
+    // Inicializar Firebase
+    app = initializeApp(firebaseConfig);
+    
+    // Inicializar Realtime Database
+    database = getDatabase(app);
+  } catch (error) {
+    console.error('Error parsing Firebase configuration:', error);
+  }
+}
+
+// Exportar database (puede ser null si no está configurado)
+export { database };
+
+// Exportar función para verificar si Firebase está configurado
+export const isFirebaseConfigured = (): boolean => {
+  return firebaseConfigString !== undefined && firebaseConfigString !== '';
 };
-
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-
-// Inicializar Realtime Database
-export const database = getDatabase(app);
 
 export default app;
