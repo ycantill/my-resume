@@ -52,7 +52,7 @@ jobs:
           echo "person: $PERSON"
 
       - name: Build application
-        run: npm run build:github
+        run: VITE_PERSON=$PERSON npm run build:github
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
