@@ -95,8 +95,7 @@ export interface Skill {
 }
 
 export interface ResumeData {
-  name: string;              // New: person identifier
-  personal: PersonalInfo;
+  name: string;              // Person identifier
   basics: ResumeBasics;
   work: WorkEntry[];
   education: Education[];
@@ -156,8 +155,12 @@ export interface LocationDisplayProps {
 
 // Component props interfaces that receive language
 export interface BasicInfoProps {
-  personal: PersonalInfo;
   basics: ResumeBasics;
+  language: Language;
+}
+
+export interface PersonalContactProps {
+  personal: PersonalInfo;
   language: Language;
 }
 

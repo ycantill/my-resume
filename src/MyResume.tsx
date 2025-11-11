@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { usePersonData } from './firebase-service.ts';
+import { usePersonData, getPersonContactData } from './firebase-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
-import type { MyResumeProps, Language } from './types.ts';
+import type { MyResumeProps, Language, PersonalInfo } from './types.ts';
 import {
   LoadingState,
   ErrorState,
@@ -11,7 +11,8 @@ import {
   WorkExperience,
   EducationSection,
   Languages,
-  Skills
+  Skills,
+  PersonalContact
 } from './components/index.ts';
 
 const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
@@ -22,6 +23,7 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
   const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
 
   const { data: resumeData, loading, error } = usePersonData(currentPerson);
+  const [contactData, setContactData] = useState<PersonalInfo | null>(null);
 
   // Update document title when data changes
   useEffect(() => {
@@ -31,6 +33,17 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
       document.title = title;
     }
   }, [resumeData, currentLanguage]);
+
+  // Load private contact data if VITE_SHOW_PRIVATE_INFO is enabled
+  useEffect(() => {
+    const loadContactData = async () => {
+      if (import.meta.env.VITE_SHOW_PRIVATE_INFO === 'true' && currentPerson) {
+        const contact = await getPersonContactData(currentPerson);
+        setContactData(contact);
+      }
+    };
+    loadContactData();
+  }, [currentPerson]);
 
   // Loading state
   if (loading) {
@@ -50,7 +63,8 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
     <div className="min-h-screen bg-gray-50">      
       <div className="resume-container shadow-lg">
         <div className="section-spacing">
-          <BasicInfo personal={data.personal} basics={data.basics} language={currentLanguage} />
+          <BasicInfo basics={data.basics} language={currentLanguage} />
+          {contactData && <PersonalContact personal={contactData} language={currentLanguage} />}
         </div>
         <div className="section-spacing">
           <Summary summary={data.basics.summary} language={currentLanguage} />

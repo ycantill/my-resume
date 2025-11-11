@@ -1,16 +1,16 @@
 import { ref, get, onValue, off } from 'firebase/database';
 import { database } from './firebase-config.ts';
 import { useState, useEffect, useCallback } from 'react';
-import type { ResumeData, UsePersonDataResult, ResumeDataError } from './types.ts';
+import type { ResumeData, UsePersonDataResult, ResumeDataError, PersonalInfo } from './types.ts';
 
 /**
- * Obtiene los datos de una persona desde Realtime Database
+ * Obtiene los datos de una persona desde Realtime Database (solo datos públicos)
  * @param personId - ID de la persona ('yohany' o 'lenicet')
  * @returns Datos de la persona o null si no existe
  */
 export async function getPersonData(personId: string): Promise<ResumeData | null> {
   try {
-    const peopleRef = ref(database, 'people');
+    const peopleRef = ref(database, 'public/people');
     const snapshot = await get(peopleRef);
     
     if (snapshot.exists()) {
@@ -22,6 +22,34 @@ export async function getPersonData(personId: string): Promise<ResumeData | null
     return null;
   } catch (error) {
     console.error('Error obteniendo datos de persona:', error);
+    return null;
+  }
+}
+
+/**
+ * Obtiene los datos de contacto privados de una persona (requiere VITE_SHOW_PRIVATE_INFO)
+ * @param personId - ID de la persona ('yohany' o 'lenicet')
+ * @returns Datos de contacto privados o null si no existe
+ */
+export async function getPersonContactData(personId: string): Promise<PersonalInfo | null> {
+  try {
+    const contactRef = ref(database, 'private/contact');
+    const snapshot = await get(contactRef);
+    
+    if (snapshot.exists()) {
+      const contacts = snapshot.val();
+      const contact = contacts.find((c: any) => c.name === personId);
+      if (contact) {
+        // Extraer solo los datos de contacto, sin el campo 'name'
+        const { name, ...personalInfo } = contact;
+        return personalInfo as PersonalInfo;
+      }
+      return null;
+    }
+    console.log('No se encontró información de contacto para:', personId);
+    return null;
+  } catch (error) {
+    console.error('Error obteniendo datos de contacto:', error);
     return null;
   }
 }
@@ -55,7 +83,7 @@ export function usePersonData(personId: string): UsePersonDataResult {
     setLoading(true);
     setError(null);
 
-    const peopleRef = ref(database, 'people');
+    const peopleRef = ref(database, 'public/people');
     
     const unsubscribe = onValue(
       peopleRef,

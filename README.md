@@ -17,6 +17,7 @@ Zero UI chrome design - pure, professional resume content accessible via semanti
 - 🎨 **Modern Styling**: Tailwind CSS
 - 🌐 **Browser Language Detection**: Automatic language selection
 - 🚨 **Fallback Page**: Helpful guidance when configuration is missing
+- 🔒 **Privacy-First**: Separate public/private data with optional contact display
 
 ## 🚀 Quick Start
 
@@ -54,8 +55,8 @@ VITE_PERSON=lenicet npm run build
 npm run dev
 
 # Show specific person's resume
-VITE_PERSON=yohany npm run dev
-VITE_PERSON=lenicet npm run dev
+npm run dev:yohany
+npm run dev:lenicet
 ```
 
 ## 🛣️ URL Structure
@@ -116,15 +117,23 @@ App → AppRouter → [PersonRequiredFallback | MyResume] → Resume Components
 ### Available Scripts
 
 ```bash
-npm run dev          # Development server (shows fallback without VITE_PERSON)
-npm run build        # Production build (requires VITE_PERSON for full functionality)
-npm run preview      # Preview build
-npm run lint         # ESLint
-npm run type-check   # TypeScript validation
+# Development servers
+npm run dev                    # Base dev server (shows fallback without VITE_PERSON)
+npm run dev:yohany             # Development with Yohany's resume
+npm run dev:lenicet            # Development with Lenicet's resume
+npm run dev:private:yohany     # Development with Yohany + private contact info
+npm run dev:private:lenicet    # Development with Lenicet + private contact info
 
-# Environment-specific commands
-VITE_PERSON=yohany npm run dev    # Development with specific person
-VITE_PERSON=lenicet npm run build # Build for specific person
+# Production builds
+npm run build                  # Base build (requires VITE_PERSON for full functionality)
+npm run build:github           # GitHub Pages build
+
+# Utilities
+npm run preview                # Preview production build
+npm run lint                   # Run ESLint
+npm run lint:fix               # Run ESLint with auto-fix
+npm run format                 # Format code with Prettier
+npm run type-check             # TypeScript validation
 ```
 
 ### Component Pattern
@@ -161,12 +170,12 @@ src/
 
 ### Environment Configuration
 
-For production deployment, you must specify the person to display:
+For production deployment, use the build script with environment variable:
 
 ```bash
-# Build for specific person
-VITE_PERSON=yohany npm run build
-VITE_PERSON=lenicet npm run build
+# Build for GitHub Pages with specific person
+VITE_PERSON=yohany npm run build:github
+VITE_PERSON=lenicet npm run build:github
 ```
 
 ### GitHub Pages (Recommended)
@@ -175,7 +184,7 @@ VITE_PERSON=lenicet npm run build
 
 1. Set up GitHub Actions with environment variable
 2. Repository Settings → Pages → Source: "GitHub Actions"
-3. Configure deployment script to include `VITE_PERSON`
+3. Configure deployment script with VITE_PERSON
 
 **Example GitHub Action:**
 
@@ -193,7 +202,7 @@ jobs:
         with:
           node-version: '18'
       - run: npm ci
-      - run: VITE_PERSON=yohany npm run build
+      - run: VITE_PERSON=yohany npm run build:github
       - uses: actions/deploy-pages@v2
         with:
           artifact_name: dist
@@ -202,28 +211,145 @@ jobs:
 ### Firebase Database Structure
 
 ```
-people/
-├── [
-│   {
-│     "name": "yohany",
-│     "personal": { ... },
-│     "basics": { ... },
-│     "work": [ ... ],
-│     "education": [ ... ],
-│     "languages": [ ... ],
-│     "skills": [ ... ]
-│   },
-│   {
-│     "name": "lenicet",
-│     "personal": { ... },
-│     "basics": { ... },
-│     "work": [ ... ],
-│     "education": [ ... ],
-│     "languages": [ ... ],
-│     "skills": [ ... ]
-│   }
-│ ]
+### Firebase Database Structure
+
+#### Public Data Structure
+
 ```
+
+public/
+├── people/
+├── [
+│ {
+│ "name": "yohany",
+│ "basics": {
+│ "name": "Yohany Cantillo",
+│ "label": { "en": "...", "es": "..." },
+│ "summary": { "en": "...", "es": "..." },
+│ "profiles": [ ... ]
+│ },
+│ "work": [ ... ],
+│ "education": [ ... ],
+│ "languages": [ ... ],
+│ "skills": [ ... ]
+│ },
+│ {
+│ "name": "lenicet",
+│ "basics": { ... },
+│ "work": [ ... ],
+│ "education": [ ... ],
+│ "languages": [ ... ],
+│ "skills": [ ... ]
+│ }
+│ ]
+
+```
+
+#### Private Data Structure (Optional)
+
+```
+
+private/
+├── contact/
+├── [
+│ {
+│ "name": "yohany",
+│ "email": "email@example.com",
+│ "phone": "+1 234 567 8900",
+│ "location": {
+│ "city": "City",
+│ "country": { "en": "Country", "es": "País" },
+│ "countryCode": "XX",
+│ "region": { "en": "Region", "es": "Región" }
+│ }
+│ },
+│ { ... }
+│ ]
+
+````
+
+**Key Structure Changes:**
+
+- **Separated Data**: Public information (basics, work, education, etc.) vs private contact information
+- **Array Format**: Both `public/people` and `private/contact` use arrays with `name` identifiers
+- **Security**: Private contact data is optional and controlled via environment variable
+
+### Privacy & Contact Information
+
+#### Public Mode (Default)
+
+By default, the application only displays public information:
+- Name and professional title
+- Professional summary
+- Work experience
+- Education
+- Skills and languages
+- Social profiles (LinkedIn, etc.)
+
+**No private contact information** is shown or accessed from Firebase.
+
+#### Private Mode (Optional - Development Only)
+
+To show private contact information during development:
+
+```bash
+VITE_SHOW_PRIVATE_INFO=true npm run dev
+````
+
+When enabled:
+
+- ✅ Fetches data from `private/contact` in Firebase
+- ✅ Displays email, phone, and location
+- ✅ Shows in a subtle gray container below basic info
+- ⚠️ Should **NEVER** be enabled in production builds
+
+#### Firebase Security Rules
+
+Apply these rules to protect private data:
+
+```json
+{
+  "rules": {
+    "public": {
+      ".read": true, // Anyone can read public data
+      ".write": false // No one can write
+    },
+    "private": {
+      ".read": false, // No one can read private data
+      ".write": false // No one can write
+    }
+  }
+}
+```
+
+**Important**: With these rules, `private/contact` is completely inaccessible from the client. The `VITE_SHOW_PRIVATE_INFO` flag is for development only with appropriate Firebase rules.
+
+### Environment Variables
+
+Create a `.env.local` file for local development:
+
+```bash
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=your_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_DATABASE_URL=https://your_project.firebaseio.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+
+# Application Configuration
+VITE_PERSON=yohany
+
+# Privacy Configuration (Development Only)
+# Set to 'true' to show private contact information
+# NEVER enable in production
+VITE_SHOW_PRIVATE_INFO=false
+```
+
+**Note**: See `.env.example` for template.
+
+````
 
 **Key Changes in Database Structure:**
 
@@ -241,7 +367,7 @@ All user-facing content uses bilingual format:
     "es": "Ingeniero de Software"
   }
 }
-```
+````
 
 ## 🖨️ Printing
 
@@ -405,7 +531,8 @@ App
     ├── LoadingState (Bilingual loading UI)
     ├── ErrorState (Bilingual error handling)
     └── Resume Components (All receive language as props)
-        ├── BasicInfo (Contact information)
+        ├── BasicInfo (Name, title, social profiles)
+        ├── PersonalContact (Email, phone, location - optional)
         ├── Summary (Professional summary)
         ├── WorkExperience (Job history with role grouping)
         ├── Education (Academic background)
@@ -453,7 +580,8 @@ npm run type-check   # TypeScript validation
 ```
 src/
 ├── components/           # Resume components
-│   ├── BasicInfo.tsx    # Contact information
+│   ├── BasicInfo.tsx    # Name, title, and social profiles
+│   ├── PersonalContact.tsx # Private contact info (email, phone, location)
 │   ├── Summary.tsx      # Professional summary
 │   ├── WorkExperience.tsx # Job history
 │   ├── Education.tsx    # Education section
@@ -466,11 +594,16 @@ src/
 ├── AppRouter.tsx        # Main routing logic + person validation
 ├── MyResume.tsx         # Container component
 ├── firebase-config.js   # Firebase configuration
-├── firebase-service.ts  # Firebase integration
+├── firebase-service.ts  # Firebase integration (public & private data)
 ├── resume-helpers.ts    # Utility functions
 ├── types.ts            # TypeScript definitions
 ├── index.css           # Tailwind configuration
 └── main.tsx            # Application entry point + VITE_PERSON reading
+public/
+├── 404.html            # GitHub Pages redirect handler
+├── CNAME.template      # Custom domain template
+firebase-rules.json     # Firebase security rules
+.env.example            # Environment variables template
 ```
 
 ### TypeScript Types
@@ -487,14 +620,14 @@ interface LocalizedText {
   es: string;
 }
 
-// Personal contact information (separated from basics)
+// Personal contact information (private, optional)
 interface PersonalInfo {
   email: string;
   phone: string;
   location: BasicLocation;
 }
 
-// Basic resume information
+// Basic resume information (public)
 interface ResumeBasics {
   name: string;
   label: LocalizedText;
@@ -502,14 +635,15 @@ interface ResumeBasics {
   profiles: ContactProfile[];
 }
 
-// Complete resume data structure
+// Complete resume data structure (public only)
 interface ResumeData {
-  personal: PersonalInfo; // New: separated contact info
-  basics: ResumeBasics; // Updated: no longer contains contact info
+  name: string; // Person identifier
+  basics: ResumeBasics; // Public information
   work: WorkEntry[];
   education: Education[];
   languages: LanguageEntry[];
   skills: Skill[];
+  // Note: personal contact info NOT included in public data
 }
 
 // Component props pattern
@@ -624,7 +758,6 @@ people/
 ├── [
 │   {
 │     "name": "yohany",
-│     "personal": { ... },    # Contact information (email, phone, location)
 │     "basics": { ... },      # Basic information (name, label, summary, profiles)
 │     "work": [ ... ],        # Work experience
 │     "education": [ ... ],   # Education background
@@ -633,7 +766,6 @@ people/
 │   },
 │   {
 │     "name": "lenicet",
-│     "personal": { ... },
 │     "basics": { ... },
 │     "work": [ ... ],
 │     "education": [ ... ],
@@ -643,7 +775,7 @@ people/
 │ ]
 ```
 
-**Note**: The database structure has evolved from `persons` object to `people` array, with each person identified by a `name` property. Personal contact information (`personal`) is separated from basic information (`basics`).
+**Note**: The database structure has evolved to use `public/people` array for public data and `private/contact` array for private contact information. Personal contact information is now completely separated and optional.
 
 ### Data Localization
 
