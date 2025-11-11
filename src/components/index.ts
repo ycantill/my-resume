@@ -7,6 +7,7 @@ import EducationSection from './Education';
 import Languages from './Languages';
 import Skills from './Skills';
 import PersonRequiredFallback from './PersonRequiredFallback';
+import PersonalContact from './PersonalContact';
 
 export {
   LoadingState,
@@ -17,5 +18,6 @@ export {
   EducationSection,
   Languages,
   Skills,
-  PersonRequiredFallback
+  PersonRequiredFallback,
+  PersonalContact
 };

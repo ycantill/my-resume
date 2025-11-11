@@ -18,7 +18,12 @@ export interface BasicLocation {
   region?: LocalizedText;
   country?: LocalizedText;
   countryCode?: string;
-  phone?: string;
+}
+
+export interface PersonalInfo {
+  email: string;
+  phone: string;
+  location: BasicLocation;
 }
 
 export interface ContactProfile {
@@ -30,9 +35,7 @@ export interface ContactProfile {
 export interface ResumeBasics {
   name: string;
   label: LocalizedText;
-  email: string;
   summary: LocalizedText;
-  location: BasicLocation;
   profiles: ContactProfile[];
 }
 
@@ -92,6 +95,7 @@ export interface Skill {
 }
 
 export interface ResumeData {
+  name: string;              // Person identifier
   basics: ResumeBasics;
   work: WorkEntry[];
   education: Education[];
@@ -134,10 +138,8 @@ export interface LanguageProviderProps {
 }
 
 // Firebase specific types
-export interface FirebasePersonsData {
-  persons: {
-    [personId: string]: ResumeData;
-  };
+export interface FirebasePeopleData {
+  people: ResumeData[];      // Changed: now it's an array instead of object
 }
 
 // Utility types for component props
@@ -154,6 +156,11 @@ export interface LocationDisplayProps {
 // Component props interfaces that receive language
 export interface BasicInfoProps {
   basics: ResumeBasics;
+  language: Language;
+}
+
+export interface PersonalContactProps {
+  personal: PersonalInfo;
   language: Language;
 }
 
