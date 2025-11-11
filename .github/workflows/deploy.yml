@@ -45,7 +45,7 @@ jobs:
 
       - name: Use variables
         run: |
-          echo "person: $vars.VITE_PERSON"
+          echo "person: vars.VITE_PERSON"
 
       - name: Build application
         run: npm run build:github
