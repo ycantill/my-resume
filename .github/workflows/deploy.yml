@@ -47,10 +47,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Use variables
-        run: |
-          echo "person: $PERSON"
-
       - name: Build application
         run: VITE_PERSON=$PERSON npm run build:github
 
