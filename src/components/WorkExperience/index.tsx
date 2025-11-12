@@ -1,7 +1,8 @@
 import React from 'react';
-import type { WorkExperienceProps } from '../types.ts';
-import { formatDateRange, formatDuration } from '../resume-helpers.ts';
-import { useTranslation } from '../hooks/useTranslation';
+import type { WorkExperienceProps } from '../../types.ts';
+import { formatDateRange, formatDuration } from '../../resume-helpers.ts';
+import { useTranslation } from '../../hooks/useTranslation';
+import './styles.css';
 
 const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
   const { t, language } = useTranslation();
@@ -15,19 +16,19 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
         if ('roles' in job && Array.isArray(job.roles) && job.roles.length) {
           return (
             <div key={jobIndex} className="job">
-              <div className="border-l-4 border-blue-500 pl-6 job-header">
-                <h3 className="text-xl font-bold text-gray-900 mb-1">{job.name}</h3>
+              <div className="job-company-header">
+                <h3 className="job-company-name">{job.name}</h3>
               </div>
-              <div className="space-y-8">
+              <div className="job-roles-container">
                 {job.roles.map((role, roleIndex) => {
                   const roleCurrent = !role.endDate;
                   const roleDuration = formatDuration(role, language);
                   return (
-                    <div key={roleIndex} className="job-role relative pl-8 border-l-2 border-gray-200 last:border-l-0">
-                      <div className="absolute w-3 h-3 bg-blue-500 rounded-full -left-1.5 top-2"></div>
+                    <div key={roleIndex} className="job-role">
+                      <div className="job-role-dot"></div>
                       <div className="job-header">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3">
-                          <h4 className="text-lg font-semibold text-gray-800">{t(role.position)}</h4>
+                        <div className="job-title-row">
+                          <h4 className="job-title">{t(role.position)}</h4>
                           {roleCurrent && (
                             <span className="current-badge">
                               {t('work.currentRole')}
@@ -36,23 +37,23 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                         </div>
                       </div>
                       <div className="job-meta">
-                        <p className="text-sm text-gray-600 font-medium">
+                        <p className="job-meta-text">
                           {formatDateRange(role, language)} | {t(role.location)} · {roleDuration}
                         </p>
                       </div>
                       <div className="job-description">
-                        <p className="text-gray-700 leading-relaxed text-justify">{t(role.summary)}</p>
+                        <p className="job-description-text">{t(role.summary)}</p>
                       </div>
                       <div className="job-highlights">
-                        <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                        <ul className="job-highlights-list">
                           {role.highlights[language].map((h, hIndex) => (
-                            <li key={hIndex} className="leading-relaxed">{h}</li>
+                            <li key={hIndex} className="job-highlights-item">{h}</li>
                           ))}
                         </ul>
                       </div>
                       {role.stack && role.stack.length > 0 && (
                         <div className="job-skills">
-                          <p className="text-sm font-medium text-gray-800 mb-3">
+                          <p className="job-skills-label">
                             {t('work.techStack')}:
                           </p>
                           <div className="skills">
@@ -76,10 +77,10 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
         
         return (
           <div key={jobIndex} className="job">
-            <div className="border-l-4 border-blue-500 pl-6">
+            <div className="job-simple-header">
               <div className="job-header">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3">
-                  <h3 className="text-xl font-bold text-gray-900">
+                <div className="job-simple-title-row">
+                  <h3 className="job-simple-title">
                     {job.name} – {job.position && t(job.position)}
                   </h3>
                   {isCurrent && (
@@ -90,25 +91,25 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                 </div>
               </div>
               <div className="job-meta">
-                <p className="text-sm text-gray-600 font-medium">
+                <p className="job-simple-meta">
                   {job.startDate && job.endDate !== undefined 
                     ? formatDateRange(job as { startDate: string; endDate?: string }, language) 
                     : ''} | {job.location && t(job.location)} · {duration}
                 </p>
               </div>
               <div className="job-description">
-                <p className="text-gray-700 leading-relaxed text-justify">{job.summary && t(job.summary)}</p>
+                <p className="job-simple-description">{job.summary && t(job.summary)}</p>
               </div>
               <div className="job-highlights">
-                <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                <ul className="job-simple-highlights">
                   {job.highlights?.[language]?.map((h, hIndex) => (
-                    <li key={hIndex} className="leading-relaxed">{h}</li>
+                    <li key={hIndex} className="job-simple-highlight-item">{h}</li>
                   )) || []}
                 </ul>
               </div>
               {job.stack && job.stack.length > 0 && (
                 <div className="job-skills">
-                  <p className="text-sm font-medium text-gray-800 mb-3">
+                  <p className="job-skills-label">
                     {t('work.techStack')}:
                   </p>
                   <div className="skills">

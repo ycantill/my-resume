@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom components using Tailwind classes */
+/* Global styles and utilities */
 @layer components {
-  /* Main container and section spacing */
+  /* Main layout containers */
   .resume-container {
     @apply max-w-4xl mx-auto px-6 py-8 bg-white min-h-screen print:px-0 print:py-0;
   }
@@ -21,57 +21,6 @@
     @apply bg-white rounded-xl p-6 mb-6 shadow-sm border border-gray-100 print:shadow-none print:border-0 print:mb-4 print:p-4;
   }
   
-  /* Header spacing improvements */
-  .basics {
-    @apply mb-8 sm:mb-10 text-center print:mb-8;
-  }
-  
-  .contact-info {
-    @apply mt-4 sm:mt-6 print:mt-4 print:text-sm;
-  }
-  
-  /* Work experience spacing */
-  .job {
-    @apply mb-8 print:mb-6;
-  }
-  
-  .job-role {
-    @apply mb-6 last:mb-0;
-  }
-  
-  .job-header {
-    @apply mb-4;
-  }
-  
-  .job-meta {
-    @apply mb-4;
-  }
-  
-  .job-description {
-    @apply mb-5;
-  }
-  
-  .job-highlights {
-    @apply mb-6;
-  }
-  
-  /* Skills and badges */
-  .skills {
-    @apply flex flex-wrap gap-3 mt-4;
-  }
-  
-  .chip {
-    @apply inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-200;
-  }
-  
-  .current-badge {
-    @apply inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-medium;
-  }
-  
-  .skill-level {
-    @apply text-sm text-gray-600 bg-gray-100 px-3 py-1.5 rounded-lg font-medium;
-  }
-  
   /* Legacy classes for compatibility */
   .resume-section {
     @apply mb-6 break-inside-avoid;
@@ -82,7 +31,7 @@
   }
 }
 
-/* Print styles */
+/* Global print styles */
 @media print {
   @page {
     margin: 0.5in;
@@ -101,40 +50,5 @@
   .resume-section {
     break-inside: avoid;
     page-break-inside: avoid;
-  }
-  
-  /* Prevent job roles from breaking between pages */
-  .job-role {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    position: relative;
-  }
-  
-  /* Ensure job containers don't break */
-  .job {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-  
-  /* Improve timeline elements for print */
-  .job-role::before {
-    content: "";
-    position: absolute;
-    left: -1.5px;
-    top: 8px;
-    width: 12px;
-    height: 12px;
-    background-color: #3b82f6;
-    border-radius: 50%;
-    z-index: 1;
-  }
-  
-  /* Hide the original absolute positioned dot in print */
-  .job-role .absolute {
-    display: none !important;
-  }
-  
-  .skill-chip {
-    @apply border border-blue-300 bg-transparent text-blue-800;
   }
 }

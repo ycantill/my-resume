@@ -1,0 +1,34 @@
+/* PersonalContact Component Styles */
+.personal-contact-info {
+  @apply mt-4;
+}
+
+.contact-wrapper {
+  @apply flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 text-sm sm:text-base flex-wrap px-4 py-3 bg-gray-50 rounded-lg;
+}
+
+.contact-divider {
+  @apply text-gray-300 hidden sm:inline;
+}
+
+.location-details {
+  @apply space-y-2 text-center sm:text-left;
+}
+
+.location-line {
+  @apply text-gray-700;
+}
+
+.location-label {
+  @apply font-medium;
+}
+
+.location-wrapper {
+  @apply flex flex-col items-center sm:items-start w-full sm:w-auto;
+}
+
+.location-header {
+  @apply mb-1;
+}
+/* Styles are inline in component using Tailwind classes */
+/* No additional custom CSS needed */
