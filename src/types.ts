@@ -116,13 +116,8 @@ export interface MyResumeProps {
 }
 
 // Router-related types
-export interface RouteParams {
-  language?: string;
-  personId?: string;
-}
-
 export interface AppRouterProps {
-  // Optional initial person (provided at app startup via env or bootstrap)
+  // Optional initial person from VITE_PERSON env variable
   initialPerson?: string;
 }
 
