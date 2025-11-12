@@ -50,7 +50,7 @@ npm install
 
 3. Set person to display:
    ```bash
-   VITE_PERSON=yohany  # or lenicet
+   VITE_PERSON=your_person_id  # Any person ID in your Firebase database
    ```
 
 ### Development
@@ -60,8 +60,10 @@ npm install
 npm run dev
 
 # Show specific person's resume
-npm run dev:yohany
-npm run dev:lenicet
+VITE_PERSON=your_person_id npm run dev
+
+# Show with private contact information (development only)
+VITE_SHOW_PRIVATE_INFO=true VITE_PERSON=your_person_id npm run dev
 ```
 
 ## 🛣️ URL Structure
@@ -86,7 +88,7 @@ Without `VITE_PERSON`, shows helpful configuration guide with setup instructions
 **Supported Values:**
 
 - **Languages**: `en`, `es`
-- **Persons**: `yohany`, `lenicet`
+- **Persons**: Any person ID configured in your Firebase database under `public/people/`
 
 ## 🏗️ Architecture
 
@@ -156,11 +158,9 @@ t({ en: "Engineer", es: "Ingeniero" }) → "Engineer" | "Ingeniero"
 
 ```bash
 # Development servers
-npm run dev                    # Base dev server (shows fallback without VITE_PERSON)
-npm run dev:yohany             # Development with Yohany's resume
-npm run dev:lenicet            # Development with Lenicet's resume
-npm run dev:private:yohany     # Development with Yohany + private contact info
-npm run dev:private:lenicet    # Development with Lenicet + private contact info
+npm run dev                                      # Base dev server (shows fallback without VITE_PERSON)
+VITE_PERSON=your_person_id npm run dev           # Development with specific person's resume
+VITE_SHOW_PRIVATE_INFO=true VITE_PERSON=your_person_id npm run dev  # Development with private contact info
 
 # Production builds
 npm run build                  # Base build (requires VITE_PERSON for full functionality)
@@ -233,8 +233,7 @@ For production deployment, use the build script with environment variable:
 
 ```bash
 # Build for GitHub Pages with specific person
-VITE_PERSON=yohany npm run build:github
-VITE_PERSON=lenicet npm run build:github
+VITE_PERSON=your_person_id npm run build:github
 ```
 
 ### GitHub Pages (Recommended)
@@ -261,7 +260,7 @@ jobs:
         with:
           node-version: '18'
       - run: npm ci
-      - run: VITE_PERSON=yohany npm run build:github
+      - run: VITE_PERSON=your_person_id npm run build:github
       - uses: actions/deploy-pages@v2
         with:
           artifact_name: dist
@@ -275,14 +274,14 @@ jobs:
 public/
 └── people/
     ├── [0]
-    │   ├── name: "yohany"
+    │   ├── name: "person_id_1"
     │   ├── basics: { name, label, summary, profiles }
     │   ├── work: [ ... ]
     │   ├── education: [ ... ]
     │   ├── languages: [ ... ]
     │   └── skills: [ ... ]
     └── [1]
-        ├── name: "lenicet"
+        ├── name: "person_id_2"
         └── [same structure]
 ```
 
@@ -292,7 +291,7 @@ public/
 private/
 └── contact/
     ├── [0]
-    │   ├── name: "yohany"
+    │   ├── name: "person_id_1"
     │   ├── email: "email@example.com"
     │   ├── phone: "+1 234 567 8900"
     │   └── location: { city, country, countryCode, region }
@@ -537,14 +536,14 @@ This React version represents a complete architectural evolution:
 **Person Not Loading:**
 
 - Ensure `VITE_PERSON` is set in `.env.local`
-- Verify person ID is valid (`yohany` or `lenicet`)
+- Verify person ID matches the `name` field in your Firebase database under `public/people/`
 - Check fallback page for helpful configuration instructions
 - Restart dev server after changing `.env.local`
 
 **Fallback Page Appearing:**
 
 - This indicates `VITE_PERSON` is not set in `.env.local`
-- Add `VITE_PERSON=yohany` to `.env.local`
+- Add `VITE_PERSON=your_person_id` to `.env.local` (use a person ID from your Firebase)
 - Restart the development server
 - Check available persons in fallback page instructions
 

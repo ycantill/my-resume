@@ -51,14 +51,8 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
               </p>
             </div>
             <pre className="bg-gray-900 text-green-400 rounded-lg p-4 overflow-x-auto text-xs font-mono">
-{`# Firebase Configuration (Single JSON string)
-VITE_FIREBASE_CONFIG={"apiKey":"YOUR_API_KEY","authDomain":"your-project.firebaseapp.com","databaseURL":"https://your-project-default-rtdb.firebaseio.com","projectId":"your-project-id","storageBucket":"your-project.firebasestorage.app","messagingSenderId":"123456789012","appId":"1:123456789012:web:abcdef1234567890abcdef","measurementId":"G-XXXXXXXXXX"}
-
-# Application Configuration
-VITE_PERSON=yohany
-
-# Privacy Configuration (Development Only)
-VITE_SHOW_PRIVATE_INFO=false`}
+{`VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
+VITE_PERSON=your_person_id`}
             </pre>
             <div className="mt-4 text-sm text-gray-600">
               <p className="mb-2">

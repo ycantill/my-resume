@@ -207,8 +207,8 @@ export type CountryCode = 'CO' | 'ES' | 'US' | 'CA' | 'MX' | 'AR' | 'BR' | 'CL' 
 // Network types for social profiles
 export type SocialNetwork = 'LinkedIn' | 'GitHub' | 'Twitter' | 'Website' | 'Portfolio';
 
-// Available persons type
-export type PersonId = 'yohany' | 'lenicet';
+// Available persons type - any string is valid
+export type PersonId = string;
 
 // Date format type (YYYY-MM)
 export type DateString = `${number}-${string}`;
@@ -227,13 +227,12 @@ export const isValidLanguage = (lang: string): lang is Language => {
   return lang === 'en' || lang === 'es';
 };
 
-export const isValidPersonId = (id: string): id is PersonId => {
-  return id === 'yohany' || id === 'lenicet';
-};
+// Removed isValidPersonId - any person ID is now valid
 
 // Constants for better type safety
 export const SUPPORTED_LANGUAGES: readonly Language[] = ['en', 'es'] as const;
-export const SUPPORTED_PERSONS: readonly PersonId[] = ['yohany', 'lenicet'] as const;
+
+// Removed SUPPORTED_PERSONS - any person can be used
 
 // Error types for better error handling
 export interface ResumeDataError {

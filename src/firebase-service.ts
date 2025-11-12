@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import type { ResumeData, UsePersonDataResult, ResumeDataError, PersonalInfo } from './types.ts';
 
 /**
- * Obtiene los datos de una persona desde Realtime Database (solo datos públicos)
- * @param personId - ID de la persona ('yohany' o 'lenicet')
- * @returns Datos de la persona o null si no existe
+ * Fetches resume data for a specific person from Firebase
+ * @param personId - ID de la persona (any valid person ID in Firebase)
+ * @returns Hook with data, loading, and error states
  */
 export async function getPersonData(personId: string): Promise<ResumeData | null> {
   try {
@@ -27,9 +27,9 @@ export async function getPersonData(personId: string): Promise<ResumeData | null
 }
 
 /**
- * Obtiene los datos de contacto privados de una persona (requiere VITE_SHOW_PRIVATE_INFO)
- * @param personId - ID de la persona ('yohany' o 'lenicet')
- * @returns Datos de contacto privados o null si no existe
+ * Fetches private contact data for a specific person from Firebase
+ * @param personId - ID de la persona (any valid person ID in Firebase)
+ * @returns Contact information or null if not found/accessible
  */
 export async function getPersonContactData(personId: string): Promise<PersonalInfo | null> {
   try {

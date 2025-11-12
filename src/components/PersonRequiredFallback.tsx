@@ -33,8 +33,8 @@ const PersonRequiredFallback: React.FC<PersonRequiredFallbackProps> = ({ languag
                   <h4 className="font-medium text-gray-800 mb-1">
                     {t('fallback.forDevelopment')}
                   </h4>
-                  <code className="block bg-white border rounded px-3 py-2 text-sm font-mono text-gray-700">
-                    VITE_PERSON=yohany npm run dev
+                                    <code className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-mono">
+                    VITE_PERSON=your_person_id npm run dev
                   </code>
                 </div>
                 
@@ -42,8 +42,8 @@ const PersonRequiredFallback: React.FC<PersonRequiredFallbackProps> = ({ languag
                   <h4 className="font-medium text-gray-800 mb-1">
                     {t('fallback.forBuilding')}
                   </h4>
-                  <code className="block bg-white border rounded px-3 py-2 text-sm font-mono text-gray-700">
-                    VITE_PERSON=lenicet npm run build
+                  <code className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-mono">
+                    VITE_PERSON=your_person_id npm run build
                   </code>
                 </div>
               </div>
@@ -51,10 +51,12 @@ const PersonRequiredFallback: React.FC<PersonRequiredFallbackProps> = ({ languag
             
             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mt-6">
               <p className="text-blue-800">
-                <strong>
+                                <p className="text-gray-700 mb-2">
                   {t('fallback.availablePersons')}
-                </strong>
-                {' '}yohany, lenicet
+                </p>
+                <p className="text-sm text-gray-600">
+                  Any person ID configured in your Firebase database under <code className="bg-gray-200 px-1 rounded">public/people/</code>
+                </p>
               </p>
             </div>
           </div>

@@ -25,11 +25,12 @@ A dynamic resume generator built with React, TypeScript, and Firebase featuring 
 
 ### Key Architecture Points
 
-- **URL-Centric**: All navigation through direct URLs (`/en/yohany`, `/es/lenicet`)
-- **Props-Driven**: No Context API, language passed as props from URL params
+- **URL-Centric**: All navigation through direct URLs (e.g., `/en`, `/es`)
+- **Props-Driven**: No Context API for data, language passed via Context
 - **Zero UI Elements**: No toolbars, buttons, or navigation - pure content only
 - **Firebase Integration**: Real-time data through custom hooks
 - **Bilingual Support**: URL-based language selection with browser detection
+- **Person-Agnostic**: Works with any person ID configured in Firebase
 
 ### Current Component Structure
 
@@ -42,10 +43,9 @@ All resume components use `useTranslation()` hook for bilingual content renderin
 ### Routing Pattern
 
 ```
-/:language/:person
-- /en/yohany, /es/yohany
-- /en/lenicet, /es/lenicet
-- / → redirects to browser language + default person
+/:language
+- /en, /es (person determined by VITE_PERSON environment variable)
+- / → redirects to browser language
 ```
 
 ### Development Patterns

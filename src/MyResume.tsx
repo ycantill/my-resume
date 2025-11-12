@@ -17,13 +17,23 @@ import {
   PersonalContact
 } from './components/index.ts';
 
-const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
+const MyResume = ({ initialPerson }: MyResumeProps) => {
   const { language } = useParams<{ language?: string }>();
   const { t } = useTranslation();
 
   // Person is provided via initialPerson prop (startup variable); language is still taken from URL
-  const currentPerson = initialPerson;
   const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
+  
+  // If no person provided, this shouldn't render (handled by AppRouter)
+  if (!initialPerson) {
+    const configError: ResumeDataError = {
+      code: 'INVALID_DATA',
+      message: 'No person specified'
+    };
+    return <ErrorState error={configError} language={currentLanguage} />;
+  }
+  
+  const currentPerson = initialPerson;
 
   // Verificar si Firebase está configurado
   if (!isFirebaseConfigured()) {
