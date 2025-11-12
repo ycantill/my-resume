@@ -36,23 +36,22 @@ npm install
 
 ### Configuration
 
-1. **Firebase Setup**:
-
-   Copy the example environment file:
+1. Copy `.env.example` to `.env.local`:
 
    ```bash
    cp .env.example .env.local
    ```
 
-   Update `.env.local` with your Firebase configuration:
-   - Get your Firebase config from [Firebase Console](https://console.firebase.google.com) → Project Settings → General
-   - Copy the config object and stringify it as JSON for `VITE_FIREBASE_CONFIG`
+2. Configure Firebase (get from [Firebase Console](https://console.firebase.google.com) → Project Settings):
 
-2. **Person Configuration**: Set the person to display via environment variable in `.env.local`:
+   ```bash
+   VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
+   ```
 
-```bash
-VITE_PERSON=yohany  # or lenicet
-```
+3. Set person to display:
+   ```bash
+   VITE_PERSON=yohany  # or lenicet
+   ```
 
 ### Development
 
@@ -82,16 +81,12 @@ Examples:
 
 ### Fallback Behavior
 
-When `VITE_PERSON` is not set, the application displays a helpful fallback page explaining:
+Without `VITE_PERSON`, shows helpful configuration guide with setup instructions.
 
-- How to set the environment variable
-- Available persons (`yohany`, `lenicet`)
-- Example commands for development and building
+**Supported Values:**
 
-### Supported Values
-
-- **Languages**: `en` (English), `es` (Spanish)
-- **Persons**: `yohany`, `lenicet` (set via `VITE_PERSON`)
+- **Languages**: `en`, `es`
+- **Persons**: `yohany`, `lenicet`
 
 ## 🏗️ Architecture
 
@@ -115,8 +110,7 @@ When `VITE_PERSON` is not set, the application displays a helpful fallback page 
 App → AppRouter → [PersonRequiredFallback | MyResume] → Resume Components
 ```
 
-- **Without VITE_PERSON**: Shows fallback page explaining configuration
-- **With VITE_PERSON**: Shows resume components receiving `language` as prop
+All resume components receive `language` as prop for bilingual rendering.
 
 ## 🔧 Development
 
@@ -216,75 +210,99 @@ jobs:
 
 ### Firebase Database Structure
 
-```
-### Firebase Database Structure
-
 #### Public Data Structure
 
-```
-
+```json
 public/
-├── people/
-├── [
-│ {
-│ "name": "yohany",
-│ "basics": {
-│ "name": "Yohany Cantillo",
-│ "label": { "en": "...", "es": "..." },
-│ "summary": { "en": "...", "es": "..." },
-│ "profiles": [ ... ]
-│ },
-│ "work": [ ... ],
-│ "education": [ ... ],
-│ "languages": [ ... ],
-│ "skills": [ ... ]
-│ },
-│ {
-│ "name": "lenicet",
-│ "basics": { ... },
-│ "work": [ ... ],
-│ "education": [ ... ],
-│ "languages": [ ... ],
-│ "skills": [ ... ]
-│ }
-│ ]
-
+└── people/
+    ├── [0]
+    │   ├── name: "yohany"
+    │   ├── basics: { name, label, summary, profiles }
+    │   ├── work: [ ... ]
+    │   ├── education: [ ... ]
+    │   ├── languages: [ ... ]
+    │   └── skills: [ ... ]
+    └── [1]
+        ├── name: "lenicet"
+        └── [same structure]
 ```
 
 #### Private Data Structure (Optional)
 
+```json
+private/
+└── contact/
+    ├── [0]
+    │   ├── name: "yohany"
+    │   ├── email: "email@example.com"
+    │   ├── phone: "+1 234 567 8900"
+    │   └── location: { city, country, countryCode, region }
+    └── [1]
+        └── [same structure]
 ```
 
-private/
-├── contact/
-├── [
-│ {
-│ "name": "yohany",
-│ "email": "email@example.com",
-│ "phone": "+1 234 567 8900",
-│ "location": {
-│ "city": "City",
-│ "country": { "en": "Country", "es": "País" },
-│ "countryCode": "XX",
-│ "region": { "en": "Region", "es": "Región" }
-│ }
-│ },
-│ { ... }
-│ ]
+**Key Points:**
 
-````
+- **Separated Data**: Public resume info vs private contact details
+- **Array Format**: Identified by `name` field matching person ID
+- **Bilingual Content**: - **Bilingual Content**: All user-facing text uses `{ "en": "...", "es": "..." }` format
 
-**Key Structure Changes:**
+### Privacy & Contact Information
 
-- **Separated Data**: Public information (basics, work, education, etc.) vs private contact information
-- **Array Format**: Both `public/people` and `private/contact` use arrays with `name` identifiers
-- **Security**: Private contact data is optional and controlled via environment variable
+#### Display Modes
+
+**Public Mode (Default - Production):**
+
+- Shows: Name, title, summary, work, education, skills, social profiles
+- Private contact info is **not accessed** from Firebase
+
+**Private Mode (Development Only):**
+
+```bash
+VITE_SHOW_PRIVATE_INFO=true npm run dev
+```
+
+- ✅ Shows email, phone, and location in gray container
+- ⚠️ **NEVER** enable in production
+
+#### Firebase Security Rules
+
+```json
+{
+  "rules": {
+    "public": { ".read": true, ".write": false },
+    "private": { ".read": false, ".write": false }
+  }
+}
+```
+
+These rules block `private/contact` access at database level. The environment variable is for development only.
+
+### Environment Variables
+
+```bash
+# Required: Firebase configuration (JSON string from Firebase Console)
+VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
+
+# Required: Person identifier
+VITE_PERSON=yohany
+
+# Optional: Show private contact (development only, never in production)
+VITE_SHOW_PRIVATE_INFO=false
+```
+
+See `.env.example` for template with placeholder values.
+
+## 🖨️ Printing
+
+### Environment Variables
 
 ### Privacy & Contact Information
 
 #### Public Mode (Default)
 
 By default, the application only displays public information:
+
 - Name and professional title
 - Professional summary
 - Work experience
@@ -300,7 +318,7 @@ To show private contact information during development:
 
 ```bash
 VITE_SHOW_PRIVATE_INFO=true npm run dev
-````
+```
 
 When enabled:
 
@@ -332,33 +350,18 @@ Apply these rules to protect private data:
 
 ### Environment Variables
 
-Create a `.env.local` file for local development:
-
 ```bash
-# Firebase Configuration (Single JSON string)
-# Get this from your Firebase Console → Project Settings → General
-VITE_FIREBASE_CONFIG={"apiKey":"YOUR_API_KEY","authDomain":"your-project.firebaseapp.com","databaseURL":"https://your-project-default-rtdb.firebaseio.com","projectId":"your-project-id","storageBucket":"your-project.firebasestorage.app","messagingSenderId":"123456789012","appId":"1:123456789012:web:abcdef1234567890abcdef","measurementId":"G-XXXXXXXXXX"}
+# Required: Firebase configuration (JSON string from Firebase Console)
+VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
 
-# Application Configuration
+# Required: Person identifier
 VITE_PERSON=yohany
 
-# Privacy Configuration (Development Only)
-# Set to 'true' to show private contact information
-# NEVER enable in production
+# Optional: Show private contact (development only, never in production)
 VITE_SHOW_PRIVATE_INFO=false
 ```
 
-**Quick Setup:**
-
-1. Copy the example file:
-
-   ```bash
-   cp .env.example .env.local
-   ```
-
-2. Update `VITE_FIREBASE_CONFIG` with your Firebase project configuration (found in Firebase Console)
-
-**Note**: The `.env.local` file is ignored by git for security. See `.env.example` for template.
+See `.env.example` for template with placeholder values.
 
 ````
 
