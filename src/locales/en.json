@@ -1,0 +1,59 @@
+{
+  "loading": {
+    "title": "Loading resume...",
+    "subtitle": "Fetching data from Firebase Realtime Database"
+  },
+  "error": {
+    "title": "Error loading resume",
+    "subtitle": "Could not load data from Firebase.",
+    "checkConfig": "Please check your Firebase configuration and internet connection.",
+    "errorDetected": "Error detected:",
+    "technicalDetails": "Technical details",
+    "code": "Code:",
+    "message": "Message:"
+  },
+  "firebaseConfig": {
+    "title": "Firebase Configuration Missing",
+    "subtitle": "The VITE_FIREBASE_CONFIG environment variable is not defined.",
+    "howToFix": "How to fix:",
+    "step1": "Create a .env.local file in the project root",
+    "step2": "Add your Firebase configuration as a JSON string",
+    "step3": "Restart the development server",
+    "exampleFile": "Example .env.local file:",
+    "getConfig": "Get your Firebase config from:",
+    "getConfigStep1": "Firebase Console → Your Project",
+    "getConfigStep2": "Project Settings ⚙️ → General",
+    "getConfigStep3": "Scroll to \"Your apps\" section",
+    "getConfigStep4": "Copy the firebaseConfig object and stringify it"
+  },
+  "fallback": {
+    "title": "Person Required",
+    "description": "No person was specified for this resume application. To view a resume, you need to set the VITE_PERSON environment variable.",
+    "howToSet": "How to set the person:",
+    "forDevelopment": "For development:",
+    "forBuilding": "For building:",
+    "availablePersons": "Available persons:",
+    "securityNote": "This application requires a person to be specified at build/start time for security and configuration purposes."
+  },
+  "sections": {
+    "summary": "Summary",
+    "experience": "Experience",
+    "education": "Education",
+    "skills": "Technical Skills",
+    "languages": "Languages"
+  },
+  "work": {
+    "currentRole": "Current role",
+    "techStack": "Tech stack",
+    "in": "in"
+  },
+  "education": {
+    "label": "Education"
+  },
+  "document": {
+    "titleSuffix": "Resume"
+  },
+  "toolbar": {
+    "language": "Language:"
+  }
+}

@@ -101,16 +101,54 @@ Without `VITE_PERSON`, shows helpful configuration guide with setup instructions
 ### Key Principles
 
 - **URL as Single Source of Truth**: All state from URL parameters
-- **Props-Driven Components**: No Context API
+- **Context-Driven Translations**: Language state managed via React Context + custom hook
 - **Zero UI Elements**: Pure content focus
 
 ### Component Structure
 
 ```
-App → AppRouter → [PersonRequiredFallback | MyResume] → Resume Components
+App → AppRouter → LanguageProvider → MyResume → Resume Components
 ```
 
-All resume components receive `language` as prop for bilingual rendering.
+All resume components use the `useTranslation()` hook for bilingual rendering.
+
+### Translation System
+
+**Architecture:**
+
+- **JSON Translation Files**: `src/locales/en.json` and `src/locales/es.json`
+- **Custom Hook**: `useTranslation()` provides `{ t, language }`
+- **Unified Translation Function**: `t()` handles both Firebase objects and static text keys
+
+**Usage Pattern:**
+
+```typescript
+// In any component
+import { useTranslation } from '../hooks/useTranslation';
+
+const Component: React.FC<ComponentProps> = ({ data }) => {
+  const { t, language } = useTranslation();
+
+  // Translate static UI text (string key)
+  return (
+    <div>
+      <h2>{t('sections.summary')}</h2>
+      {/* Translate Firebase data (LocalizedText object) */}
+      <p>{t(data.summary)}</p>
+    </div>
+  );
+};
+```
+
+**Translation Function Types:**
+
+```typescript
+// Static UI text (key lookup in JSON)
+t('loading.title') → "Loading resume..." | "Cargando currículum..."
+
+// Firebase data (LocalizedText object)
+t({ en: "Engineer", es: "Ingeniero" }) → "Engineer" | "Ingeniero"
+```
 
 ## 🔧 Development
 
@@ -139,16 +177,29 @@ npm run type-check             # TypeScript validation
 ### Component Pattern
 
 ```typescript
+import { useTranslation } from '../hooks/useTranslation';
+
 interface ComponentProps {
   data: DataType;
-  language: Language;
 }
 
-const Component: React.FC<ComponentProps> = ({ data, language }) => {
-  const t = language;
-  return <div>{t === 'en' ? 'English' : 'Español'}</div>;
+const Component: React.FC<ComponentProps> = ({ data }) => {
+  const { t, language } = useTranslation();
+
+  // Use t() for static text keys
+  return (
+    <div>
+      <h2>{t('sections.experience')}</h2>
+      {/* Use t() for LocalizedText objects from Firebase */}
+      <p>{t(data.description)}</p>
+      {/* Access language when needed for helpers */}
+      <span>{formatDate(data.startDate, language)}</span>
+    </div>
+  );
 };
 ```
+
+**Note**: Components rendered outside `LanguageProvider` (like `LoadingState`, `ErrorState`) receive `language` as a prop and create a local `t()` function.
 
 ### File Structure
 
@@ -159,11 +210,19 @@ src/
 │   ├── LoadingState.tsx  # Loading UI
 │   ├── ErrorState.tsx    # Error handling
 │   └── [other components...]
-├── AppRouter.tsx        # Main routing (handles person validation)
-├── MyResume.tsx         # Container component
-├── firebase-service.ts  # Firebase integration
-├── types.ts            # TypeScript definitions
-└── main.tsx            # Entry point (reads VITE_PERSON)
+├── contexts/            # React contexts
+│   └── LanguageContext.tsx # Language state management
+├── hooks/              # Custom hooks
+│   └── useTranslation.ts # Translation hook
+├── locales/            # Translation files
+│   ├── en.json         # English translations
+│   └── es.json         # Spanish translations
+├── AppRouter.tsx       # Main routing (handles person validation)
+├── MyResume.tsx        # Container component
+├── firebase-service.ts # Firebase integration
+├── resume-helpers.ts   # Translation & formatting utilities
+├── types.ts           # TypeScript definitions
+└── main.tsx           # Entry point (reads VITE_PERSON)
 ```
 
 ## 🚀 Deployment
@@ -245,7 +304,8 @@ private/
 
 - **Separated Data**: Public resume info vs private contact details
 - **Array Format**: Identified by `name` field matching person ID
-- **Bilingual Content**: - **Bilingual Content**: All user-facing text uses `{ "en": "...", "es": "..." }` format
+- **Bilingual Content**: All user-facing text uses `{ "en": "...", "es": "..." }` format (LocalizedText interface)
+- **Static UI Text**: Translated via JSON files in `src/locales/`
 
 ### Privacy & Contact Information
 

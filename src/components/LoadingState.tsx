@@ -1,8 +1,10 @@
 import React from 'react';
 import type { LoadingStateProps } from '../types.ts';
+import { t as translateFn } from '../resume-helpers.ts';
 
 const LoadingState: React.FC<LoadingStateProps> = ({ language }) => {
-  const t = language;
+  // Use language from props (when rendered outside LanguageProvider)
+  const t = (textOrKey: any) => translateFn(textOrKey, language);
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -14,13 +16,10 @@ const LoadingState: React.FC<LoadingStateProps> = ({ language }) => {
           </div>
         </div>
         <h2 className="text-2xl font-bold text-gray-800 mb-3">
-          {t === 'en' ? 'Loading resume...' : 'Cargando currículum...'}
+          {t('loading.title')}
         </h2>
         <p className="text-gray-600 mb-4">
-          {t === 'en' 
-            ? 'Fetching data from Firebase Realtime Database' 
-            : 'Obteniendo datos desde Firebase Realtime Database'
-          }
+          {t('loading.subtitle')}
         </p>
         <div className="flex justify-center space-x-1">
           <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>

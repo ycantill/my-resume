@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLanguage } from '../contexts/LanguageContext.tsx';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface ToolbarProps {
   onLanguageChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -8,8 +8,7 @@ interface ToolbarProps {
 const Toolbar: React.FC<ToolbarProps> = ({ 
   onLanguageChange
 }) => {
-  const { language } = useLanguage();
-  const t = language;
+  const { t, language } = useTranslation();
 
   return (
     <div className="toolbar sticky top-0 z-10 shadow-sm">
@@ -17,7 +16,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         <div className="flex items-center">
           <div className="toolbar-group">
             <label htmlFor="lang-select" className="form-label">
-              {t === 'en' ? 'Language:' : 'Idioma:'}
+              {t('toolbar.language')}
             </label>
             <select id="lang-select" value={language} onChange={onLanguageChange} className="toolbar-select">
               <option value="en">English</option>

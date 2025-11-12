@@ -1,14 +1,15 @@
 import React from 'react';
 import type { PersonalContactProps } from '../types.ts';
 import { formatLocationLabel, normalizePhone } from '../resume-helpers.ts';
+import { useTranslation } from '../hooks/useTranslation';
 
 /**
  * PersonalContact Component
  * Displays private contact information (email, phone, location)
  * Only renders if VITE_SHOW_PRIVATE_INFO environment variable is set to 'true'
  */
-const PersonalContact: React.FC<PersonalContactProps> = ({ personal, language }) => {
-  const t = language;
+const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
+  const { language } = useTranslation();
   const { location } = personal;
 
   // Only render if environment variable is set
@@ -56,7 +57,7 @@ const PersonalContact: React.FC<PersonalContactProps> = ({ personal, language })
             <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
               <span className="text-lg flex-shrink-0" aria-hidden="true">📍</span>
               <span className="text-gray-700 font-medium">
-                {formatLocationLabel(location, t)}
+                {formatLocationLabel(location, language)}
               </span>
             </div>
           </>

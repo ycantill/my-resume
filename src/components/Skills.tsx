@@ -1,18 +1,19 @@
 import React from 'react';
 import type { SkillsProps } from '../types.ts';
+import { useTranslation } from '../hooks/useTranslation';
 
-const Skills: React.FC<SkillsProps> = ({ skills, language }) => {
-  const t = language;
-
+const Skills: React.FC<SkillsProps> = ({ skills }) => {
+  const { t } = useTranslation();
+  
   return (
     <>
-      <h2 className="section-title">{t === 'en' ? 'Technical Skills' : 'Habilidades Técnicas'}</h2>
+      <h2 className="section-title">{t('sections.skills')}</h2>
       <div className="grid gap-6 md:grid-cols-2">
         {skills.map((skill, skillIndex) => (
           <div key={skillIndex} className="section-card skill-category border-l-4 border-purple-500">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-lg font-bold text-gray-900">{skill.name}</h3>
-              <span className="skill-level bg-purple-100 text-purple-800">{skill.level[t]}</span>
+              <span className="skill-level bg-purple-100 text-purple-800">{t(skill.level)}</span>
             </div>
             <div className="skills">
               {skill.keywords.map((k, kIndex) => (

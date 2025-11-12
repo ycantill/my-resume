@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { usePersonData, getPersonContactData } from './firebase-service.ts';
 import { isFirebaseConfigured } from './firebase-config.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
+import { useTranslation } from './hooks/useTranslation.ts';
 import type { MyResumeProps, Language, PersonalInfo, ResumeDataError } from './types.ts';
 import {
   LoadingState,
@@ -18,6 +19,7 @@ import {
 
 const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
   const { language } = useParams<{ language?: string }>();
+  const { t } = useTranslation();
 
   // Person is provided via initialPerson prop (startup variable); language is still taken from URL
   const currentPerson = initialPerson;
@@ -38,11 +40,10 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
   // Update document title when data changes
   useEffect(() => {
     if (resumeData) {
-      const t = currentLanguage;
-      const title = `${resumeData.basics.name} - ${t === 'en' ? 'Resume' : 'Currículum'}`;
+      const title = `${resumeData.basics.name} - ${t('document.titleSuffix')}`;
       document.title = title;
     }
-  }, [resumeData, currentLanguage]);
+  }, [resumeData, t]);
 
   // Load private contact data if VITE_SHOW_PRIVATE_INFO is enabled
   useEffect(() => {
@@ -73,23 +74,23 @@ const MyResume = ({ initialPerson = 'yohany' }: MyResumeProps) => {
     <div className="min-h-screen bg-gray-50">      
       <div className="resume-container shadow-lg">
         <div className="section-spacing">
-          <BasicInfo basics={data.basics} language={currentLanguage} />
-          {contactData && <PersonalContact personal={contactData} language={currentLanguage} />}
+          <BasicInfo basics={data.basics} />
+          {contactData && <PersonalContact personal={contactData} />}
         </div>
         <div className="section-spacing">
-          <Summary summary={data.basics.summary} language={currentLanguage} />
+          <Summary summary={data.basics.summary} />
         </div>
         <div className="section-spacing">
-          <WorkExperience workItems={workItems} language={currentLanguage} />
+          <WorkExperience workItems={workItems} />
         </div>
         <div className="section-spacing">
-          <EducationSection education={data.education} language={currentLanguage} />
+          <EducationSection education={data.education} />
         </div>
         <div className="section-spacing">
-          <Languages languages={data.languages} language={currentLanguage} />
+          <Languages languages={data.languages} />
         </div>
         <div className="section-spacing">
-          <Skills skills={data.skills} language={currentLanguage} />
+          <Skills skills={data.skills} />
         </div>
       </div>
     </div>

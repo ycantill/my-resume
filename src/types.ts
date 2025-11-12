@@ -148,43 +148,37 @@ export interface LocationDisplayProps {
   language: Language;
 }
 
-// Component props interfaces that receive language
+// Component props interfaces - language obtained from useTranslation hook
 export interface BasicInfoProps {
   basics: ResumeBasics;
-  language: Language;
 }
 
 export interface PersonalContactProps {
   personal: PersonalInfo;
-  language: Language;
 }
 
 export interface SummaryProps {
   summary: LocalizedText;
-  language: Language;
 }
 
 export interface WorkExperienceProps {
   workItems: (WorkEntry | GroupedWorkEntry)[];
-  language: Language;
 }
 
 export interface EducationSectionProps {
   education: Education[];
-  language: Language;
 }
 
 export interface LanguagesProps {
   languages: LanguageEntry[];
-  language: Language;
 }
 
 export interface SkillsProps {
   skills: Skill[];
-  language: Language;
 }
 
-// Loading and Error component props
+// Loading and Error component props - these receive language directly
+// because they render outside LanguageProvider
 export interface LoadingStateProps {
   language: Language;
 }

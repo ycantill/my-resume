@@ -1,14 +1,15 @@
 import React from 'react';
 import type { BasicInfoProps } from '../types.ts';
+import { useTranslation } from '../hooks/useTranslation';
 
-const BasicInfo: React.FC<BasicInfoProps> = ({ basics, language }) => {
-  const t = language;
-
+const BasicInfo: React.FC<BasicInfoProps> = ({ basics }) => {
+  const { t } = useTranslation();
+  
   return (
     <section className="basics">
       <div className="text-center mb-6 sm:mb-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">{basics.name}</h1>
-        <p className="text-lg sm:text-xl md:text-2xl text-gray-600 px-4">{basics.label[t]}</p>
+        <p className="text-lg sm:text-xl md:text-2xl text-gray-600 px-4">{t(basics.label)}</p>
       </div>
 
       <div className="contact-info">
