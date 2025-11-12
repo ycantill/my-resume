@@ -62,7 +62,7 @@ const LanguageRoute: React.FC<{ initialPerson?: string }> = ({ initialPerson }) 
   // Show the resume with the provided person
   return (
     <LanguageProvider initialLanguage={validatedLanguage}>
-      <MyResume initialPerson={initialPerson} initialLanguage={validatedLanguage} />
+      <MyResume initialPerson={initialPerson} />
     </LanguageProvider>
   );
 };

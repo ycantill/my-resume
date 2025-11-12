@@ -72,27 +72,6 @@
     @apply text-sm text-gray-600 bg-gray-100 px-3 py-1.5 rounded-lg font-medium;
   }
   
-  /* Interactive elements */
-  .toolbar {
-    @apply bg-white border-b border-gray-200 px-6 py-4 print:hidden;
-  }
-  
-  .toolbar-content {
-    @apply max-w-4xl mx-auto flex flex-wrap items-center gap-6;
-  }
-  
-  .toolbar-group {
-    @apply flex items-center gap-3;
-  }
-  
-  .toolbar-select {
-    @apply border border-gray-300 rounded-lg px-4 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500;
-  }
-  
-  .form-label {
-    @apply text-sm font-medium text-gray-700;
-  }
-  
   /* Legacy classes for compatibility */
   .resume-section {
     @apply mb-6 break-inside-avoid;
@@ -100,18 +79,6 @@
   
   .resume-card {
     @apply bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4;
-  }
-  
-  .toolbar-button {
-    @apply bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors;
-  }
-  
-  .form-select {
-    @apply border border-gray-300 rounded px-3 py-1 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
-  }
-  
-  .form-label {
-    @apply text-sm font-medium text-gray-700 mr-2;
   }
 }
 

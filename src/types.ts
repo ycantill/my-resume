@@ -112,7 +112,6 @@ export interface UsePersonDataResult {
 
 export interface MyResumeProps {
   initialPerson?: string;
-  initialLanguage?: Language;
 }
 
 // Router-related types
