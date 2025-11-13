@@ -25,11 +25,11 @@ const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
       <div className="contact-wrapper">
         
         {/* Email */}
-        <div className="contact-item">
-          <span className="contact-icon" aria-hidden="true">✉️</span>
+        <div className="personal-contact-item">
+          <span className="personal-contact-icon" aria-hidden="true">✉️</span>
           <a 
             href={`mailto:${personal.email}`} 
-            className="contact-link"
+            className="personal-contact-link"
           >
             {personal.email}
           </a>
@@ -39,11 +39,11 @@ const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
         {personal.phone && (
           <>
             <span className="contact-divider">•</span>
-            <div className="contact-item">
-              <span className="contact-icon" aria-hidden="true">📞</span>
+            <div className="personal-contact-item">
+              <span className="personal-contact-icon" aria-hidden="true">📞</span>
               <a 
                 href={`tel:${normalizePhone(personal.phone)}`} 
-                className="contact-link"
+                className="personal-contact-link"
               >
                 {personal.phone}
               </a>
@@ -55,21 +55,9 @@ const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
         {location && (
           <>
             <span className="contact-divider">•</span>
-            <div className="location-wrapper">
-              <div className="contact-item location-header">
-                <span className="contact-icon" aria-hidden="true">📍</span>
-                <span className="location-label">{formatLocationLabel(location, language)}</span>
-              </div>
-              <div className="location-details">
-                {location.city && (
-                  <p className="location-line">{location.city}</p>
-                )}
-                {location.region && location.countryCode && (
-                  <p className="location-line">
-                    {t(location.region)}, {location.countryCode}
-                  </p>
-                )}
-              </div>
+            <div className="personal-contact-item">
+              <span className="personal-contact-icon" aria-hidden="true">📍</span>
+              <span className="location-label">{formatLocationLabel(location, language)}</span>
             </div>
           </>
         )}

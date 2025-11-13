@@ -1,26 +1,26 @@
 /* PersonalContact Component Styles */
 .personal-contact-info {
-  @apply mt-4;
+  @apply mt-2;
 }
 
 .contact-wrapper {
-  @apply flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 text-sm sm:text-base flex-wrap px-4 py-3 bg-gray-50 rounded-lg;
+  @apply flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 text-sm sm:text-base flex-wrap px-4 py-2;
+}
+
+.personal-contact-item {
+  @apply flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start;
+}
+
+.personal-contact-icon {
+  @apply text-lg sm:text-xl flex-shrink-0;
+}
+
+.personal-contact-link {
+  @apply text-blue-600 hover:text-blue-800 font-medium truncate max-w-xs sm:max-w-none;
 }
 
 .contact-divider {
   @apply text-gray-300 hidden sm:inline;
-}
-
-.location-details {
-  @apply space-y-2 text-center sm:text-left;
-}
-
-.location-line {
-  @apply text-gray-700;
-}
-
-.location-label {
-  @apply font-medium;
 }
 
 .location-wrapper {
@@ -30,5 +30,15 @@
 .location-header {
   @apply mb-1;
 }
-/* Styles are inline in component using Tailwind classes */
-/* No additional custom CSS needed */
+
+.location-label {
+  @apply font-medium text-gray-700;
+}
+
+.location-details {
+  @apply space-y-2 text-center sm:text-left;
+}
+
+.location-line {
+  @apply text-gray-700;
+}
