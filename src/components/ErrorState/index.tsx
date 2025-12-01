@@ -8,11 +8,11 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
   // Use language from props (when rendered outside LanguageProvider)
   const t = (textOrKey: any) => translateFn(textOrKey, language);
   
-  // Detectar si el error es por falta de configuración de Firebase
-  const isFirebaseConfigError = error?.message?.includes('VITE_FIREBASE_CONFIG') || 
+  // Detectar si el error es por falta de configuración de base de datos
+  const isDatabaseConfigError = error?.message?.includes('VITE_DATABASE_URL') || 
                                  error?.message?.includes('environment variable');
   
-  if (isFirebaseConfigError) {
+  if (isDatabaseConfigError) {
     return (
       <div className="error-container">
         <div className="error-card">
@@ -21,10 +21,10 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
               <span className="error-icon">⚙️</span>
             </div>
             <h2 className="error-title">
-              {t('firebaseConfig.title')}
+              {t('databaseConfig.title')}
             </h2>
             <p className="error-subtitle">
-              {t('firebaseConfig.subtitle')}
+              {t('databaseConfig.subtitle')}
             </p>
           </div>
           
@@ -33,12 +33,12 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
               <span className="error-config-icon">📝</span>
               <div className="error-config-content">
                 <p className="error-config-title">
-                  {t('firebaseConfig.howToFix')}
+                  {t('databaseConfig.howToFix')}
                 </p>
                 <ol className="error-config-steps">
-                  <li>{t('firebaseConfig.step1')}</li>
-                  <li>{t('firebaseConfig.step2')}</li>
-                  <li>{t('firebaseConfig.step3')}</li>
+                  <li>{t('databaseConfig.step1')}</li>
+                  <li>{t('databaseConfig.step2')}</li>
+                  <li>{t('databaseConfig.step3')}</li>
                 </ol>
               </div>
             </div>
@@ -48,22 +48,22 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
             <div className="error-example-header">
               <span className="error-example-icon">💡</span>
               <p className="error-example-title">
-                {t('firebaseConfig.exampleFile')}
+                {t('databaseConfig.exampleFile')}
               </p>
             </div>
             <pre className="error-example-code">
-{`VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
+{`VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
 VITE_PERSON=your_person_id`}
             </pre>
             <div className="error-example-footer">
               <p className="error-example-description">
-                {t('firebaseConfig.getConfig')}
+                {t('databaseConfig.getConfig')}
               </p>
               <ol className="error-example-steps">
-                <li>{t('firebaseConfig.getConfigStep1')}</li>
-                <li>{t('firebaseConfig.getConfigStep2')}</li>
-                <li>{t('firebaseConfig.getConfigStep3')}</li>
-                <li>{t('firebaseConfig.getConfigStep4')}</li>
+                <li>{t('databaseConfig.getConfigStep1')}</li>
+                <li>{t('databaseConfig.getConfigStep2')}</li>
+                <li>{t('databaseConfig.getConfigStep3')}</li>
+                <li>{t('databaseConfig.getConfigStep4')}</li>
               </ol>
             </div>
           </div>
@@ -72,7 +72,7 @@ VITE_PERSON=your_person_id`}
     );
   }
   
-  // Error genérico de Firebase
+  // Error genérico
   return (
     <div className="error-generic-container">
       <div className="error-generic-card">

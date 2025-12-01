@@ -17,7 +17,7 @@ const Skills: React.FC<SkillsProps> = ({ skills }) => {
               <span className="skill-level">{t(skill.level)}</span>
             </div>
             <div className="skills">
-              {skill.keywords.map((k, kIndex) => (
+              {skill.keywords.filter(k => k != null && k !== '').map((k, kIndex) => (
                 <span key={kIndex} className="chip chip-purple">{k}</span>
               ))}
             </div>

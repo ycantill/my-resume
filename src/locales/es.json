@@ -5,26 +5,26 @@
   },
   "error": {
     "title": "Error al cargar currículum",
-    "subtitle": "No se pudieron cargar los datos desde Firebase.",
-    "checkConfig": "Verifica tu configuración de Firebase y conexión a internet.",
+    "subtitle": "No se pudieron cargar los datos desde la base de datos.",
+    "checkConfig": "Verifica tu configuración de base de datos y conexión a internet.",
     "errorDetected": "Error detectado:",
     "technicalDetails": "Detalles técnicos",
     "code": "Código:",
     "message": "Mensaje:"
   },
-  "firebaseConfig": {
-    "title": "Configuración de Firebase Faltante",
-    "subtitle": "La variable de entorno VITE_FIREBASE_CONFIG no está definida.",
+  "databaseConfig": {
+    "title": "Configuración de Base de Datos Faltante",
+    "subtitle": "La variable de entorno VITE_DATABASE_URL no está definida.",
     "howToFix": "Cómo solucionarlo:",
     "step1": "Crea un archivo .env.local en la raíz del proyecto",
-    "step2": "Agrega tu configuración de Firebase como un string JSON",
+    "step2": "Agrega la URL de tu Firebase Realtime Database",
     "step3": "Reinicia el servidor de desarrollo",
     "exampleFile": "Ejemplo de archivo .env.local:",
-    "getConfig": "Obtén tu configuración de Firebase desde:",
+    "getConfig": "Obtén la URL de tu base de datos Firebase desde:",
     "getConfigStep1": "Consola de Firebase → Tu Proyecto",
-    "getConfigStep2": "Configuración del Proyecto ⚙️ → General",
-    "getConfigStep3": "Desplázate a la sección \"Tus apps\"",
-    "getConfigStep4": "Copia el objeto firebaseConfig y conviértelo a string"
+    "getConfigStep2": "Realtime Database → Copia la URL de la base de datos",
+    "getConfigStep3": "Formato: https://tu-proyecto.firebaseio.com",
+    "getConfigStep4": "Pégala en VITE_DATABASE_URL en .env.local"
   },
   "fallback": {
     "title": "Persona Requerida",

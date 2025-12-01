@@ -1,6 +1,6 @@
 {
   "name": "my-resume",
-  "description": "React version of my-resume application",
+  "description": "Dynamic resume generator built with React, TypeScript, and Firebase REST API",
   "license": "MIT",
   "author": "my-resume",
   "version": "0.0.0",
@@ -16,7 +16,6 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "firebase": "^10.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.9.5"

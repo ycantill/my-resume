@@ -236,7 +236,7 @@ export const SUPPORTED_LANGUAGES: readonly Language[] = ['en', 'es'] as const;
 
 // Error types for better error handling
 export interface ResumeDataError {
-  code: 'PERSON_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA';
+  code: 'PERSON_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA' | 'FETCH_ERROR';
   message: string;
   personId?: string;
   originalError?: Error;
@@ -262,6 +262,10 @@ export const formatErrorMessage = (error: ResumeDataError, language: Language): 
     INVALID_DATA: {
       en: 'Invalid data provided.',
       es: 'Datos inválidos proporcionados.'
+    },
+    FETCH_ERROR: {
+      en: 'Error fetching data from database.',
+      es: 'Error al obtener datos de la base de datos.'
     }
   };
   

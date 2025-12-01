@@ -57,7 +57,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                             {t('work.techStack')}:
                           </p>
                           <div className="skills">
-                            {role.stack.map((s, sIndex) => (
+                            {role.stack.filter(s => s != null && s !== '').map((s, sIndex) => (
                               <span key={sIndex} className="chip">{s}</span>
                             ))}
                           </div>
@@ -113,7 +113,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                     {t('work.techStack')}:
                   </p>
                   <div className="skills">
-                    {job.stack.map((s, sIndex) => (
+                    {job.stack.filter(s => s != null && s !== '').map((s, sIndex) => (
                       <span key={sIndex} className="chip">{s}</span>
                     ))}
                   </div>

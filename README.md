@@ -8,12 +8,12 @@ Zero UI chrome design - pure, professional resume content accessible via semanti
 
 ## ✨ Features
 
-- 📄 **Dynamic Resume Generator**: React + Firebase integration
+- 📄 **Dynamic Resume Generator**: React + Firebase REST API integration
 - 🌍 **Multi-language Support**: English/Spanish via URL routing (`/en`, `/es`)
 - 👥 **Environment-Based Person Selection**: Configure person via `VITE_PERSON` variable
 - 🔗 **URL-Centric Navigation**: Direct URLs only
 - 📱 **Responsive Design**: Print-optimized
-- ⚡ **Real-time Updates**: Firebase Realtime Database
+- ⚡ **Lightweight Bundle**: Firebase REST API (no SDK dependency)
 - 🎨 **Modern Styling**: Tailwind CSS
 - 🌐 **Browser Language Detection**: Automatic language selection
 - 🚨 **Fallback Page**: Helpful guidance when configuration is missing
@@ -24,7 +24,7 @@ Zero UI chrome design - pure, professional resume content accessible via semanti
 ### Prerequisites
 
 - Node.js 16+
-- Firebase project with Realtime Database
+- Firebase Realtime Database with public read access
 
 ### Installation
 
@@ -42,15 +42,21 @@ npm install
    cp .env.example .env.local
    ```
 
-2. Configure Firebase (get from [Firebase Console](https://console.firebase.google.com) → Project Settings):
+2. Configure Firebase Database URL (get from [Firebase Console](https://console.firebase.google.com) → Realtime Database):
 
    ```bash
-   VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
+   VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
    ```
 
 3. Set person to display:
+
    ```bash
    VITE_PERSON=your_person_id  # Any person ID in your Firebase database
+   ```
+
+4. (Optional) Show private contact information:
+   ```bash
+   VITE_SHOW_PRIVATE_INFO=true  # Shows email, phone, and location
    ```
 
 ### Development
@@ -97,7 +103,7 @@ Without `VITE_PERSON`, shows helpful configuration guide with setup instructions
 - **React 18** + TypeScript
 - **Vite** (build tool)
 - **React Router** (URL routing)
-- **Firebase** (Realtime Database)
+- **Firebase REST API** (Realtime Database access)
 - **Tailwind CSS** (styling)
 
 ### Key Principles
@@ -219,7 +225,7 @@ src/
 │   └── es.json         # Spanish translations
 ├── AppRouter.tsx       # Main routing (handles person validation)
 ├── MyResume.tsx        # Container component
-├── firebase-service.ts # Firebase integration
+├── api-service.ts      # Firebase REST API integration
 ├── resume-helpers.ts   # Translation & formatting utilities
 ├── types.ts           # TypeScript definitions
 └── main.tsx           # Entry point (reads VITE_PERSON)
@@ -268,13 +274,15 @@ jobs:
 
 ### Firebase Database Structure
 
+**Important**: The application uses Firebase REST API to fetch data. Database rules must allow public read access to `/public/people`.
+
 #### Public Data Structure
 
 ```json
 public/
-└── people/
+└── people/           # Array of people
     ├── [0]
-    │   ├── name: "person_id_1"
+    │   ├── name: "person_id_1"     # Used to match VITE_PERSON
     │   ├── basics: { name, label, summary, profiles }
     │   ├── work: [ ... ]
     │   ├── education: [ ... ]
@@ -285,19 +293,25 @@ public/
         └── [same structure]
 ```
 
+**REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/public/people.json`
+
 #### Private Data Structure (Optional)
 
 ```json
 private/
-└── contact/
+└── contact/          # Array of contact info
     ├── [0]
-    │   ├── name: "person_id_1"
+    │   ├── name: "person_id_1"     # Must match person name
     │   ├── email: "email@example.com"
     │   ├── phone: "+1 234 567 8900"
     │   └── location: { city, country, countryCode, region }
     └── [1]
         └── [same structure]
 ```
+
+**REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/private/contact.json`
+
+**Note**: Private data requires database rules allowing read access. The app searches arrays by `name` field to find matching person.
 
 **Key Points:**
 
@@ -340,10 +354,10 @@ These rules block `private/contact` access at database level. The environment va
 ### Environment Variables
 
 ```bash
-# Required: Firebase configuration (JSON string from Firebase Console)
-VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
+# Required: Firebase Realtime Database URL
+VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
 
-# Required: Person identifier
+# Required: Person identifier (must match 'name' field in Firebase)
 VITE_PERSON=yohany
 
 # Optional: Show private contact (development only, never in production)
@@ -353,8 +367,6 @@ VITE_SHOW_PRIVATE_INFO=false
 See `.env.example` for template with placeholder values.
 
 ## 🖨️ Printing
-
-### Environment Variables
 
 ### Privacy & Contact Information
 
@@ -485,12 +497,22 @@ This React version represents a complete architectural evolution:
 - ✅ Added fallback page for missing configuration
 - ✅ Simplified URL structure to language-only
 
+#### **Phase 7: Firebase REST API Migration**
+
+- ✅ Migrated from Firebase SDK to REST API
+- ✅ Removed 76 packages (Firebase SDK dependency eliminated)
+- ✅ Simplified configuration from JSON object to single URL
+- ✅ Reduced bundle size significantly
+- ✅ Array-based data structure with name-based lookup
+- ✅ Maintained all functionality with lighter footprint
+
 ### Bundle Size Optimization
 
-- **Before**: 22.39 kB CSS with complex UI
-- **After**: 20.08 kB CSS (~10% reduction)
+- **Initial CSS**: 22.39 kB with complex UI
+- **After Minimization**: 20.08 kB CSS (~10% reduction)
+- **After REST API**: Even smaller bundle (no Firebase SDK ~200KB+)
 - **Components**: Eliminated Context providers and UI chrome
-- **Performance**: Faster rendering, cleaner DOM structure
+- **Performance**: Faster rendering, cleaner DOM structure, reduced network overhead
 
 ## 🎨 Design Philosophy
 
@@ -521,10 +543,10 @@ This React version represents a complete architectural evolution:
 
 **Firebase Connection Errors:**
 
-- Verify `VITE_FIREBASE_CONFIG` is set in `.env.local`
-- Check the JSON format is valid (use a JSON validator)
-- Check database rules allow read access
+- Verify `VITE_DATABASE_URL` is set in `.env.local`
+- Check database rules allow read access to `/public/people`
 - Ensure internet connectivity
+- Verify database URL format: `https://[PROJECT_ID].firebaseio.com` (no trailing slash)
 
 **Language Not Displaying:**
 
@@ -537,8 +559,9 @@ This React version represents a complete architectural evolution:
 
 - Ensure `VITE_PERSON` is set in `.env.local`
 - Verify person ID matches the `name` field in your Firebase database under `public/people/`
-- Check fallback page for helpful configuration instructions
-- Restart dev server after changing `.env.local`
+- Restart dev server after changing environment variables (`npm run dev`)
+- Check that Firebase database contains array structure with `name` field
+- Verify Firebase REST API is accessible (test URL in browser)
 
 **Fallback Page Appearing:**
 

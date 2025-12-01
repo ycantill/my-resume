@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { usePersonData, getPersonContactData } from './firebase-service.ts';
-import { isFirebaseConfigured } from './firebase-config.ts';
+import { usePersonData, getPersonContactData, isDatabaseConfigured } from './api-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
 import { useTranslation } from './hooks/useTranslation.ts';
 import type { MyResumeProps, Language, PersonalInfo, ResumeDataError } from './types.ts';
@@ -23,27 +22,9 @@ const MyResume = ({ initialPerson }: MyResumeProps) => {
 
   // Person is provided via initialPerson prop (startup variable); language is still taken from URL
   const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
-  
-  // If no person provided, this shouldn't render (handled by AppRouter)
-  if (!initialPerson) {
-    const configError: ResumeDataError = {
-      code: 'INVALID_DATA',
-      message: 'No person specified'
-    };
-    return <ErrorState error={configError} language={currentLanguage} />;
-  }
-  
   const currentPerson = initialPerson;
 
-  // Verificar si Firebase está configurado
-  if (!isFirebaseConfigured()) {
-    const configError: ResumeDataError = {
-      code: 'INVALID_DATA',
-      message: 'VITE_FIREBASE_CONFIG environment variable is not defined'
-    };
-    return <ErrorState error={configError} language={currentLanguage} />;
-  }
-
+  // Hooks must be called unconditionally
   const { data: resumeData, loading, error } = usePersonData(currentPerson);
   const [contactData, setContactData] = useState<PersonalInfo | null>(null);
 
@@ -65,6 +46,26 @@ const MyResume = ({ initialPerson }: MyResumeProps) => {
     };
     loadContactData();
   }, [currentPerson]);
+
+  // Early returns after all hooks
+  
+  // If no person provided, this shouldn't render (handled by AppRouter)
+  if (!initialPerson) {
+    const configError: ResumeDataError = {
+      code: 'INVALID_DATA',
+      message: 'No person specified'
+    };
+    return <ErrorState error={configError} language={currentLanguage} />;
+  }
+
+  // Verificar si Database está configurado
+  if (!isDatabaseConfigured()) {
+    const configError: ResumeDataError = {
+      code: 'INVALID_DATA',
+      message: 'VITE_DATABASE_URL environment variable is not defined'
+    };
+    return <ErrorState error={configError} language={currentLanguage} />;
+  }
 
   // Loading state
   if (loading) {
