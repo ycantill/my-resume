@@ -1,6 +1,6 @@
 /* WorkExperience Component Styles */
 .job {
-  @apply mb-8 print:mb-6;
+  @apply mb-8 print:mb-4;
 }
 
 .job-company-header {
@@ -12,11 +12,11 @@
 }
 
 .job-roles-container {
-  @apply space-y-8;
+  @apply space-y-8 print:space-y-4;
 }
 
 .job-role {
-  @apply mb-6 last:mb-0 relative pl-8 border-l-2 border-gray-200 last:border-l-0;
+  @apply mb-6 last:mb-0 relative pl-8 border-l-2 border-gray-200 last:border-l-0 print:mb-4;
 }
 
 .job-role-dot {
@@ -106,19 +106,6 @@
 
 /* Print styles for WorkExperience */
 @media print {
-  /* Prevent job roles from breaking between pages */
-  .job-role {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    position: relative;
-  }
-  
-  /* Ensure job containers don't break */
-  .job {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-  
   /* Improve timeline elements for print */
   .job-role::before {
     content: "";

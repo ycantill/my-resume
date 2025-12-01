@@ -8,7 +8,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({ education }) => {
   
   return (
     <>
-      <h2 className="section-title">{t('sections.education')}</h2>
+      <h2 className="section-title education-title">{t('sections.education')}</h2>
       <div className="education-list">
         {education.map((edu, eduIndex) => (
           <div key={eduIndex} className="section-card education-card">

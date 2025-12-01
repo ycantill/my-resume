@@ -1,6 +1,6 @@
 /* BasicInfo Component Styles */
 .basics {
-  @apply mb-8 sm:mb-10 text-center print:mb-8;
+  @apply mb-8 sm:mb-10 text-center print:mb-6;
 }
 
 .basics-header {

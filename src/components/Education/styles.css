@@ -1,6 +1,6 @@
 /* Education Component Styles */
 .education-card {
-  @apply border-l-4 border-green-500;
+  @apply border-l-4 border-green-500 print:break-inside-avoid;
 }
 
 .education-header {
@@ -28,7 +28,7 @@
 }
 
 .education-list {
-  @apply space-y-6;
+  @apply space-y-6 print:space-y-3;
 }
 /* Styles are inline in component using Tailwind classes */
 /* No additional custom CSS needed */
