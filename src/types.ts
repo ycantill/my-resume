@@ -112,17 +112,11 @@ export interface UsePersonDataResult {
 
 export interface MyResumeProps {
   initialPerson?: string;
-  initialLanguage?: Language;
 }
 
 // Router-related types
-export interface RouteParams {
-  language?: string;
-  personId?: string;
-}
-
 export interface AppRouterProps {
-  // Optional initial person (provided at app startup via env or bootstrap)
+  // Optional initial person from VITE_PERSON env variable
   initialPerson?: string;
 }
 
@@ -153,43 +147,37 @@ export interface LocationDisplayProps {
   language: Language;
 }
 
-// Component props interfaces that receive language
+// Component props interfaces - language obtained from useTranslation hook
 export interface BasicInfoProps {
   basics: ResumeBasics;
-  language: Language;
 }
 
 export interface PersonalContactProps {
   personal: PersonalInfo;
-  language: Language;
 }
 
 export interface SummaryProps {
   summary: LocalizedText;
-  language: Language;
 }
 
 export interface WorkExperienceProps {
   workItems: (WorkEntry | GroupedWorkEntry)[];
-  language: Language;
 }
 
 export interface EducationSectionProps {
   education: Education[];
-  language: Language;
 }
 
 export interface LanguagesProps {
   languages: LanguageEntry[];
-  language: Language;
 }
 
 export interface SkillsProps {
   skills: Skill[];
-  language: Language;
 }
 
-// Loading and Error component props
+// Loading and Error component props - these receive language directly
+// because they render outside LanguageProvider
 export interface LoadingStateProps {
   language: Language;
 }
@@ -219,8 +207,8 @@ export type CountryCode = 'CO' | 'ES' | 'US' | 'CA' | 'MX' | 'AR' | 'BR' | 'CL' 
 // Network types for social profiles
 export type SocialNetwork = 'LinkedIn' | 'GitHub' | 'Twitter' | 'Website' | 'Portfolio';
 
-// Available persons type
-export type PersonId = 'yohany' | 'lenicet';
+// Available persons type - any string is valid
+export type PersonId = string;
 
 // Date format type (YYYY-MM)
 export type DateString = `${number}-${string}`;
@@ -239,17 +227,16 @@ export const isValidLanguage = (lang: string): lang is Language => {
   return lang === 'en' || lang === 'es';
 };
 
-export const isValidPersonId = (id: string): id is PersonId => {
-  return id === 'yohany' || id === 'lenicet';
-};
+// Removed isValidPersonId - any person ID is now valid
 
 // Constants for better type safety
 export const SUPPORTED_LANGUAGES: readonly Language[] = ['en', 'es'] as const;
-export const SUPPORTED_PERSONS: readonly PersonId[] = ['yohany', 'lenicet'] as const;
+
+// Removed SUPPORTED_PERSONS - any person can be used
 
 // Error types for better error handling
 export interface ResumeDataError {
-  code: 'PERSON_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA';
+  code: 'PERSON_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA' | 'FETCH_ERROR';
   message: string;
   personId?: string;
   originalError?: Error;
@@ -275,6 +262,10 @@ export const formatErrorMessage = (error: ResumeDataError, language: Language): 
     INVALID_DATA: {
       en: 'Invalid data provided.',
       es: 'Datos inválidos proporcionados.'
+    },
+    FETCH_ERROR: {
+      en: 'Error fetching data from database.',
+      es: 'Error al obtener datos de la base de datos.'
     }
   };
   

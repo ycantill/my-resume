@@ -8,12 +8,12 @@ Zero UI chrome design - pure, professional resume content accessible via semanti
 
 ## ✨ Features
 
-- 📄 **Dynamic Resume Generator**: React + Firebase integration
+- 📄 **Dynamic Resume Generator**: React + Firebase REST API integration
 - 🌍 **Multi-language Support**: English/Spanish via URL routing (`/en`, `/es`)
 - 👥 **Environment-Based Person Selection**: Configure person via `VITE_PERSON` variable
 - 🔗 **URL-Centric Navigation**: Direct URLs only
 - 📱 **Responsive Design**: Print-optimized
-- ⚡ **Real-time Updates**: Firebase Realtime Database
+- ⚡ **Lightweight Bundle**: Firebase REST API (no SDK dependency)
 - 🎨 **Modern Styling**: Tailwind CSS
 - 🌐 **Browser Language Detection**: Automatic language selection
 - 🚨 **Fallback Page**: Helpful guidance when configuration is missing
@@ -24,7 +24,7 @@ Zero UI chrome design - pure, professional resume content accessible via semanti
 ### Prerequisites
 
 - Node.js 16+
-- Firebase project with Realtime Database
+- Firebase Realtime Database with public read access
 
 ### Installation
 
@@ -36,23 +36,28 @@ npm install
 
 ### Configuration
 
-1. **Firebase Setup**:
-
-   Copy the example environment file:
+1. Copy `.env.example` to `.env.local`:
 
    ```bash
    cp .env.example .env.local
    ```
 
-   Update `.env.local` with your Firebase configuration:
-   - Get your Firebase config from [Firebase Console](https://console.firebase.google.com) → Project Settings → General
-   - Copy the config object and stringify it as JSON for `VITE_FIREBASE_CONFIG`
+2. Configure Firebase Database URL (get from [Firebase Console](https://console.firebase.google.com) → Realtime Database):
 
-2. **Person Configuration**: Set the person to display via environment variable in `.env.local`:
+   ```bash
+   VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
+   ```
 
-```bash
-VITE_PERSON=yohany  # or lenicet
-```
+3. Set person to display:
+
+   ```bash
+   VITE_PERSON=your_person_id  # Any person ID in your Firebase database
+   ```
+
+4. (Optional) Show private contact information:
+   ```bash
+   VITE_SHOW_PRIVATE_INFO=true  # Shows email, phone, and location
+   ```
 
 ### Development
 
@@ -61,8 +66,10 @@ VITE_PERSON=yohany  # or lenicet
 npm run dev
 
 # Show specific person's resume
-npm run dev:yohany
-npm run dev:lenicet
+VITE_PERSON=your_person_id npm run dev
+
+# Show with private contact information (development only)
+VITE_SHOW_PRIVATE_INFO=true VITE_PERSON=your_person_id npm run dev
 ```
 
 ## 🛣️ URL Structure
@@ -82,16 +89,12 @@ Examples:
 
 ### Fallback Behavior
 
-When `VITE_PERSON` is not set, the application displays a helpful fallback page explaining:
+Without `VITE_PERSON`, shows helpful configuration guide with setup instructions.
 
-- How to set the environment variable
-- Available persons (`yohany`, `lenicet`)
-- Example commands for development and building
+**Supported Values:**
 
-### Supported Values
-
-- **Languages**: `en` (English), `es` (Spanish)
-- **Persons**: `yohany`, `lenicet` (set via `VITE_PERSON`)
+- **Languages**: `en`, `es`
+- **Persons**: Any person ID configured in your Firebase database under `public/people/`
 
 ## 🏗️ Architecture
 
@@ -100,23 +103,60 @@ When `VITE_PERSON` is not set, the application displays a helpful fallback page 
 - **React 18** + TypeScript
 - **Vite** (build tool)
 - **React Router** (URL routing)
-- **Firebase** (Realtime Database)
+- **Firebase REST API** (Realtime Database access)
 - **Tailwind CSS** (styling)
 
 ### Key Principles
 
 - **URL as Single Source of Truth**: All state from URL parameters
-- **Props-Driven Components**: No Context API
+- **Context-Driven Translations**: Language state managed via React Context + custom hook
 - **Zero UI Elements**: Pure content focus
 
 ### Component Structure
 
 ```
-App → AppRouter → [PersonRequiredFallback | MyResume] → Resume Components
+App → AppRouter → LanguageProvider → MyResume → Resume Components
 ```
 
-- **Without VITE_PERSON**: Shows fallback page explaining configuration
-- **With VITE_PERSON**: Shows resume components receiving `language` as prop
+All resume components use the `useTranslation()` hook for bilingual rendering.
+
+### Translation System
+
+**Architecture:**
+
+- **JSON Translation Files**: `src/locales/en.json` and `src/locales/es.json`
+- **Custom Hook**: `useTranslation()` provides `{ t, language }`
+- **Unified Translation Function**: `t()` handles both Firebase objects and static text keys
+
+**Usage Pattern:**
+
+```typescript
+// In any component
+import { useTranslation } from '../hooks/useTranslation';
+
+const Component: React.FC<ComponentProps> = ({ data }) => {
+  const { t, language } = useTranslation();
+
+  // Translate static UI text (string key)
+  return (
+    <div>
+      <h2>{t('sections.summary')}</h2>
+      {/* Translate Firebase data (LocalizedText object) */}
+      <p>{t(data.summary)}</p>
+    </div>
+  );
+};
+```
+
+**Translation Function Types:**
+
+```typescript
+// Static UI text (key lookup in JSON)
+t('loading.title') → "Loading resume..." | "Cargando currículum..."
+
+// Firebase data (LocalizedText object)
+t({ en: "Engineer", es: "Ingeniero" }) → "Engineer" | "Ingeniero"
+```
 
 ## 🔧 Development
 
@@ -124,11 +164,9 @@ App → AppRouter → [PersonRequiredFallback | MyResume] → Resume Components
 
 ```bash
 # Development servers
-npm run dev                    # Base dev server (shows fallback without VITE_PERSON)
-npm run dev:yohany             # Development with Yohany's resume
-npm run dev:lenicet            # Development with Lenicet's resume
-npm run dev:private:yohany     # Development with Yohany + private contact info
-npm run dev:private:lenicet    # Development with Lenicet + private contact info
+npm run dev                                      # Base dev server (shows fallback without VITE_PERSON)
+VITE_PERSON=your_person_id npm run dev           # Development with specific person's resume
+VITE_SHOW_PRIVATE_INFO=true VITE_PERSON=your_person_id npm run dev  # Development with private contact info
 
 # Production builds
 npm run build                  # Base build (requires VITE_PERSON for full functionality)
@@ -145,16 +183,29 @@ npm run type-check             # TypeScript validation
 ### Component Pattern
 
 ```typescript
+import { useTranslation } from '../hooks/useTranslation';
+
 interface ComponentProps {
   data: DataType;
-  language: Language;
 }
 
-const Component: React.FC<ComponentProps> = ({ data, language }) => {
-  const t = language;
-  return <div>{t === 'en' ? 'English' : 'Español'}</div>;
+const Component: React.FC<ComponentProps> = ({ data }) => {
+  const { t, language } = useTranslation();
+
+  // Use t() for static text keys
+  return (
+    <div>
+      <h2>{t('sections.experience')}</h2>
+      {/* Use t() for LocalizedText objects from Firebase */}
+      <p>{t(data.description)}</p>
+      {/* Access language when needed for helpers */}
+      <span>{formatDate(data.startDate, language)}</span>
+    </div>
+  );
 };
 ```
+
+**Note**: Components rendered outside `LanguageProvider` (like `LoadingState`, `ErrorState`) receive `language` as a prop and create a local `t()` function.
 
 ### File Structure
 
@@ -165,11 +216,19 @@ src/
 │   ├── LoadingState.tsx  # Loading UI
 │   ├── ErrorState.tsx    # Error handling
 │   └── [other components...]
-├── AppRouter.tsx        # Main routing (handles person validation)
-├── MyResume.tsx         # Container component
-├── firebase-service.ts  # Firebase integration
-├── types.ts            # TypeScript definitions
-└── main.tsx            # Entry point (reads VITE_PERSON)
+├── contexts/            # React contexts
+│   └── LanguageContext.tsx # Language state management
+├── hooks/              # Custom hooks
+│   └── useTranslation.ts # Translation hook
+├── locales/            # Translation files
+│   ├── en.json         # English translations
+│   └── es.json         # Spanish translations
+├── AppRouter.tsx       # Main routing (handles person validation)
+├── MyResume.tsx        # Container component
+├── api-service.ts      # Firebase REST API integration
+├── resume-helpers.ts   # Translation & formatting utilities
+├── types.ts           # TypeScript definitions
+└── main.tsx           # Entry point (reads VITE_PERSON)
 ```
 
 ## 🚀 Deployment
@@ -180,8 +239,7 @@ For production deployment, use the build script with environment variable:
 
 ```bash
 # Build for GitHub Pages with specific person
-VITE_PERSON=yohany npm run build:github
-VITE_PERSON=lenicet npm run build:github
+VITE_PERSON=your_person_id npm run build:github
 ```
 
 ### GitHub Pages (Recommended)
@@ -208,7 +266,7 @@ jobs:
         with:
           node-version: '18'
       - run: npm ci
-      - run: VITE_PERSON=yohany npm run build:github
+      - run: VITE_PERSON=your_person_id npm run build:github
       - uses: actions/deploy-pages@v2
         with:
           artifact_name: dist
@@ -216,75 +274,106 @@ jobs:
 
 ### Firebase Database Structure
 
-```
-### Firebase Database Structure
+**Important**: The application uses Firebase REST API to fetch data. Database rules must allow public read access to `/public/people`.
 
 #### Public Data Structure
 
-```
-
+```json
 public/
-├── people/
-├── [
-│ {
-│ "name": "yohany",
-│ "basics": {
-│ "name": "Yohany Cantillo",
-│ "label": { "en": "...", "es": "..." },
-│ "summary": { "en": "...", "es": "..." },
-│ "profiles": [ ... ]
-│ },
-│ "work": [ ... ],
-│ "education": [ ... ],
-│ "languages": [ ... ],
-│ "skills": [ ... ]
-│ },
-│ {
-│ "name": "lenicet",
-│ "basics": { ... },
-│ "work": [ ... ],
-│ "education": [ ... ],
-│ "languages": [ ... ],
-│ "skills": [ ... ]
-│ }
-│ ]
-
+└── people/           # Array of people
+    ├── [0]
+    │   ├── name: "person_id_1"     # Used to match VITE_PERSON
+    │   ├── basics: { name, label, summary, profiles }
+    │   ├── work: [ ... ]
+    │   ├── education: [ ... ]
+    │   ├── languages: [ ... ]
+    │   └── skills: [ ... ]
+    └── [1]
+        ├── name: "person_id_2"
+        └── [same structure]
 ```
+
+**REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/public/people.json`
 
 #### Private Data Structure (Optional)
 
+```json
+private/
+└── contact/          # Array of contact info
+    ├── [0]
+    │   ├── name: "person_id_1"     # Must match person name
+    │   ├── email: "email@example.com"
+    │   ├── phone: "+1 234 567 8900"
+    │   └── location: { city, country, countryCode, region }
+    └── [1]
+        └── [same structure]
 ```
 
-private/
-├── contact/
-├── [
-│ {
-│ "name": "yohany",
-│ "email": "email@example.com",
-│ "phone": "+1 234 567 8900",
-│ "location": {
-│ "city": "City",
-│ "country": { "en": "Country", "es": "País" },
-│ "countryCode": "XX",
-│ "region": { "en": "Region", "es": "Región" }
-│ }
-│ },
-│ { ... }
-│ ]
+**REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/private/contact.json`
 
-````
+**Note**: Private data requires database rules allowing read access. The app searches arrays by `name` field to find matching person.
 
-**Key Structure Changes:**
+**Key Points:**
 
-- **Separated Data**: Public information (basics, work, education, etc.) vs private contact information
-- **Array Format**: Both `public/people` and `private/contact` use arrays with `name` identifiers
-- **Security**: Private contact data is optional and controlled via environment variable
+- **Separated Data**: Public resume info vs private contact details
+- **Array Format**: Identified by `name` field matching person ID
+- **Bilingual Content**: All user-facing text uses `{ "en": "...", "es": "..." }` format (LocalizedText interface)
+- **Static UI Text**: Translated via JSON files in `src/locales/`
+
+### Privacy & Contact Information
+
+#### Display Modes
+
+**Public Mode (Default - Production):**
+
+- Shows: Name, title, summary, work, education, skills, social profiles
+- Private contact info is **not accessed** from Firebase
+
+**Private Mode (Development Only):**
+
+```bash
+VITE_SHOW_PRIVATE_INFO=true npm run dev
+```
+
+- ✅ Shows email, phone, and location in gray container
+- ⚠️ **NEVER** enable in production
+
+#### Firebase Security Rules
+
+```json
+{
+  "rules": {
+    "public": { ".read": true, ".write": false },
+    "private": { ".read": false, ".write": false }
+  }
+}
+```
+
+These rules block `private/contact` access at database level. The environment variable is for development only.
+
+### Environment Variables
+
+```bash
+# Required: Firebase Realtime Database URL
+VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
+
+# Required: Person identifier (must match 'name' field in Firebase)
+VITE_PERSON=yohany
+
+# Optional: Show private contact (development only, never in production)
+VITE_SHOW_PRIVATE_INFO=false
+```
+
+See `.env.example` for template with placeholder values.
+
+## 🖨️ Printing
 
 ### Privacy & Contact Information
 
 #### Public Mode (Default)
 
 By default, the application only displays public information:
+
 - Name and professional title
 - Professional summary
 - Work experience
@@ -300,7 +389,7 @@ To show private contact information during development:
 
 ```bash
 VITE_SHOW_PRIVATE_INFO=true npm run dev
-````
+```
 
 When enabled:
 
@@ -332,33 +421,18 @@ Apply these rules to protect private data:
 
 ### Environment Variables
 
-Create a `.env.local` file for local development:
-
 ```bash
-# Firebase Configuration (Single JSON string)
-# Get this from your Firebase Console → Project Settings → General
-VITE_FIREBASE_CONFIG={"apiKey":"YOUR_API_KEY","authDomain":"your-project.firebaseapp.com","databaseURL":"https://your-project-default-rtdb.firebaseio.com","projectId":"your-project-id","storageBucket":"your-project.firebasestorage.app","messagingSenderId":"123456789012","appId":"1:123456789012:web:abcdef1234567890abcdef","measurementId":"G-XXXXXXXXXX"}
+# Required: Firebase configuration (JSON string from Firebase Console)
+VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
 
-# Application Configuration
+# Required: Person identifier
 VITE_PERSON=yohany
 
-# Privacy Configuration (Development Only)
-# Set to 'true' to show private contact information
-# NEVER enable in production
+# Optional: Show private contact (development only, never in production)
 VITE_SHOW_PRIVATE_INFO=false
 ```
 
-**Quick Setup:**
-
-1. Copy the example file:
-
-   ```bash
-   cp .env.example .env.local
-   ```
-
-2. Update `VITE_FIREBASE_CONFIG` with your Firebase project configuration (found in Firebase Console)
-
-**Note**: The `.env.local` file is ignored by git for security. See `.env.example` for template.
+See `.env.example` for template with placeholder values.
 
 ````
 
@@ -423,12 +497,22 @@ This React version represents a complete architectural evolution:
 - ✅ Added fallback page for missing configuration
 - ✅ Simplified URL structure to language-only
 
+#### **Phase 7: Firebase REST API Migration**
+
+- ✅ Migrated from Firebase SDK to REST API
+- ✅ Removed 76 packages (Firebase SDK dependency eliminated)
+- ✅ Simplified configuration from JSON object to single URL
+- ✅ Reduced bundle size significantly
+- ✅ Array-based data structure with name-based lookup
+- ✅ Maintained all functionality with lighter footprint
+
 ### Bundle Size Optimization
 
-- **Before**: 22.39 kB CSS with complex UI
-- **After**: 20.08 kB CSS (~10% reduction)
+- **Initial CSS**: 22.39 kB with complex UI
+- **After Minimization**: 20.08 kB CSS (~10% reduction)
+- **After REST API**: Even smaller bundle (no Firebase SDK ~200KB+)
 - **Components**: Eliminated Context providers and UI chrome
-- **Performance**: Faster rendering, cleaner DOM structure
+- **Performance**: Faster rendering, cleaner DOM structure, reduced network overhead
 
 ## 🎨 Design Philosophy
 
@@ -459,10 +543,10 @@ This React version represents a complete architectural evolution:
 
 **Firebase Connection Errors:**
 
-- Verify `VITE_FIREBASE_CONFIG` is set in `.env.local`
-- Check the JSON format is valid (use a JSON validator)
-- Check database rules allow read access
+- Verify `VITE_DATABASE_URL` is set in `.env.local`
+- Check database rules allow read access to `/public/people`
 - Ensure internet connectivity
+- Verify database URL format: `https://[PROJECT_ID].firebaseio.com` (no trailing slash)
 
 **Language Not Displaying:**
 
@@ -474,14 +558,15 @@ This React version represents a complete architectural evolution:
 **Person Not Loading:**
 
 - Ensure `VITE_PERSON` is set in `.env.local`
-- Verify person ID is valid (`yohany` or `lenicet`)
-- Check fallback page for helpful configuration instructions
-- Restart dev server after changing `.env.local`
+- Verify person ID matches the `name` field in your Firebase database under `public/people/`
+- Restart dev server after changing environment variables (`npm run dev`)
+- Check that Firebase database contains array structure with `name` field
+- Verify Firebase REST API is accessible (test URL in browser)
 
 **Fallback Page Appearing:**
 
 - This indicates `VITE_PERSON` is not set in `.env.local`
-- Add `VITE_PERSON=yohany` to `.env.local`
+- Add `VITE_PERSON=your_person_id` to `.env.local` (use a person ID from your Firebase)
 - Restart the development server
 - Check available persons in fallback page instructions
 

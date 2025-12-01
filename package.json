@@ -1,16 +1,12 @@
 {
   "name": "my-resume",
-  "description": "React version of my-resume application",
+  "description": "Dynamic resume generator built with React, TypeScript, and Firebase REST API",
   "license": "MIT",
   "author": "my-resume",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:yohany": "VITE_PERSON=yohany vite",
-    "dev:lenicet": "VITE_PERSON=lenicet vite",
-    "dev:private:yohany": "VITE_SHOW_PRIVATE_INFO=true VITE_PERSON=yohany vite",
-    "dev:private:lenicet": "VITE_SHOW_PRIVATE_INFO=true VITE_PERSON=lenicet vite",
     "build": "vite build",
     "preview": "vite preview",
     "build:github": "NODE_ENV=production vite build",
@@ -20,7 +16,6 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "firebase": "^10.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.9.5"

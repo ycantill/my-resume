@@ -1,0 +1,42 @@
+/* LoadingState Component Styles */
+.loading-container {
+  @apply min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4;
+}
+
+.loading-card {
+  @apply max-w-md mx-auto p-8 bg-white rounded-xl shadow-xl text-center;
+}
+
+.loading-spinner-wrapper {
+  @apply relative mb-6;
+}
+
+.loading-spinner-outer {
+  @apply animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto;
+}
+
+.loading-spinner-inner {
+  @apply absolute inset-0 flex items-center justify-center;
+}
+
+.loading-spinner-dot {
+  @apply w-6 h-6 bg-blue-600 rounded-full animate-pulse;
+}
+
+.loading-title {
+  @apply text-2xl font-bold text-gray-800 mb-3;
+}
+
+.loading-subtitle {
+  @apply text-gray-600 mb-4;
+}
+
+.loading-dots {
+  @apply flex justify-center space-x-1;
+}
+
+.loading-dot {
+  @apply w-2 h-2 bg-blue-500 rounded-full animate-bounce;
+}
+/* Styles are inline in component using Tailwind classes */
+/* No additional custom CSS needed */

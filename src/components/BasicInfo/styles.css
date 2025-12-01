@@ -1,0 +1,40 @@
+/* BasicInfo Component Styles */
+.basics {
+  @apply mb-8 sm:mb-10 text-center print:mb-6;
+}
+
+.basics-header {
+  @apply text-center mb-6 sm:mb-8;
+}
+
+.basics-name {
+  @apply text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 px-4;
+}
+
+.basics-label {
+  @apply text-lg sm:text-xl md:text-2xl text-gray-600 px-4;
+}
+
+.contact-info {
+  @apply mt-4 sm:mt-6 print:mt-4 print:text-sm;
+}
+
+.contact-container {
+  @apply flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-8 text-sm sm:text-base flex-wrap px-4;
+}
+
+.contact-item {
+  @apply flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start;
+}
+
+.contact-icon-linkedin {
+  @apply bg-blue-600 text-white text-xs sm:text-sm px-2 py-1 rounded font-semibold flex-shrink-0;
+}
+
+.contact-icon {
+  @apply text-lg sm:text-xl flex-shrink-0;
+}
+
+.contact-link {
+  @apply text-blue-600 hover:text-blue-800 font-medium truncate max-w-xs sm:max-w-none;
+}

@@ -1,0 +1,6 @@
+/* Summary Component Styles */
+.summary-text {
+  @apply text-gray-700 leading-relaxed text-justify;
+}
+/* Styles are inline in component using Tailwind classes */
+/* No additional custom CSS needed */

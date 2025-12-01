@@ -1,5 +1,48 @@
 // Helper functions for date formatting and durations used by the resume component
-import type { WorkEntry, GroupedWorkEntry, BasicLocation, Language, DateRange } from './types.ts';
+import type { WorkEntry, GroupedWorkEntry, BasicLocation, Language, DateRange, LocalizedText } from './types.ts';
+import enTranslations from './locales/en.json';
+import esTranslations from './locales/es.json';
+
+// Translations object
+const translations = {
+  en: enTranslations,
+  es: esTranslations,
+} as const;
+
+// Unified translation helper - handles both Firebase LocalizedText and static strings
+export function t(textOrKey: LocalizedText | string, lang: Language): string {
+  // If it's a LocalizedText object (has 'en' property)
+  if (typeof textOrKey === 'object' && textOrKey !== null && 'en' in textOrKey) {
+    return textOrKey[lang] || textOrKey.en || '';
+  }
+  
+  // If it's a string key, look it up in translations
+  if (typeof textOrKey === 'string') {
+    const keys = textOrKey.split('.');
+    let value: any = translations[lang];
+    
+    for (const k of keys) {
+      if (value && typeof value === 'object' && k in value) {
+        value = value[k];
+      } else {
+        // Fallback to English if key not found
+        value = translations.en;
+        for (const fallbackKey of keys) {
+          if (value && typeof value === 'object' && fallbackKey in value) {
+            value = value[fallbackKey];
+          } else {
+            return textOrKey; // Return key if not found
+          }
+        }
+        break;
+      }
+    }
+    
+    return typeof value === 'string' ? value : textOrKey;
+  }
+  
+  return '';
+}
 
 // Formats a YYYY-MM string into MMM YYYY localized label
 export function formatDateLabel(ym: string | null | undefined, lang: Language): string | null {

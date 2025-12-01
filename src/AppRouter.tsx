@@ -3,8 +3,8 @@ import { HashRouter as Router, Routes, Route, Navigate, useParams } from 'react-
 import { LanguageProvider } from './contexts/LanguageContext';
 import MyResume from './MyResume';
 import { PersonRequiredFallback } from './components/index';
-import type { AppRouterProps, PersonId, Language } from './types';
-import { isValidPersonId, isValidLanguage, SUPPORTED_LANGUAGES } from './types';
+import type { AppRouterProps, Language } from './types';
+import { isValidLanguage, SUPPORTED_LANGUAGES } from './types';
 
 const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
   // Detect browser language for default
@@ -15,10 +15,6 @@ const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
   };
 
   const defaultLanguage = getBrowserLanguage();
-  
-  // Check if initialPerson is provided and valid
-  const hasValidPerson = initialPerson && isValidPersonId(initialPerson);
-  const validatedPerson = hasValidPerson ? initialPerson as PersonId : null;
 
   return (
     <Router>
@@ -32,7 +28,7 @@ const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
         {/* Language-only route - shows resume if person is provided, fallback otherwise */}
         <Route 
           path="/:language" 
-          element={<LanguageRoute initialPerson={validatedPerson} />} 
+          element={<LanguageRoute initialPerson={initialPerson} />} 
         />
 
         {/* Catch all - redirect to default language */}
@@ -47,7 +43,7 @@ const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
 
 
 // Component that handles language-only routes and shows resume or fallback
-const LanguageRoute: React.FC<{ initialPerson: PersonId | null }> = ({ initialPerson }) => {
+const LanguageRoute: React.FC<{ initialPerson?: string }> = ({ initialPerson }) => {
   const { language } = useParams<{ language: string }>();
 
   // Validate language
@@ -66,7 +62,7 @@ const LanguageRoute: React.FC<{ initialPerson: PersonId | null }> = ({ initialPe
   // Show the resume with the provided person
   return (
     <LanguageProvider initialLanguage={validatedLanguage}>
-      <MyResume initialPerson={initialPerson} initialLanguage={validatedLanguage} />
+      <MyResume initialPerson={initialPerson} />
     </LanguageProvider>
   );
 };

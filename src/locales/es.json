@@ -1,0 +1,56 @@
+{
+  "loading": {
+    "title": "Cargando currículum...",
+    "subtitle": "Obteniendo datos desde Firebase Realtime Database"
+  },
+  "error": {
+    "title": "Error al cargar currículum",
+    "subtitle": "No se pudieron cargar los datos desde la base de datos.",
+    "checkConfig": "Verifica tu configuración de base de datos y conexión a internet.",
+    "errorDetected": "Error detectado:",
+    "technicalDetails": "Detalles técnicos",
+    "code": "Código:",
+    "message": "Mensaje:"
+  },
+  "databaseConfig": {
+    "title": "Configuración de Base de Datos Faltante",
+    "subtitle": "La variable de entorno VITE_DATABASE_URL no está definida.",
+    "howToFix": "Cómo solucionarlo:",
+    "step1": "Crea un archivo .env.local en la raíz del proyecto",
+    "step2": "Agrega la URL de tu Firebase Realtime Database",
+    "step3": "Reinicia el servidor de desarrollo",
+    "exampleFile": "Ejemplo de archivo .env.local:",
+    "getConfig": "Obtén la URL de tu base de datos Firebase desde:",
+    "getConfigStep1": "Consola de Firebase → Tu Proyecto",
+    "getConfigStep2": "Realtime Database → Copia la URL de la base de datos",
+    "getConfigStep3": "Formato: https://tu-proyecto.firebaseio.com",
+    "getConfigStep4": "Pégala en VITE_DATABASE_URL en .env.local"
+  },
+  "fallback": {
+    "title": "Persona Requerida",
+    "description": "No se especificó una persona para esta aplicación de currículum. Para ver un currículum, necesitas establecer la variable de entorno VITE_PERSON.",
+    "howToSet": "Cómo establecer la persona:",
+    "forDevelopment": "Para desarrollo:",
+    "forBuilding": "Para compilar:",
+    "availablePersons": "Personas disponibles:",
+    "securityNote": "Esta aplicación requiere que se especifique una persona al momento de compilar/iniciar por motivos de seguridad y configuración."
+  },
+  "sections": {
+    "summary": "Resumen",
+    "experience": "Experiencia",
+    "education": "Educación",
+    "skills": "Habilidades Técnicas",
+    "languages": "Idiomas"
+  },
+  "work": {
+    "currentRole": "Puesto actual",
+    "techStack": "Stack técnico",
+    "in": "en"
+  },
+  "education": {
+    "label": "Educación"
+  },
+  "document": {
+    "titleSuffix": "Currículum"
+  }
+}
