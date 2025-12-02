@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { usePersonData, getPersonContactData, isDatabaseConfigured } from './api-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
 import { useTranslation } from './hooks/useTranslation.ts';
-import type { MyResumeProps, Language, PersonalInfo, ResumeDataError } from './types.ts';
+import { useAppStore, selectResumeData, selectContactData, selectLoading, selectError } from './store/useAppStore.ts';
+import type { MyResumeProps, ResumeDataError } from './types.ts';
 import {
   LoadingState,
   ErrorState,
@@ -16,17 +16,25 @@ import {
   PersonalContact
 } from './components/index.ts';
 
-const MyResume = ({ initialPerson }: MyResumeProps) => {
-  const { language } = useParams<{ language?: string }>();
+const MyResume = ({ initialPerson, initialLanguage }: MyResumeProps) => {
   const { t } = useTranslation();
 
-  // Person is provided via initialPerson prop (startup variable); language is still taken from URL
-  const currentLanguage = (language === 'es' ? 'es' : 'en') as Language;
-  const currentPerson = initialPerson;
+  // Get state from Zustand store
+  const resumeData = useAppStore(selectResumeData);
+  const contactData = useAppStore(selectContactData);
+  const loading = useAppStore(selectLoading);
+  const error = useAppStore(selectError);
+  const language = useAppStore(state => state.language);
+  const setLanguage = useAppStore(state => state.setLanguage);
+  const setContactData = useAppStore(state => state.setContactData);
 
-  // Hooks must be called unconditionally
-  const { data: resumeData, loading, error } = usePersonData(currentPerson);
-  const [contactData, setContactData] = useState<PersonalInfo | null>(null);
+  // Sync URL language with store
+  useEffect(() => {
+    setLanguage(initialLanguage);
+  }, [initialLanguage, setLanguage]);
+
+  // Fetch person data (updates store)
+  usePersonData(initialPerson || null);
 
   // Update document title when data changes
   useEffect(() => {
@@ -39,13 +47,13 @@ const MyResume = ({ initialPerson }: MyResumeProps) => {
   // Load private contact data if VITE_SHOW_PRIVATE_INFO is enabled
   useEffect(() => {
     const loadContactData = async () => {
-      if (import.meta.env.VITE_SHOW_PRIVATE_INFO === 'true' && currentPerson) {
-        const contact = await getPersonContactData(currentPerson);
+      if (import.meta.env.VITE_SHOW_PRIVATE_INFO === 'true' && initialPerson) {
+        const contact = await getPersonContactData(initialPerson);
         setContactData(contact);
       }
     };
     loadContactData();
-  }, [currentPerson]);
+  }, [initialPerson, setContactData]);
 
   // Early returns after all hooks
   
@@ -55,7 +63,7 @@ const MyResume = ({ initialPerson }: MyResumeProps) => {
       code: 'INVALID_DATA',
       message: 'No person specified'
     };
-    return <ErrorState error={configError} language={currentLanguage} />;
+    return <ErrorState error={configError} language={language} />;
   }
 
   // Verificar si Database está configurado
@@ -64,17 +72,17 @@ const MyResume = ({ initialPerson }: MyResumeProps) => {
       code: 'INVALID_DATA',
       message: 'VITE_DATABASE_URL environment variable is not defined'
     };
-    return <ErrorState error={configError} language={currentLanguage} />;
+    return <ErrorState error={configError} language={language} />;
   }
 
   // Loading state
   if (loading) {
-    return <LoadingState language={currentLanguage} />;
+    return <LoadingState language={language} />;
   }
 
   // Error state
   if (error || !resumeData) {
-    return <ErrorState error={error} language={currentLanguage} />;
+    return <ErrorState error={error} language={language} />;
   }
 
   // Main render with data

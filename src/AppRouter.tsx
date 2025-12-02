@@ -1,6 +1,5 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
-import { LanguageProvider } from './contexts/LanguageContext';
 import MyResume from './MyResume';
 import { PersonRequiredFallback } from './components/index';
 import type { AppRouterProps, Language } from './types';
@@ -60,11 +59,7 @@ const LanguageRoute: React.FC<{ initialPerson?: string }> = ({ initialPerson }) 
   }
 
   // Show the resume with the provided person
-  return (
-    <LanguageProvider initialLanguage={validatedLanguage}>
-      <MyResume initialPerson={initialPerson} />
-    </LanguageProvider>
-  );
+  return <MyResume initialPerson={initialPerson} initialLanguage={validatedLanguage} />;
 };
 
 export default AppRouter;

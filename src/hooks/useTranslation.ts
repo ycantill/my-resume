@@ -1,19 +1,20 @@
 import { useCallback } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useAppStore, selectLanguage } from '../store/useAppStore';
 import { t as translateFn } from '../resume-helpers';
 import type { LocalizedText } from '../types';
 
 /**
  * Custom hook for translations
- * Automatically uses the language from LanguageContext
+ * Uses the language from Zustand store
  * 
- * @returns {Object} Object containing translation function and current language
+ * @returns {Object} Object containing translation function, current language, and setLanguage
  * @example
- * const { t } = useTranslation();
+ * const { t, language } = useTranslation();
  * return <h1>{t('sections.education')}</h1>;
  */
 export function useTranslation() {
-  const { language } = useLanguage();
+  const language = useAppStore(selectLanguage);
+  const setLanguage = useAppStore(state => state.setLanguage);
   
   // Memoize translation function with current language
   const t = useCallback(
@@ -23,5 +24,5 @@ export function useTranslation() {
     [language]
   );
   
-  return { t, language };
+  return { t, language, setLanguage };
 }

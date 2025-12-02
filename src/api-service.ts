@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useAppStore } from './store/useAppStore';
 import type { ResumeData, PersonalInfo, ResumeDataError } from './types';
 
 /**
@@ -88,11 +89,12 @@ async function fetchPersonContactData(personId: string): Promise<PersonalInfo | 
 
 /**
  * Hook to fetch person data from Firebase REST API
+ * Integrates with Zustand store for state management
  */
 export function usePersonData(personId: string | null) {
-  const [data, setData] = useState<ResumeData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<ResumeDataError | null>(null);
+  const setResumeData = useAppStore(state => state.setResumeData);
+  const setLoading = useAppStore(state => state.setLoading);
+  const setError = useAppStore(state => state.setError);
 
   useEffect(() => {
     if (!personId) {
@@ -110,7 +112,7 @@ export function usePersonData(personId: string | null) {
         const resumeData = await fetchPersonData(personId);
         
         if (!cancelled) {
-          setData(resumeData);
+          setResumeData(resumeData);
           setLoading(false);
         }
       } catch (err) {
@@ -121,7 +123,7 @@ export function usePersonData(personId: string | null) {
             personId
           };
           setError(errorObj);
-          setData(null);
+          setResumeData(null);
           setLoading(false);
         }
       }
@@ -132,9 +134,7 @@ export function usePersonData(personId: string | null) {
     return () => {
       cancelled = true;
     };
-  }, [personId]);
-
-  return { data, loading, error };
+  }, [personId, setResumeData, setLoading, setError]);
 }
 
 /**

@@ -36,10 +36,11 @@ A dynamic resume generator built with React, TypeScript, and Firebase REST API f
 ### Current Component Structure
 
 ```
-App → AppRouter → LanguageProvider → MyResume → [LoadingState|ErrorState|Resume Components]
+App → AppRouter → MyResume → [LoadingState|ErrorState|Resume Components]
 ```
 
 All resume components use `useTranslation()` hook for bilingual content rendering.
+Language state is managed entirely by Zustand store, synced from URL in MyResume component.
 
 ### Routing Pattern
 
@@ -54,16 +55,16 @@ All resume components use `useTranslation()` hook for bilingual content renderin
 1. **Component Creation**: Define props interface in `types.ts`, use `useTranslation()` hook
 2. **URL Parameter Access**: `useParams<{ language?: string; personId?: string }>()`
 3. **Translation**: `const { t, language } = useTranslation(); return <div>{t('sections.summary')}</div>`
-4. **Context-Driven**: Language state managed via LanguageContext + custom hook
+4. **Store-Driven**: Language state managed via Zustand store, synced from URL
 
 ### File Organization
 
 - `src/components/` - All resume components (bilingual)
-- `src/contexts/` - React contexts (LanguageContext)
+- `src/store/` - Zustand store (language, resumeData, contactData, loading, error)
 - `src/hooks/` - Custom hooks (useTranslation)
 - `src/locales/` - Translation JSON files (en.json, es.json)
 - `src/AppRouter.tsx` - Main routing with language detection
-- `src/MyResume.tsx` - Container component
+- `src/MyResume.tsx` - Container component, syncs URL language with store
 - `src/types.ts` - All TypeScript interfaces
 - `src/resume-helpers.ts` - Translation function and formatting utilities
 - `src/api-service.ts` - Firebase REST API integration (no SDK)
@@ -113,16 +114,17 @@ const Component: React.FC<ComponentProps> = ({ data }) => {
 <Component data={data} />
 ```
 
-**Special Cases**: Components rendered outside LanguageProvider (LoadingState, ErrorState, PersonRequiredFallback) receive `language` as prop and create local `t()` function.
+**Special Cases**: Components rendered with explicit language prop (LoadingState, ErrorState, PersonRequiredFallback) receive `language` as prop and create local `t()` function.
 
 ### File Modification Guidelines:
 
 - **types.ts**: Add/update interfaces for component props (no language parameter for most components)
 - **components/\*.tsx**: Import and use `useTranslation()` hook
 - **locales/en.json, es.json**: Add new translation keys for static UI text (use `databaseConfig.*` for DB errors)
-- **MyResume.tsx**: Main container, wraps content in LanguageProvider
+- **MyResume.tsx**: Main container, syncs URL language with Zustand store
 - **AppRouter.tsx**: Routing logic, language detection, URL validation
 - **api-service.ts**: Firebase REST API calls (fetch-based, no SDK)
+- **store/useAppStore.ts**: Zustand store with all application state
 - **resume-helpers.ts**: Unified `t()` function handles both LocalizedText objects and string keys
 - **.env.example**: Update when adding new environment variables
 - **README.md**:

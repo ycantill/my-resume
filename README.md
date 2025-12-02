@@ -115,7 +115,9 @@ Without `VITE_PERSON`, shows helpful configuration guide with setup instructions
 ### Component Structure
 
 ```
-App → AppRouter → LanguageProvider → MyResume → Resume Components
+App → AppRouter → MyResume → Resume Components
+                      ↓
+                Zustand Store (single source of truth)
 ```
 
 All resume components use the `useTranslation()` hook for bilingual rendering.
@@ -205,7 +207,7 @@ const Component: React.FC<ComponentProps> = ({ data }) => {
 };
 ```
 
-**Note**: Components rendered outside `LanguageProvider` (like `LoadingState`, `ErrorState`) receive `language` as a prop and create a local `t()` function.
+**Note**: Special components like `LoadingState`, `ErrorState`, and `PersonRequiredFallback` receive `language` as a prop and create a local `t()` function, since they render before the store is initialized.
 
 ### File Structure
 
