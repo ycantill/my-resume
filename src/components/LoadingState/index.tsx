@@ -4,7 +4,7 @@ import { t as translateFn } from '../../resume-helpers.ts';
 import './styles.css';
 
 const LoadingState: React.FC<LoadingStateProps> = ({ language }) => {
-  // Use language from props (when rendered outside LanguageProvider)
+  // Use language from props (receives it from parent component)
   const t = (textOrKey: any) => translateFn(textOrKey, language);
   
   return (

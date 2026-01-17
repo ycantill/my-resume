@@ -8,7 +8,7 @@ interface PersonRequiredFallbackProps {
 }
 
 const PersonRequiredFallback: React.FC<PersonRequiredFallbackProps> = ({ language }) => {
-  // Use language from props (when rendered outside LanguageProvider)
+  // Use language from props (receives it from parent component)
   const t = (textOrKey: any) => translateFn(textOrKey, language);
   
   return (

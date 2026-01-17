@@ -5,7 +5,7 @@ import { t as translateFn } from '../../resume-helpers.ts';
 import './styles.css';
 
 const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
-  // Use language from props (when rendered outside LanguageProvider)
+  // Use language from props (receives it from parent component)
   const t = (textOrKey: any) => translateFn(textOrKey, language);
   
   // Detectar si el error es por falta de configuración de base de datos
