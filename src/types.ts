@@ -34,6 +34,7 @@ export interface ContactProfile {
 export interface ResumeBasics {
   name: string;
   label: LocalizedText;
+  email?: string;
   summary: LocalizedText;
   profiles: ContactProfile[];
 }
