@@ -4,10 +4,8 @@ name: My Resume Workflow
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push events only for the "main" branch
   push:
-    branches: ['main', 'devops']
-  pull_request:
     branches: ['main']
 
   # Allows you to run this workflow manually from the Actions tab
@@ -63,8 +61,6 @@ jobs:
 
   # Deployment job
   deploy:
-    # Only deploy on push to main/devops, not on pull requests
-    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
