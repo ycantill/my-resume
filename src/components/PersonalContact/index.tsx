@@ -6,7 +6,7 @@ import './styles.css';
 
 /**
  * PersonalContact Component
- * Displays private contact information (email, phone, location)
+ * Displays private contact information (phone, location)
  * Only renders if VITE_SHOW_PRIVATE_INFO environment variable is set to 'true'
  */
 const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
@@ -23,38 +23,24 @@ const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
   return (
     <div className="personal-contact-info">
       <div className="contact-wrapper">
-        
-        {/* Email */}
-        <div className="personal-contact-item">
-          <span className="personal-contact-icon" aria-hidden="true">✉️</span>
-          <a 
-            href={`mailto:${personal.email}`} 
-            className="personal-contact-link"
-          >
-            {personal.email}
-          </a>
-        </div>
 
         {/* Phone */}
         {personal.phone && (
-          <>
-            <span className="contact-divider">•</span>
-            <div className="personal-contact-item">
-              <span className="personal-contact-icon" aria-hidden="true">📞</span>
-              <a 
-                href={`tel:${normalizePhone(personal.phone)}`} 
-                className="personal-contact-link"
-              >
-                {personal.phone}
-              </a>
-            </div>
-          </>
+          <div className="personal-contact-item">
+            <span className="personal-contact-icon" aria-hidden="true">📞</span>
+            <a 
+              href={`tel:${normalizePhone(personal.phone)}`} 
+              className="personal-contact-link"
+            >
+              {personal.phone}
+            </a>
+          </div>
         )}
 
         {/* Location */}
         {location && (
           <>
-            <span className="contact-divider">•</span>
+            {personal.phone && <span className="contact-divider">•</span>}
             <div className="personal-contact-item">
               <span className="personal-contact-icon" aria-hidden="true">📍</span>
               <span className="location-label">{formatLocationLabel(location, language)}</span>
