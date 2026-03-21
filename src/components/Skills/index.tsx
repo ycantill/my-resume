@@ -12,10 +12,7 @@ const Skills: React.FC<SkillsProps> = ({ skills }) => {
       <div className="skills-grid">
         {skills.map((skill, skillIndex) => (
           <div key={skillIndex} className="section-card skill-category">
-            <div className="skill-header">
-              <h3 className="skill-name">{skill.name}</h3>
-              <span className="skill-level">{t(skill.level)}</span>
-            </div>
+            <h3 className="skill-name">{skill.name}</h3>
             <div className="skills">
               {skill.keywords.filter(k => k != null && k !== '').map((k, kIndex) => (
                 <span key={kIndex} className="chip chip-purple">{k}</span>
