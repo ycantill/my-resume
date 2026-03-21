@@ -90,7 +90,7 @@ export interface LanguageEntry {
 
 export interface Skill {
   name: string;
-  level: LocalizedText;
+  level?: LocalizedText; // Optional for backward compatibility
   keywords: string[];
 }
 

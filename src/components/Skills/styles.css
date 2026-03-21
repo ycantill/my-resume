@@ -7,16 +7,8 @@
   @apply border-l-4 border-purple-500;
 }
 
-.skill-header {
-  @apply flex justify-between items-start mb-4;
-}
-
 .skill-name {
-  @apply text-lg font-bold text-gray-900;
-}
-
-.skill-level {
-  @apply text-sm bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg font-medium;
+  @apply text-lg font-bold text-gray-900 mb-4;
 }
 
 .skills {
