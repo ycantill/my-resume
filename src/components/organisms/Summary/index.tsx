@@ -1,6 +1,6 @@
 import React from 'react';
-import type { SummaryProps } from '../../types.ts';
-import { useTranslation } from '../../hooks/useTranslation';
+import type { SummaryProps } from '../../../types.ts';
+import { useTranslation } from '../../../hooks/useTranslation';
 import './styles.css';
 
 const Summary: React.FC<SummaryProps> = ({ summary }) => {

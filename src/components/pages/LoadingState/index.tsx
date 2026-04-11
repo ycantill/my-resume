@@ -1,6 +1,6 @@
 import React from 'react';
-import type { LoadingStateProps } from '../../types.ts';
-import { t as translateFn } from '../../resume-helpers.ts';
+import type { LoadingStateProps } from '../../../types.ts';
+import { t as translateFn } from '../../../resume-helpers.ts';
 import './styles.css';
 
 const LoadingState: React.FC<LoadingStateProps> = ({ language }) => {

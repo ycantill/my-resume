@@ -1,7 +1,7 @@
 import React from 'react';
-import type { PersonalContactProps } from '../../types.ts';
-import { formatLocationLabel, normalizePhone } from '../../resume-helpers.ts';
-import { useTranslation } from '../../hooks/useTranslation';
+import type { PersonalContactProps } from '../../../types.ts';
+import { formatLocationLabel, normalizePhone } from '../../../resume-helpers.ts';
+import { useTranslation } from '../../../hooks/useTranslation';
 import './styles.css';
 
 /**
@@ -10,7 +10,7 @@ import './styles.css';
  * Only renders if VITE_SHOW_PRIVATE_INFO environment variable is set to 'true'
  */
 const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
-  const { language, t } = useTranslation();
+  const { language } = useTranslation();
   const { location } = personal;
 
   // Only render if environment variable is set
