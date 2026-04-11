@@ -1,6 +1,6 @@
 import React from 'react';
-import type { Language } from '../../types';
-import { t as translateFn } from '../../resume-helpers';
+import type { Language } from '../../../types';
+import { t as translateFn } from '../../../resume-helpers';
 import './styles.css';
 
 interface PersonRequiredFallbackProps {

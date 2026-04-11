@@ -1,11 +1,12 @@
 import React from 'react';
-import type { BasicInfoProps } from '../../types.ts';
-import { useTranslation } from '../../hooks/useTranslation';
+import type { BasicInfoProps } from '../../../types.ts';
+import { useTranslation } from '../../../hooks/useTranslation';
+import ProfileLink from '../../molecules/ProfileLink';
 import './styles.css';
 
 const BasicInfo: React.FC<BasicInfoProps> = ({ basics }) => {
   const { t } = useTranslation();
-  
+
   return (
     <section className="basics">
       <div className="basics-header">
@@ -23,17 +24,8 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ basics }) => {
               </a>
             </div>
           )}
-          {basics.profiles.map((p, index) => (
-            <div key={index} className="contact-item">
-              {/linkedin/i.test(p.url)
-                ? <span className="contact-icon-linkedin" aria-hidden="true">in</span>
-                : /github/i.test(p.url)
-                ? <span className="contact-icon" aria-hidden="true">{'\u{1F4BB}'}</span>
-                : <span className="contact-icon" aria-hidden="true">🔗</span>}
-              <a href={p.url} target="_blank" rel="noopener noreferrer" className="contact-link">
-                {p.url.replace(/^https?:\/\/(www\.)?/, '')}
-              </a>
-            </div>
+          {basics.profiles.map((profile, index) => (
+            <ProfileLink key={index} profile={profile} />
           ))}
         </div>
       </div>

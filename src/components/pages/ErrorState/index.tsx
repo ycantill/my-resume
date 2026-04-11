@@ -1,7 +1,7 @@
 import React from 'react';
-import type { ErrorStateProps } from '../../types.ts';
-import { formatErrorMessage } from '../../types.ts';
-import { t as translateFn } from '../../resume-helpers.ts';
+import type { ErrorStateProps } from '../../../types.ts';
+import { formatErrorMessage } from '../../../types.ts';
+import { t as translateFn } from '../../../resume-helpers.ts';
 import './styles.css';
 
 const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
