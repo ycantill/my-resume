@@ -2,7 +2,7 @@ import React from 'react';
 import type { PersonalContactProps } from '../../../types.ts';
 import { formatLocationLabel, normalizePhone } from '../../../resume-helpers.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
-import './styles.css';
+import styles from './styles.module.css';
 
 /**
  * PersonalContact Component
@@ -21,16 +21,16 @@ const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
   }
 
   return (
-    <div className="personal-contact-info">
-      <div className="contact-wrapper">
+    <div className={styles.root}>
+      <div className={styles.wrapper}>
 
         {/* Phone */}
         {personal.phone && (
-          <div className="personal-contact-item">
-            <span className="personal-contact-icon" aria-hidden="true">📞</span>
-            <a 
-              href={`tel:${normalizePhone(personal.phone)}`} 
-              className="personal-contact-link"
+          <div className={styles.item}>
+            <span className={styles.icon} aria-hidden="true">📞</span>
+            <a
+              href={`tel:${normalizePhone(personal.phone)}`}
+              className={styles.link}
             >
               {personal.phone}
             </a>
@@ -40,10 +40,10 @@ const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
         {/* Location */}
         {location && (
           <>
-            {personal.phone && <span className="contact-divider">•</span>}
-            <div className="personal-contact-item">
-              <span className="personal-contact-icon" aria-hidden="true">📍</span>
-              <span className="location-label">{formatLocationLabel(location, language)}</span>
+            {personal.phone && <span className={styles.divider}>•</span>}
+            <div className={styles.item}>
+              <span className={styles.icon} aria-hidden="true">📍</span>
+              <span className={styles.location}>{formatLocationLabel(location, language)}</span>
             </div>
           </>
         )}

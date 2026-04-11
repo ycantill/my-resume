@@ -2,7 +2,8 @@ import React from 'react';
 import type { LanguagesProps } from '../../../types.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
 import LanguageItem from '../../molecules/LanguageItem';
-import './styles.css';
+import { clsx } from 'clsx';
+import styles from './styles.module.css';
 
 const Languages: React.FC<LanguagesProps> = ({ languages }) => {
   const { t } = useTranslation();
@@ -10,8 +11,8 @@ const Languages: React.FC<LanguagesProps> = ({ languages }) => {
   return (
     <>
       <h2 className="section-title">{t('sections.languages')}</h2>
-      <div className="section-card languages-card">
-        <div className="languages-grid">
+      <div className={clsx('section-card', styles.card)}>
+        <div className={styles.gridLayout}>
           {languages.map((entry, index) => (
             <LanguageItem key={index} entry={entry} />
           ))}

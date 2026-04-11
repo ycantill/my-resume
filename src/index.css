@@ -18,7 +18,7 @@
   }
   
   /* Prevent education section title from breaking */
-  .section-title.education-title {
+  .section-title--education {
     @apply print:break-after-avoid;
   }
   

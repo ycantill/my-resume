@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ContactProfile } from '../../../types.ts';
+import styles from './styles.module.css';
 
 interface ProfileLinkProps {
   profile: ContactProfile;
@@ -10,17 +11,17 @@ const ProfileLink: React.FC<ProfileLinkProps> = ({ profile }) => {
   const isGitHub = /github/i.test(profile.url);
 
   return (
-    <div className="contact-item">
+    <div className={styles.root}>
       {isLinkedIn
-        ? <span className="contact-icon-linkedin" aria-hidden="true">in</span>
+        ? <span className={styles.iconLinkedin} aria-hidden="true">in</span>
         : isGitHub
-        ? <span className="contact-icon" aria-hidden="true">{'\u{1F4BB}'}</span>
-        : <span className="contact-icon" aria-hidden="true">🔗</span>}
+        ? <span className={styles.icon} aria-hidden="true">{'💻'}</span>
+        : <span className={styles.icon} aria-hidden="true">🔗</span>}
       <a
         href={profile.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="contact-link"
+        className={styles.url}
       >
         {profile.url.replace(/^https?:\/\/(www\.)?/, '')}
       </a>
@@ -29,3 +30,4 @@ const ProfileLink: React.FC<ProfileLinkProps> = ({ profile }) => {
 };
 
 export default ProfileLink;
+

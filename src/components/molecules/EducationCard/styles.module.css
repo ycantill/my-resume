@@ -1,34 +1,28 @@
-/* Education Component Styles */
-.education-card {
+/* EducationCard — molecule */
+.root {
   @apply border-l-4 border-green-500 print:break-inside-avoid;
 }
 
-.education-header {
+.header {
   @apply flex items-start justify-between mb-3;
 }
 
-.education-institution {
+.institution {
   @apply text-lg font-bold text-gray-900;
 }
 
-.education-badge {
+.badge {
   @apply text-xs bg-green-100 text-green-800 px-3 py-1.5 rounded-full font-medium;
 }
 
-.education-degree {
+.degree {
   @apply text-gray-700 mb-3 font-medium;
 }
 
-.education-location {
+.location {
   @apply text-sm text-gray-600 flex items-center;
 }
 
-.education-icon {
+.locationIcon {
   @apply mr-2 text-base;
 }
-
-.education-list {
-  @apply space-y-6 print:space-y-3;
-}
-/* Styles are inline in component using Tailwind classes */
-/* No additional custom CSS needed */

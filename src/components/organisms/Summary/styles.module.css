@@ -1,0 +1,4 @@
+/* Summary — organism */
+.text {
+  @apply text-gray-700 leading-relaxed text-justify;
+}

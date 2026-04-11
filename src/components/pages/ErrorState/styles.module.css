@@ -1,0 +1,159 @@
+/* ErrorState — page */
+
+/* DB Config Error variant */
+.configRoot {
+  @apply min-h-screen bg-gradient-to-br from-orange-50 to-yellow-100 flex items-center justify-center p-4;
+}
+
+.configCard {
+  @apply max-w-3xl mx-auto bg-white rounded-xl shadow-xl p-8;
+}
+
+.configHeader {
+  @apply text-center mb-6;
+}
+
+.configIconWrapper {
+  @apply w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4;
+}
+
+.configIcon {
+  @apply text-orange-500 text-4xl;
+}
+
+.configTitle {
+  @apply text-2xl font-bold text-gray-800 mb-3;
+}
+
+.configSubtitle {
+  @apply text-gray-600 mb-6;
+}
+
+.configSetup {
+  @apply bg-orange-50 border-2 border-orange-200 rounded-xl p-6 mb-6;
+}
+
+.configSetupHeader {
+  @apply flex items-start space-x-3 mb-4;
+}
+
+.configSetupIcon {
+  @apply text-orange-500 text-xl;
+}
+
+.configSetupContent {
+  @apply flex-1;
+}
+
+.configSetupTitle {
+  @apply text-sm font-semibold text-orange-800 mb-3;
+}
+
+.configSetupSteps {
+  @apply text-sm text-orange-900 space-y-2 list-decimal list-inside;
+}
+
+.configExample {
+  @apply bg-gray-50 border-2 border-gray-200 rounded-xl p-6;
+}
+
+.configExampleHeader {
+  @apply flex items-start space-x-3 mb-3;
+}
+
+.configExampleIcon {
+  @apply text-gray-600 text-xl;
+}
+
+.configExampleTitle {
+  @apply text-sm font-semibold text-gray-800;
+}
+
+.configExampleCode {
+  @apply bg-gray-900 text-green-400 rounded-lg p-4 overflow-x-auto text-xs font-mono;
+}
+
+.configExampleFooter {
+  @apply mt-4 text-sm text-gray-600;
+}
+
+.configExampleDesc {
+  @apply mb-2;
+}
+
+.configExampleSteps {
+  @apply list-decimal list-inside space-y-1 ml-4 text-xs;
+}
+
+/* Generic Error variant */
+.genericRoot {
+  @apply min-h-screen bg-gradient-to-br from-red-50 to-pink-100 flex items-center justify-center p-4;
+}
+
+.genericCard {
+  @apply max-w-lg mx-auto bg-white rounded-xl shadow-xl p-8;
+}
+
+.genericHeader {
+  @apply text-center mb-6;
+}
+
+.genericIconWrapper {
+  @apply w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4;
+}
+
+.genericIcon {
+  @apply text-red-500 text-4xl;
+}
+
+.genericTitle {
+  @apply text-2xl font-bold text-gray-800 mb-3;
+}
+
+.genericSubtitle {
+  @apply text-gray-600 mb-2;
+}
+
+.genericCheck {
+  @apply text-gray-600 mb-6;
+}
+
+.genericDetails {
+  @apply bg-red-50 border-2 border-red-200 rounded-xl p-6;
+}
+
+.genericDetailsHeader {
+  @apply flex items-start space-x-3 mb-4;
+}
+
+.genericDetailsIcon {
+  @apply text-red-500 text-xl;
+}
+
+.genericDetailsLabel {
+  @apply text-sm font-medium text-red-800 mb-1;
+}
+
+.genericDetailsMessage {
+  @apply text-red-700;
+}
+
+.genericDetailsToggle {
+  @apply text-sm;
+}
+
+.genericDetailsSummary {
+  @apply cursor-pointer text-red-800 font-medium hover:text-red-900 flex items-center;
+}
+
+.genericDetailsSummaryIcon {
+  @apply mr-2;
+}
+
+.genericDetailsContent {
+  @apply mt-3 space-y-2 text-red-700 bg-red-100 rounded-lg p-3;
+}
+
+.genericDetailsCode {
+  @apply bg-red-200 px-1 rounded;
+}

@@ -14,7 +14,8 @@ Zero UI chrome design - pure, professional resume content accessible via semanti
 - 🔗 **URL-Centric Navigation**: Direct URLs only
 - 📱 **Responsive Design**: Print-optimized
 - ⚡ **Lightweight Bundle**: Firebase REST API (no SDK dependency)
-- 🎨 **Modern Styling**: Tailwind CSS
+- 🎨 **Modern Styling**: Tailwind CSS + CSS Modules (scoped, BEM-aligned)
+- 🧱 **Atomic Design**: Components organized as atoms → molecules → organisms → pages
 - 🌐 **Browser Language Detection**: Automatic language selection
 - 🚨 **Fallback Page**: Helpful guidance when configuration is missing
 - 🔒 **Privacy-First**: Separate public/private data with optional contact display
@@ -105,12 +106,16 @@ Without `VITE_PERSON`, shows helpful configuration guide with setup instructions
 - **React Router** (URL routing)
 - **Firebase REST API** (Realtime Database access)
 - **Tailwind CSS** (styling)
+- **CSS Modules** (scoped component styles)
+- **clsx** (conditional class composition)
 
 ### Key Principles
 
 - **URL as Single Source of Truth**: All state from URL parameters
 - **Context-Driven Translations**: Language state managed via React Context + custom hook
 - **Zero UI Elements**: Pure content focus
+- **Atomic Design**: Components organized by complexity level
+- **BEM-Aligned CSS Modules**: Scoped styles with semantic naming
 
 ### Component Structure
 
@@ -121,6 +126,72 @@ App → AppRouter → MyResume → Resume Components
 ```
 
 All resume components use the `useTranslation()` hook for bilingual rendering.
+
+### Atomic Design
+
+Components are organized into four layers of complexity:
+
+```
+src/components/
+├── atoms/          # Smallest indivisible UI units
+│   └── Chip/       # Tag/badge element
+├── molecules/      # Compositions of atoms
+│   ├── ProfileLink/    # Social/contact link with icon
+│   ├── LanguageItem/   # Single language with fluency
+│   ├── SkillCategory/  # Skill group with chip list
+│   ├── EducationCard/  # Single education entry
+│   └── WorkRoleCard/   # Single role within a company
+├── organisms/      # Full resume sections
+│   ├── BasicInfo/
+│   ├── Summary/
+│   ├── WorkExperience/
+│   ├── Education/
+│   ├── Skills/
+│   ├── Languages/
+│   └── PersonalContact/
+└── pages/          # Full-page states
+    ├── LoadingState/
+    ├── ErrorState/
+    └── PersonRequiredFallback/
+```
+
+### CSS Architecture
+
+Each component has its own `styles.module.css` file. The approach combines three complementary tools:
+
+| Tool | Role |
+|---|---|
+| **CSS Modules** | Scoping — class names are hashed at build time, zero collisions |
+| **BEM semantics** | Naming — module file = block, camelCase properties = elements/modifiers |
+| **Tailwind `@apply`** | Styles — utility classes provide the actual CSS |
+| **clsx** | Composition — combines module classes with global Tailwind classes |
+
+**Naming convention:**
+
+```css
+/* styles.module.css — the file name IS the block */
+.root { @apply p-6; }             /* block */
+.headerTitle { @apply text-xl; }  /* block__element (camelCase) */
+.badgeCurrent { @apply text-green-600; } /* block__element--modifier */
+```
+
+**Usage in components:**
+
+```tsx
+import { clsx } from 'clsx';
+import styles from './styles.module.css';
+
+// Module class only
+<div className={styles.root}>
+
+// Module class + global Tailwind utility class
+<div className={clsx('section-card', styles.root)}>
+
+// Conditional modifier
+<span className={clsx(styles.badge, isCurrent && styles.badgeCurrent)}>
+```
+
+**Important**: Never name a CSS module class the same as a Tailwind utility you `@apply` inside it — e.g. `.grid { @apply grid }` causes a circular dependency error. Use a descriptive name instead (`.gridLayout { @apply grid }`).
 
 ### Translation System
 
@@ -213,24 +284,42 @@ const Component: React.FC<ComponentProps> = ({ data }) => {
 
 ```
 src/
-├── components/           # Resume components
-│   ├── PersonRequiredFallback.tsx # Fallback when VITE_PERSON not set
-│   ├── LoadingState.tsx  # Loading UI
-│   ├── ErrorState.tsx    # Error handling
-│   └── [other components...]
-├── contexts/            # React contexts
-│   └── LanguageContext.tsx # Language state management
-├── hooks/              # Custom hooks
-│   └── useTranslation.ts # Translation hook
-├── locales/            # Translation files
-│   ├── en.json         # English translations
-│   └── es.json         # Spanish translations
-├── AppRouter.tsx       # Main routing (handles person validation)
-├── MyResume.tsx        # Container component
-├── api-service.ts      # Firebase REST API integration
-├── resume-helpers.ts   # Translation & formatting utilities
-├── types.ts           # TypeScript definitions
-└── main.tsx           # Entry point (reads VITE_PERSON)
+├── components/
+│   ├── index.ts              # Barrel exports for all components
+│   ├── atoms/
+│   │   └── Chip/             # index.tsx + styles.module.css
+│   ├── molecules/
+│   │   ├── ProfileLink/
+│   │   ├── LanguageItem/
+│   │   ├── SkillCategory/
+│   │   ├── EducationCard/
+│   │   └── WorkRoleCard/
+│   ├── organisms/
+│   │   ├── BasicInfo/
+│   │   ├── Summary/
+│   │   ├── WorkExperience/
+│   │   ├── Education/
+│   │   ├── Skills/
+│   │   ├── Languages/
+│   │   └── PersonalContact/
+│   └── pages/
+│       ├── LoadingState/
+│       ├── ErrorState/
+│       └── PersonRequiredFallback/
+├── hooks/
+│   └── useTranslation.ts     # Translation hook
+├── locales/
+│   ├── en.json               # English translations
+│   └── es.json               # Spanish translations
+├── store/
+│   └── useAppStore.ts        # Zustand store (language, resumeData, loading, error)
+├── AppRouter.tsx             # Main routing with language detection
+├── MyResume.tsx              # Container component, syncs URL → store
+├── api-service.ts            # Firebase REST API integration (no SDK)
+├── resume-helpers.ts         # Translation & formatting utilities
+├── types.ts                  # TypeScript definitions
+├── index.css                 # Global Tailwind layers (section-card, section-title, etc.)
+└── main.tsx                  # Entry point
 ```
 
 ## 🚀 Deployment
@@ -507,6 +596,15 @@ This React version represents a complete architectural evolution:
 - ✅ Reduced bundle size significantly
 - ✅ Array-based data structure with name-based lookup
 - ✅ Maintained all functionality with lighter footprint
+
+#### **Phase 8: Atomic Design + CSS Modules**
+
+- ✅ Reorganized all components into Atomic Design layers (atoms → molecules → organisms → pages)
+- ✅ Extracted 5 new molecule components from organism internals (ProfileLink, LanguageItem, SkillCategory, EducationCard, WorkRoleCard)
+- ✅ Migrated all CSS to CSS Modules (`.module.css`) — build-time scoped class names
+- ✅ Adopted BEM-aligned camelCase naming: file = block, `styles.elementName` = element, `styles.elementNameModifier` = modifier
+- ✅ Added `clsx` for composing module classes with global Tailwind utility classes
+- ✅ Global Tailwind component classes (`section-card`, `section-title`) preserved in `index.css`
 
 ### Bundle Size Optimization
 

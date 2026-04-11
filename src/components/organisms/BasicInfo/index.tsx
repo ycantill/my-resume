@@ -2,24 +2,24 @@ import React from 'react';
 import type { BasicInfoProps } from '../../../types.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
 import ProfileLink from '../../molecules/ProfileLink';
-import './styles.css';
+import styles from './styles.module.css';
 
 const BasicInfo: React.FC<BasicInfoProps> = ({ basics }) => {
   const { t } = useTranslation();
 
   return (
-    <section className="basics">
-      <div className="basics-header">
-        <h1 className="basics-name">{basics.name}</h1>
-        <p className="basics-label">{t(basics.label)}</p>
+    <section className={styles.root}>
+      <div className={styles.header}>
+        <h1 className={styles.name}>{basics.name}</h1>
+        <p className={styles.label}>{t(basics.label)}</p>
       </div>
 
-      <div className="contact-info">
-        <div className="contact-container">
+      <div className={styles.contact}>
+        <div className={styles.contactList}>
           {basics.email && (
-            <div className="contact-item">
-              <span className="contact-icon" aria-hidden="true">✉️</span>
-              <a href={`mailto:${basics.email}`} className="contact-link">
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon} aria-hidden="true">✉️</span>
+              <a href={`mailto:${basics.email}`} className={styles.contactLink}>
                 {basics.email}
               </a>
             </div>
