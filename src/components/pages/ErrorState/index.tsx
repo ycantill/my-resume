@@ -2,7 +2,7 @@ import React from 'react';
 import type { ErrorStateProps } from '../../../types.ts';
 import { formatErrorMessage } from '../../../types.ts';
 import { t as translateFn } from '../../../resume-helpers.ts';
-import './styles.css';
+import styles from './styles.module.css';
 
 const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
   // Use language from props (receives it from parent component)
@@ -14,28 +14,28 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
   
   if (isDatabaseConfigError) {
     return (
-      <div className="error-container">
-        <div className="error-card">
-          <div className="error-header">
-            <div className="error-icon-wrapper">
-              <span className="error-icon">⚙️</span>
+      <div className={styles.configRoot}>
+        <div className={styles.configCard}>
+          <div className={styles.configHeader}>
+            <div className={styles.configIconWrapper}>
+              <span className={styles.configIcon}>⚙️</span>
             </div>
-            <h2 className="error-title">
+            <h2 className={styles.configTitle}>
               {t('databaseConfig.title')}
             </h2>
-            <p className="error-subtitle">
+            <p className={styles.configSubtitle}>
               {t('databaseConfig.subtitle')}
             </p>
           </div>
-          
-          <div className="error-config-box">
-            <div className="error-config-header">
-              <span className="error-config-icon">📝</span>
-              <div className="error-config-content">
-                <p className="error-config-title">
+
+          <div className={styles.configSetup}>
+            <div className={styles.configSetupHeader}>
+              <span className={styles.configSetupIcon}>📝</span>
+              <div className={styles.configSetupContent}>
+                <p className={styles.configSetupTitle}>
                   {t('databaseConfig.howToFix')}
                 </p>
-                <ol className="error-config-steps">
+                <ol className={styles.configSetupSteps}>
                   <li>{t('databaseConfig.step1')}</li>
                   <li>{t('databaseConfig.step2')}</li>
                   <li>{t('databaseConfig.step3')}</li>
@@ -44,22 +44,22 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
             </div>
           </div>
 
-          <div className="error-example-box">
-            <div className="error-example-header">
-              <span className="error-example-icon">💡</span>
-              <p className="error-example-title">
+          <div className={styles.configExample}>
+            <div className={styles.configExampleHeader}>
+              <span className={styles.configExampleIcon}>💡</span>
+              <p className={styles.configExampleTitle}>
                 {t('databaseConfig.exampleFile')}
               </p>
             </div>
-            <pre className="error-example-code">
+            <pre className={styles.configExampleCode}>
 {`VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
 VITE_PERSON=your_person_id`}
             </pre>
-            <div className="error-example-footer">
-              <p className="error-example-description">
+            <div className={styles.configExampleFooter}>
+              <p className={styles.configExampleDesc}>
                 {t('databaseConfig.getConfig')}
               </p>
-              <ol className="error-example-steps">
+              <ol className={styles.configExampleSteps}>
                 <li>{t('databaseConfig.getConfigStep1')}</li>
                 <li>{t('databaseConfig.getConfigStep2')}</li>
                 <li>{t('databaseConfig.getConfigStep3')}</li>
@@ -71,46 +71,46 @@ VITE_PERSON=your_person_id`}
       </div>
     );
   }
-  
+
   // Error genérico
   return (
-    <div className="error-generic-container">
-      <div className="error-generic-card">
-        <div className="error-generic-header">
-          <div className="error-generic-icon-wrapper">
-            <span className="error-generic-icon">⚠️</span>
+    <div className={styles.genericRoot}>
+      <div className={styles.genericCard}>
+        <div className={styles.genericHeader}>
+          <div className={styles.genericIconWrapper}>
+            <span className={styles.genericIcon}>⚠️</span>
           </div>
-          <h2 className="error-generic-title">
+          <h2 className={styles.genericTitle}>
             {t('error.title')}
           </h2>
-          <p className="error-generic-subtitle">
+          <p className={styles.genericSubtitle}>
             {t('error.subtitle')}
           </p>
-          <p className="error-generic-check">
+          <p className={styles.genericCheck}>
             {t('error.checkConfig')}
           </p>
         </div>
-        
+
         {error && (
-          <div className="error-details-box">
-            <div className="error-details-header">
-              <span className="error-details-icon">🔍</span>
+          <div className={styles.genericDetails}>
+            <div className={styles.genericDetailsHeader}>
+              <span className={styles.genericDetailsIcon}>🔍</span>
               <div>
-                <p className="error-details-label">
+                <p className={styles.genericDetailsLabel}>
                   {t('error.errorDetected')}
                 </p>
-                <p className="error-details-message">{formatErrorMessage(error, language)}</p>
+                <p className={styles.genericDetailsMessage}>{formatErrorMessage(error, language)}</p>
               </div>
             </div>
-            <details className="error-details-toggle">
-              <summary className="error-details-summary">
-                <span className="error-details-summary-icon">📋</span>
+            <details className={styles.genericDetailsToggle}>
+              <summary className={styles.genericDetailsSummary}>
+                <span className={styles.genericDetailsSummaryIcon}>📋</span>
                 {t('error.technicalDetails')}
               </summary>
-              <div className="error-details-content">
-                <p><strong>{t('error.code')}</strong> <code className="error-details-code">{error.code}</code></p>
+              <div className={styles.genericDetailsContent}>
+                <p><strong>{t('error.code')}</strong> <code className={styles.genericDetailsCode}>{error.code}</code></p>
                 <p><strong>{t('error.message')}</strong> {error.message}</p>
-                {error.personId && <p><strong>Person ID:</strong> <code className="error-details-code">{error.personId}</code></p>}
+                {error.personId && <p><strong>Person ID:</strong> <code className={styles.genericDetailsCode}>{error.personId}</code></p>}
               </div>
             </details>
           </div>

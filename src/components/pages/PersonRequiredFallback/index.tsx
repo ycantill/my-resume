@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Language } from '../../../types';
 import { t as translateFn } from '../../../resume-helpers';
-import './styles.css';
+import styles from './styles.module.css';
 
 interface PersonRequiredFallbackProps {
   language: Language;
@@ -12,58 +12,58 @@ const PersonRequiredFallback: React.FC<PersonRequiredFallbackProps> = ({ languag
   const t = (textOrKey: any) => translateFn(textOrKey, language);
   
   return (
-    <div className="fallback-container">
-      <div className="fallback-wrapper">
-        <div className="fallback-card">
-          <h1 className="fallback-title">
+    <div className={styles.root}>
+      <div className={styles.wrapper}>
+        <div className={styles.card}>
+          <h1 className={styles.title}>
             {t('fallback.title')}
           </h1>
-          
-          <div className="fallback-content">
+
+          <div className={styles.content}>
             <p>
               {t('fallback.description')}
             </p>
-            
-            <div className="fallback-instructions">
-              <h3 className="fallback-section-title">
+
+            <div className={styles.instructions}>
+              <h3 className={styles.instructionsTitle}>
                 {t('fallback.howToSet')}
               </h3>
-              
-              <div className="fallback-methods">
+
+              <div className={styles.methods}>
                 <div>
-                  <h4 className="fallback-method-title">
+                  <h4 className={styles.methodTitle}>
                     {t('fallback.forDevelopment')}
                   </h4>
-                  <code className="fallback-method-code">
+                  <code className={styles.methodCode}>
                     VITE_PERSON=your_person_id npm run dev
                   </code>
                 </div>
-                
+
                 <div>
-                  <h4 className="fallback-method-title">
+                  <h4 className={styles.methodTitle}>
                     {t('fallback.forBuilding')}
                   </h4>
-                  <code className="fallback-method-code">
+                  <code className={styles.methodCode}>
                     VITE_PERSON=your_person_id npm run build
                   </code>
                 </div>
               </div>
             </div>
-            
-            <div className="fallback-info">
-              <div className="fallback-info-text">
-                <p className="fallback-persons-desc">
+
+            <div className={styles.info}>
+              <div className={styles.infoText}>
+                <p className={styles.personsDesc}>
                   {t('fallback.availablePersons')}
                 </p>
-                <p className="fallback-persons-detail">
-                  Any person ID configured in your Firebase database under <code className="fallback-persons-code">public/people/</code>
+                <p className={styles.personsDetail}>
+                  Any person ID configured in your Firebase database under <code className={styles.personsCode}>public/people/</code>
                 </p>
               </div>
             </div>
           </div>
-          
-          <div className="fallback-footer">
-            <p className="fallback-footer-text">
+
+          <div className={styles.footer}>
+            <p className={styles.footerText}>
               {t('fallback.securityNote')}
             </p>
           </div>

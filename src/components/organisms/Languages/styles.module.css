@@ -1,0 +1,8 @@
+/* Languages — organism */
+.card {
+  @apply border-l-4 border-indigo-500;
+}
+
+.gridLayout {
+  @apply grid gap-4 sm:grid-cols-2;
+}

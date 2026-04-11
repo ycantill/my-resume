@@ -1,0 +1,12 @@
+/* SkillCategory — molecule */
+.root {
+  @apply border-l-4 border-purple-500;
+}
+
+.name {
+  @apply text-lg font-bold text-gray-900 mb-4;
+}
+
+.chips {
+  @apply flex flex-wrap gap-3 mt-4;
+}

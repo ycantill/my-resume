@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles.css';
+import styles from './styles.module.css';
 
 interface ChipProps {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ interface ChipProps {
 }
 
 const Chip: React.FC<ChipProps> = ({ children, variant = 'default' }) => (
-  <span className={`chip${variant === 'purple' ? ' chip-purple' : ''}`}>
+  <span className={variant === 'purple' ? `${styles.chip} ${styles.chipPurple}` : styles.chip}>
     {children}
   </span>
 );

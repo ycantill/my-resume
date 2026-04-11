@@ -4,7 +4,7 @@ import { formatDateRange, formatDuration } from '../../../resume-helpers.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
 import WorkRoleCard from '../../molecules/WorkRoleCard';
 import Chip from '../../atoms/Chip';
-import './styles.css';
+import styles from './styles.module.css';
 
 const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
   const { t, language } = useTranslation();
@@ -17,11 +17,11 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
 
         if ('roles' in job && Array.isArray(job.roles) && job.roles.length) {
           return (
-            <div key={jobIndex} className="job">
-              <div className="job-company-header">
-                <h3 className="job-company-name">{job.name}</h3>
+            <div key={jobIndex} className={styles.entry}>
+              <div className={styles.companyHeader}>
+                <h3 className={styles.companyName}>{job.name}</h3>
               </div>
-              <div className="job-roles-container">
+              <div className={styles.roles}>
                 {job.roles.map((role, roleIndex) => (
                   <WorkRoleCard key={roleIndex} role={role} />
                 ))}
@@ -35,39 +35,39 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
           : '';
 
         return (
-          <div key={jobIndex} className="job">
-            <div className="job-simple-header">
-              <div className="job-header">
-                <div className="job-simple-title-row">
-                  <h3 className="job-simple-title">
+          <div key={jobIndex} className={styles.entry}>
+            <div className={styles.simpleHeader}>
+              <div className={styles.header}>
+                <div className={styles.titleRow}>
+                  <h3 className={styles.title}>
                     {job.name} – {job.position && t(job.position)}
                   </h3>
                   {isCurrent && (
-                    <span className="current-badge">{t('work.currentRole')}</span>
+                    <span className={styles.badgeCurrent}>{t('work.currentRole')}</span>
                   )}
                 </div>
               </div>
-              <div className="job-meta">
-                <p className="job-simple-meta">
+              <div className={styles.meta}>
+                <p className={styles.metaText}>
                   {job.startDate && job.endDate !== undefined
                     ? formatDateRange(job as { startDate: string; endDate?: string }, language)
                     : ''} | {job.location && t(job.location)} · {duration}
                 </p>
               </div>
-              <div className="job-description">
-                <p className="job-simple-description">{job.summary && t(job.summary)}</p>
+              <div className={styles.description}>
+                <p className={styles.descriptionText}>{job.summary && t(job.summary)}</p>
               </div>
-              <div className="job-highlights">
-                <ul className="job-simple-highlights">
+              <div className={styles.highlights}>
+                <ul className={styles.highlightsList}>
                   {job.highlights?.[language]?.map((h, hIndex) => (
-                    <li key={hIndex} className="job-simple-highlight-item">{h}</li>
+                    <li key={hIndex} className={styles.highlightsItem}>{h}</li>
                   )) || []}
                 </ul>
               </div>
               {job.stack && job.stack.length > 0 && (
-                <div className="job-skills">
-                  <p className="job-skills-label">{t('work.techStack')}:</p>
-                  <div className="skills">
+                <div className={styles.stack}>
+                  <p className={styles.stackLabel}>{t('work.techStack')}:</p>
+                  <div className={styles.chips}>
                     {job.stack.filter(s => s != null && s !== '').map((s, sIndex) => (
                       <Chip key={sIndex}>{s}</Chip>
                     ))}

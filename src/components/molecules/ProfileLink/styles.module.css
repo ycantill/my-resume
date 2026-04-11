@@ -1,0 +1,16 @@
+/* ProfileLink — molecule */
+.root {
+  @apply flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start;
+}
+
+.icon {
+  @apply text-lg sm:text-xl flex-shrink-0;
+}
+
+.iconLinkedin {
+  @apply bg-blue-600 text-white text-xs sm:text-sm px-2 py-1 rounded font-semibold flex-shrink-0;
+}
+
+.url {
+  @apply text-blue-600 hover:text-blue-800 font-medium truncate max-w-xs sm:max-w-none;
+}
