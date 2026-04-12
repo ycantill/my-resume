@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { usePersonData, getPersonContactData, isDatabaseConfigured } from './api-service.ts';
+import { usePersonData, isDatabaseConfigured } from './api-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
 import { useTranslation } from './hooks/useTranslation.ts';
-import { useAppStore, selectResumeData, selectContactData, selectLoading, selectError } from './store/useAppStore.ts';
+import { useAuth } from './hooks/useAuth.ts';
+import { useAppStore, selectResumeData, selectLoading, selectError } from './store/useAppStore.ts';
 import type { MyResumeProps, ResumeDataError } from './types.ts';
 import {
   LoadingState,
@@ -21,12 +22,13 @@ const MyResume = ({ initialLanguage }: MyResumeProps) => {
 
   // Get state from Zustand store
   const resumeData = useAppStore(selectResumeData);
-  const contactData = useAppStore(selectContactData);
   const loading = useAppStore(selectLoading);
   const error = useAppStore(selectError);
   const language = useAppStore(state => state.language);
   const setLanguage = useAppStore(state => state.setLanguage);
-  const setContactData = useAppStore(state => state.setContactData);
+
+  // Initialize Firebase auth listener
+  useAuth();
 
   // Sync URL language with store
   useEffect(() => {
@@ -43,17 +45,6 @@ const MyResume = ({ initialLanguage }: MyResumeProps) => {
       document.title = title;
     }
   }, [resumeData, t]);
-
-  // Load private contact data if VITE_SHOW_PRIVATE_INFO is enabled
-  useEffect(() => {
-    const loadContactData = async () => {
-      if (import.meta.env.VITE_SHOW_PRIVATE_INFO === 'true') {
-        const contact = await getPersonContactData();
-        setContactData(contact);
-      }
-    };
-    loadContactData();
-  }, [setContactData]);
 
   // Early returns after all hooks
   
@@ -85,7 +76,7 @@ const MyResume = ({ initialLanguage }: MyResumeProps) => {
       <div className="resume-container shadow-lg">
         <div className="section-spacing">
           <BasicInfo basics={data.basics} />
-          {contactData && <PersonalContact personal={contactData} />}
+          <PersonalContact />
         </div>
         <div className="section-spacing">
           <Summary summary={data.basics.summary} />

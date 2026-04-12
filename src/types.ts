@@ -134,9 +134,7 @@ export interface BasicInfoProps {
   basics: ResumeBasics;
 }
 
-export interface PersonalContactProps {
-  personal: PersonalInfo;
-}
+export type PersonalContactProps = Record<string, never>;
 
 export interface SummaryProps {
   summary: LocalizedText;

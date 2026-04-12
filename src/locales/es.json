@@ -52,5 +52,19 @@
   },
   "document": {
     "titleSuffix": "Currículum"
+  },
+  "contact": {
+    "viewContact": "Ver información de contacto",
+    "phonePlaceholder": "+57 300 000 0000",
+    "sendCode": "Enviar código",
+    "sending": "Enviando...",
+    "codePlaceholder": "Código de 6 dígitos",
+    "verify": "Verificar",
+    "verifying": "Verificando...",
+    "back": "Atrás",
+    "cancel": "Cancelar",
+    "signOut": "Cerrar sesión",
+    "sendError": "No se pudo enviar el código. Verifica el número e inténtalo de nuevo.",
+    "verifyError": "Código incorrecto. Inténtalo de nuevo."
   }
 }

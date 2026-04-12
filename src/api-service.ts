@@ -50,9 +50,9 @@ async function fetchPersonData(): Promise<ResumeData> {
  * Fetch contact data from Firebase REST API
  * Data is stored directly under /private (single person)
  */
-async function fetchPersonContactData(): Promise<PersonalInfo | null> {
+async function fetchPersonContactData(authToken: string): Promise<PersonalInfo | null> {
   const baseUrl = getDatabaseUrl();
-  const url = `${baseUrl}/private.json`;
+  const url = `${baseUrl}/private.json?auth=${authToken}`;
   
   try {
     const response = await fetch(url);
@@ -122,11 +122,11 @@ export function usePersonData() {
 }
 
 /**
- * Get contact data (async function)
+ * Get contact data using a Firebase auth token
  */
-export async function getPersonContactData(): Promise<PersonalInfo | null> {
+export async function getPersonContactData(authToken: string): Promise<PersonalInfo | null> {
   try {
-    return await fetchPersonContactData();
+    return await fetchPersonContactData(authToken);
   } catch (error) {
     console.error('Error fetching contact data:', error);
     return null;

@@ -52,5 +52,19 @@
   },
   "document": {
     "titleSuffix": "Resume"
+  },
+  "contact": {
+    "viewContact": "View contact info",
+    "phonePlaceholder": "+1 234 567 8900",
+    "sendCode": "Send code",
+    "sending": "Sending...",
+    "codePlaceholder": "6-digit code",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "back": "Back",
+    "cancel": "Cancel",
+    "signOut": "Sign out",
+    "sendError": "Failed to send code. Check the number and try again.",
+    "verifyError": "Invalid code. Please try again."
   }
 }
