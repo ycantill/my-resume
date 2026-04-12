@@ -16,6 +16,7 @@ export { default as EducationSection } from './organisms/Education';
 export { default as Languages } from './organisms/Languages';
 export { default as Skills } from './organisms/Skills';
 export { default as PersonalContact } from './organisms/PersonalContact';
+export { default as PhoneAuth } from './organisms/PhoneAuth';
 
 // Pages
 export { default as LoadingState } from './pages/LoadingState';

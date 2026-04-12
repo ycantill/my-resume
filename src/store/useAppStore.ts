@@ -9,6 +9,7 @@ interface AppState {
   contactData: PersonalInfo | null;
   loading: boolean;
   error: ResumeDataError | null;
+  authToken: string | null;
   
   // Acciones
   setLanguage: (language: Language) => void;
@@ -16,6 +17,7 @@ interface AppState {
   setContactData: (data: PersonalInfo | null) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: ResumeDataError | null) => void;
+  setAuthToken: (token: string | null) => void;
   reset: () => void;
 }
 
@@ -25,6 +27,7 @@ const initialState = {
   contactData: null,
   loading: false,
   error: null,
+  authToken: null,
 };
 
 export const useAppStore = create<AppState>()(
@@ -37,6 +40,7 @@ export const useAppStore = create<AppState>()(
       setContactData: (data) => set({ contactData: data }),
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
+      setAuthToken: (token) => set({ authToken: token }),
       reset: () => set(initialState),
     }),
     { name: 'AppStore' }
@@ -49,3 +53,4 @@ export const selectResumeData = (state: AppState) => state.resumeData;
 export const selectContactData = (state: AppState) => state.contactData;
 export const selectLoading = (state: AppState) => state.loading;
 export const selectError = (state: AppState) => state.error;
+export const selectAuthToken = (state: AppState) => state.authToken;

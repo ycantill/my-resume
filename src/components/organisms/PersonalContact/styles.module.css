@@ -1,32 +1,36 @@
 /* PersonalContact — organism */
-.root {
+.personal-contact {
   @apply mt-2;
 }
 
-.wrapper {
+.personal-contact__wrapper {
   @apply flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 text-sm sm:text-base flex-wrap px-4 py-2;
 }
 
-.item {
+.personal-contact__item {
   @apply flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start;
 }
 
-.icon {
+.personal-contact__icon {
   @apply text-lg sm:text-xl flex-shrink-0;
 }
 
-.link {
+.personal-contact__link {
   @apply text-blue-600 hover:text-blue-800 font-medium truncate max-w-xs sm:max-w-none;
 }
 
-.divider {
+.personal-contact__divider {
   @apply text-gray-300 hidden sm:inline;
 }
 
-.location {
+.personal-contact__location {
   @apply font-medium text-gray-700;
 }
 
-.timezone {
+.personal-contact__timezone {
   @apply text-gray-500 text-xs sm:text-sm ml-1;
+}
+
+.personal-contact__sign-out {
+  @apply text-xs text-gray-400 hover:text-gray-600 transition-colors cursor-pointer underline-offset-2 hover:underline;
 }
