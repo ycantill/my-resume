@@ -10,8 +10,7 @@ Zero UI chrome design - pure, professional resume content accessible via semanti
 
 - 📄 **Dynamic Resume Generator**: React + Firebase REST API integration
 - 🌍 **Multi-language Support**: English/Spanish via URL routing (`/en`, `/es`)
-- 👥 **Environment-Based Person Selection**: Configure person via `VITE_PERSON` variable
-- 🔗 **URL-Centric Navigation**: Direct URLs only
+-  **URL-Centric Navigation**: Direct URLs only
 - 📱 **Responsive Design**: Print-optimized
 - ⚡ **Lightweight Bundle**: Firebase REST API (no SDK dependency)
 - 🎨 **Modern Styling**: Tailwind CSS + CSS Modules (scoped, BEM-aligned)
@@ -49,28 +48,19 @@ npm install
    VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
    ```
 
-3. Set person to display:
-
+3. (Optional) Show private contact information:
    ```bash
-   VITE_PERSON=your_person_id  # Any person ID in your Firebase database
-   ```
-
-4. (Optional) Show private contact information:
-   ```bash
-   VITE_SHOW_PRIVATE_INFO=true  # Shows email, phone, and location
+   VITE_SHOW_PRIVATE_INFO=true  # Shows phone and location
    ```
 
 ### Development
 
 ```bash
-# Show fallback page (no person configured)
+# Start development server
 npm run dev
 
-# Show specific person's resume
-VITE_PERSON=your_person_id npm run dev
-
 # Show with private contact information (development only)
-VITE_SHOW_PRIVATE_INFO=true VITE_PERSON=your_person_id npm run dev
+VITE_SHOW_PRIVATE_INFO=true npm run dev
 ```
 
 ## 🛣️ URL Structure
@@ -88,14 +78,9 @@ Examples:
 
 **Note**: The application uses hash routing for GitHub Pages compatibility. Direct URLs like `/es` automatically redirect to `/#/es`.
 
-### Fallback Behavior
-
-Without `VITE_PERSON`, shows helpful configuration guide with setup instructions.
-
 **Supported Values:**
 
 - **Languages**: `en`, `es`
-- **Persons**: Any person ID configured in your Firebase database under `public/people/`
 
 ## 🏗️ Architecture
 
@@ -237,9 +222,8 @@ t({ en: "Engineer", es: "Ingeniero" }) → "Engineer" | "Ingeniero"
 
 ```bash
 # Development servers
-npm run dev                                      # Base dev server (shows fallback without VITE_PERSON)
-VITE_PERSON=your_person_id npm run dev           # Development with specific person's resume
-VITE_SHOW_PRIVATE_INFO=true VITE_PERSON=your_person_id npm run dev  # Development with private contact info
+npm run dev                            # Start development server
+VITE_SHOW_PRIVATE_INFO=true npm run dev  # Development with private contact info
 
 # Production builds
 npm run build                  # Base build (requires VITE_PERSON for full functionality)
@@ -329,8 +313,8 @@ src/
 For production deployment, use the build script with environment variable:
 
 ```bash
-# Build for GitHub Pages with specific person
-VITE_PERSON=your_person_id npm run build:github
+# Build for GitHub Pages
+npm run build:github
 ```
 
 ### GitHub Pages (Recommended)
@@ -357,7 +341,7 @@ jobs:
         with:
           node-version: '18'
       - run: npm ci
-      - run: VITE_PERSON=your_person_id npm run build:github
+      - run: npm run build:github
       - uses: actions/deploy-pages@v2
         with:
           artifact_name: dist
@@ -365,51 +349,38 @@ jobs:
 
 ### Firebase Database Structure
 
-**Important**: The application uses Firebase REST API to fetch data. Database rules must allow public read access to `/public/people`.
+**Important**: The application uses Firebase REST API to fetch data. Database rules must allow public read access to `/public`.
 
 #### Public Data Structure
 
 ```json
 public/
-└── people/           # Array of people
-    ├── [0]
-    │   ├── name: "person_id_1"     # Used to match VITE_PERSON
-    │   ├── basics: { name, label, summary, profiles }
-    │   ├── work: [ ... ]
-    │   ├── education: [ ... ]
-    │   ├── languages: [ ... ]
-    │   └── skills: [ ... ]
-    └── [1]
-        ├── name: "person_id_2"
-        └── [same structure]
+├── basics: { name, label, summary, profiles }
+├── work: [ ... ]
+├── education: [ ... ]
+├── languages: [ ... ]
+└── skills: [ ... ]
 ```
 
-**REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/public/people.json`
+**REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/public.json`
 
 #### Private Data Structure (Optional)
 
 ```json
 private/
-└── contact/          # Array of contact info
-    ├── [0]
-    │   ├── name: "person_id_1"     # Must match person name
-    │   ├── email: "email@example.com"
-    │   ├── phone: "+1 234 567 8900"
-    │   └── location: { city, country, countryCode, region }
-    └── [1]
-        └── [same structure]
+├── phone: "+1 234 567 8900"
+└── location: { country, countryCode, timezone }
 ```
 
-**REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/private/contact.json`
-
-**Note**: Private data requires database rules allowing read access. The app searches arrays by `name` field to find matching person.
+**REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/private.json`
 
 **Key Points:**
 
+- **Single Person**: Database holds exactly one person's data
 - **Separated Data**: Public resume info vs private contact details
-- **Array Format**: Identified by `name` field matching person ID
 - **Bilingual Content**: All user-facing text uses `{ "en": "...", "es": "..." }` format (LocalizedText interface)
 - **Static UI Text**: Translated via JSON files in `src/locales/`
+- **Location**: `country` (LocalizedText), `countryCode` (ISO), `timezone` (e.g. `GMT-5`)
 
 ### Privacy & Contact Information
 
@@ -426,7 +397,7 @@ private/
 VITE_SHOW_PRIVATE_INFO=true npm run dev
 ```
 
-- ✅ Shows email, phone, and location in gray container
+- ✅ Shows phone and location (country + timezone) in gray container
 - ⚠️ **NEVER** enable in production
 
 #### Firebase Security Rules
@@ -440,16 +411,13 @@ VITE_SHOW_PRIVATE_INFO=true npm run dev
 }
 ```
 
-These rules block `private/contact` access at database level. The environment variable is for development only.
+These rules block `private` access at database level. The environment variable is for development only.
 
 ### Environment Variables
 
 ```bash
 # Required: Firebase Realtime Database URL
 VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
-
-# Required: Person identifier (must match 'name' field in Firebase)
-VITE_PERSON=yohany
 
 # Optional: Show private contact (development only, never in production)
 VITE_SHOW_PRIVATE_INFO=false
@@ -484,8 +452,8 @@ VITE_SHOW_PRIVATE_INFO=true npm run dev
 
 When enabled:
 
-- ✅ Fetches data from `private/contact` in Firebase
-- ✅ Displays email, phone, and location
+- ✅ Fetches data from `private` in Firebase
+    - ✅ Displays phone and location (country + timezone)
 - ✅ Shows in a subtle gray container below basic info
 - ⚠️ Should **NEVER** be enabled in production builds
 
@@ -508,16 +476,13 @@ Apply these rules to protect private data:
 }
 ```
 
-**Important**: With these rules, `private/contact` is completely inaccessible from the client. The `VITE_SHOW_PRIVATE_INFO` flag is for development only with appropriate Firebase rules.
+**Important**: With these rules, `private` is completely inaccessible from the client. The `VITE_SHOW_PRIVATE_INFO` flag is for development only with appropriate Firebase rules.
 
 ### Environment Variables
 
 ```bash
-# Required: Firebase configuration (JSON string from Firebase Console)
-VITE_FIREBASE_CONFIG={"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
-
-# Required: Person identifier
-VITE_PERSON=yohany
+# Required: Firebase Realtime Database URL
+VITE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
 
 # Optional: Show private contact (development only, never in production)
 VITE_SHOW_PRIVATE_INFO=false
@@ -588,6 +553,14 @@ This React version represents a complete architectural evolution:
 - ✅ Added fallback page for missing configuration
 - ✅ Simplified URL structure to language-only
 
+#### **Phase 9: Single-Person Flat Structure**
+
+- ✅ Removed multi-person array structure from Firebase
+- ✅ `VITE_PERSON` env var eliminated — database holds one person directly
+- ✅ `/public.json` and `/private.json` fetched directly (no array search)
+- ✅ Location simplified: removed `city` and `region`, added `timezone` (e.g. `GMT-5`)
+- ✅ Removed `PersonRequiredFallback` page (no longer needed)
+
 #### **Phase 7: Firebase REST API Migration**
 
 - ✅ Migrated from Firebase SDK to REST API
@@ -644,31 +617,20 @@ This React version represents a complete architectural evolution:
 **Firebase Connection Errors:**
 
 - Verify `VITE_DATABASE_URL` is set in `.env.local`
-- Check database rules allow read access to `/public/people`
+- Check database rules allow read access to `/public`
 - Ensure internet connectivity
 - Verify database URL format: `https://[PROJECT_ID].firebaseio.com` (no trailing slash)
 
 **Language Not Displaying:**
 
 - Check URL format: `/en` or `/es`
-- Verify `VITE_PERSON` is set in `.env.local`
-- Verify person exists in Firebase data
 - Check browser language detection for root URL
 
-**Person Not Loading:**
+**Resume Not Loading:**
 
-- Ensure `VITE_PERSON` is set in `.env.local`
-- Verify person ID matches the `name` field in your Firebase database under `public/people/`
 - Restart dev server after changing environment variables (`npm run dev`)
-- Check that Firebase database contains array structure with `name` field
-- Verify Firebase REST API is accessible (test URL in browser)
-
-**Fallback Page Appearing:**
-
-- This indicates `VITE_PERSON` is not set in `.env.local`
-- Add `VITE_PERSON=your_person_id` to `.env.local` (use a person ID from your Firebase)
-- Restart the development server
-- Check available persons in fallback page instructions
+- Verify Firebase REST API is accessible (test `VITE_DATABASE_URL/public.json` in browser)
+- Check that Firebase database contains the expected flat structure
 
 **Print Layout Issues:**
 

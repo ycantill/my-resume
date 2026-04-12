@@ -21,45 +21,38 @@ export function isDatabaseConfigured(): boolean {
 }
 
 /**
- * Fetch person data from Firebase REST API
- * Firebase stores people as an array, so we fetch all and find by name
+ * Fetch resume data from Firebase REST API
+ * Data is stored directly under /public (single person)
  */
-async function fetchPersonData(personId: string): Promise<ResumeData> {
+async function fetchPersonData(): Promise<ResumeData> {
   const baseUrl = getDatabaseUrl();
-  const url = `${baseUrl}/public/people.json`;
+  const url = `${baseUrl}/public.json`;
   
   const response = await fetch(url);
   
   if (!response.ok) {
     if (response.status === 404) {
-      throw new Error(`People data not found in database`);
+      throw new Error(`Resume data not found in database`);
     }
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
   
-  const peopleArray = await response.json();
+  const data = await response.json();
   
-  if (!peopleArray || !Array.isArray(peopleArray)) {
-    throw new Error(`Invalid people data structure in database`);
+  if (!data || typeof data !== 'object') {
+    throw new Error(`Invalid data structure in database`);
   }
   
-  // Find person by name field
-  const personData = peopleArray.find((person: any) => person?.name === personId);
-  
-  if (!personData) {
-    throw new Error(`No data found for person '${personId}'`);
-  }
-  
-  return personData as ResumeData;
+  return data as ResumeData;
 }
 
 /**
- * Fetch person contact data from Firebase REST API
- * Firebase stores contact as an array, so we fetch all and find by name
+ * Fetch contact data from Firebase REST API
+ * Data is stored directly under /private (single person)
  */
-async function fetchPersonContactData(personId: string): Promise<PersonalInfo | null> {
+async function fetchPersonContactData(): Promise<PersonalInfo | null> {
   const baseUrl = getDatabaseUrl();
-  const url = `${baseUrl}/private/contact.json`;
+  const url = `${baseUrl}/private.json`;
   
   try {
     const response = await fetch(url);
@@ -71,16 +64,13 @@ async function fetchPersonContactData(personId: string): Promise<PersonalInfo | 
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     
-    const contactArray = await response.json();
+    const contactData = await response.json();
     
-    if (!contactArray || !Array.isArray(contactArray)) {
+    if (!contactData || typeof contactData !== 'object') {
       return null;
     }
     
-    // Find contact by name field
-    const contactData = contactArray.find((contact: any) => contact?.name === personId);
-    
-    return contactData || null;
+    return contactData as PersonalInfo;
   } catch (error) {
     console.warn('Failed to fetch private contact data:', error);
     return null;
@@ -88,20 +78,15 @@ async function fetchPersonContactData(personId: string): Promise<PersonalInfo | 
 }
 
 /**
- * Hook to fetch person data from Firebase REST API
+ * Hook to fetch resume data from Firebase REST API
  * Integrates with Zustand store for state management
  */
-export function usePersonData(personId: string | null) {
+export function usePersonData() {
   const setResumeData = useAppStore(state => state.setResumeData);
   const setLoading = useAppStore(state => state.setLoading);
   const setError = useAppStore(state => state.setError);
 
   useEffect(() => {
-    if (!personId) {
-      setLoading(false);
-      return;
-    }
-
     let cancelled = false;
 
     const loadData = async () => {
@@ -109,7 +94,7 @@ export function usePersonData(personId: string | null) {
         setLoading(true);
         setError(null);
         
-        const resumeData = await fetchPersonData(personId);
+        const resumeData = await fetchPersonData();
         
         if (!cancelled) {
           setResumeData(resumeData);
@@ -120,7 +105,6 @@ export function usePersonData(personId: string | null) {
           const errorObj: ResumeDataError = {
             code: 'FETCH_ERROR',
             message: err instanceof Error ? err.message : 'Unknown error occurred',
-            personId
           };
           setError(errorObj);
           setResumeData(null);
@@ -134,15 +118,15 @@ export function usePersonData(personId: string | null) {
     return () => {
       cancelled = true;
     };
-  }, [personId, setResumeData, setLoading, setError]);
+  }, [setResumeData, setLoading, setError]);
 }
 
 /**
- * Get person contact data (async function)
+ * Get contact data (async function)
  */
-export async function getPersonContactData(personId: string): Promise<PersonalInfo | null> {
+export async function getPersonContactData(): Promise<PersonalInfo | null> {
   try {
-    return await fetchPersonContactData(personId);
+    return await fetchPersonContactData();
   } catch (error) {
     console.error('Error fetching contact data:', error);
     return null;
