@@ -1,11 +1,10 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import MyResume from './MyResume';
-import { PersonRequiredFallback } from './components/index';
 import type { AppRouterProps, Language } from './types';
 import { isValidLanguage, SUPPORTED_LANGUAGES } from './types';
 
-const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
+const AppRouter: React.FC<AppRouterProps> = () => {
   // Detect browser language for default
   const getBrowserLanguage = (): Language => {
     const browserLang = navigator.language.toLowerCase();
@@ -27,7 +26,7 @@ const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
         {/* Language-only route - shows resume if person is provided, fallback otherwise */}
         <Route 
           path="/:language" 
-          element={<LanguageRoute initialPerson={initialPerson} />} 
+          element={<LanguageRoute />} 
         />
 
         {/* Catch all - redirect to default language */}
@@ -41,8 +40,8 @@ const AppRouter: React.FC<AppRouterProps> = ({ initialPerson }) => {
 };
 
 
-// Component that handles language-only routes and shows resume or fallback
-const LanguageRoute: React.FC<{ initialPerson?: string }> = ({ initialPerson }) => {
+// Component that handles language-only routes
+const LanguageRoute: React.FC = () => {
   const { language } = useParams<{ language: string }>();
 
   // Validate language
@@ -53,13 +52,7 @@ const LanguageRoute: React.FC<{ initialPerson?: string }> = ({ initialPerson }) 
 
   const validatedLanguage = language as Language;
 
-  // If no person is provided, show the fallback page
-  if (!initialPerson) {
-    return <PersonRequiredFallback language={validatedLanguage} />;
-  }
-
-  // Show the resume with the provided person
-  return <MyResume initialPerson={initialPerson} initialLanguage={validatedLanguage} />;
+  return <MyResume initialLanguage={validatedLanguage} />;
 };
 
 export default AppRouter;

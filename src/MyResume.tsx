@@ -16,7 +16,7 @@ import {
   PersonalContact
 } from './components/index.ts';
 
-const MyResume = ({ initialPerson, initialLanguage }: MyResumeProps) => {
+const MyResume = ({ initialLanguage }: MyResumeProps) => {
   const { t } = useTranslation();
 
   // Get state from Zustand store
@@ -33,8 +33,8 @@ const MyResume = ({ initialPerson, initialLanguage }: MyResumeProps) => {
     setLanguage(initialLanguage);
   }, [initialLanguage, setLanguage]);
 
-  // Fetch person data (updates store)
-  usePersonData(initialPerson || null);
+  // Fetch resume data (updates store)
+  usePersonData();
 
   // Update document title when data changes
   useEffect(() => {
@@ -47,26 +47,17 @@ const MyResume = ({ initialPerson, initialLanguage }: MyResumeProps) => {
   // Load private contact data if VITE_SHOW_PRIVATE_INFO is enabled
   useEffect(() => {
     const loadContactData = async () => {
-      if (import.meta.env.VITE_SHOW_PRIVATE_INFO === 'true' && initialPerson) {
-        const contact = await getPersonContactData(initialPerson);
+      if (import.meta.env.VITE_SHOW_PRIVATE_INFO === 'true') {
+        const contact = await getPersonContactData();
         setContactData(contact);
       }
     };
     loadContactData();
-  }, [initialPerson, setContactData]);
+  }, [setContactData]);
 
   // Early returns after all hooks
   
-  // If no person provided, this shouldn't render (handled by AppRouter)
-  if (!initialPerson) {
-    const configError: ResumeDataError = {
-      code: 'INVALID_DATA',
-      message: 'No person specified'
-    };
-    return <ErrorState error={configError} language={language} />;
-  }
-
-  // Verificar si Database está configurado
+  // If database is not configured show error
   if (!isDatabaseConfigured()) {
     const configError: ResumeDataError = {
       code: 'INVALID_DATA',

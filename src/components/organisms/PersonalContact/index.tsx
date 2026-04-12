@@ -44,6 +44,9 @@ const PersonalContact: React.FC<PersonalContactProps> = ({ personal }) => {
             <div className={styles.item}>
               <span className={styles.icon} aria-hidden="true">📍</span>
               <span className={styles.location}>{formatLocationLabel(location, language)}</span>
+              {location.timezone && (
+                <span className={styles.timezone}>({location.timezone})</span>
+              )}
             </div>
           </>
         )}

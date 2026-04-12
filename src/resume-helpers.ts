@@ -125,14 +125,10 @@ export function normalizePhone(phone: string | null | undefined): string {
 // Build a single human-readable label for a location
 export function formatLocationLabel(loc: BasicLocation | null | undefined, lang: Language): string {
   if (!loc) return '';
-  const region = loc.region && typeof loc.region === 'object' ? (loc.region[lang] || loc.region.en || '') : (loc.region || '');
   const country = loc.country && typeof loc.country === 'object'
     ? (loc.country[lang] || loc.country.en || '')
     : (loc.country || countryNameFromCode(loc.countryCode, lang) || '');
-  const city = loc.city || '';
-  const segs = [city, region, country].filter(Boolean);
-  if (segs.length) return segs.join(', ');
-  return '';
+  return country;
 }
 
 // Map ISO country codes to localized names (fallback if country not provided)

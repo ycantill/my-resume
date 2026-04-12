@@ -26,3 +26,7 @@
 .location {
   @apply font-medium text-gray-700;
 }
+
+.timezone {
+  @apply text-gray-500 text-xs sm:text-sm ml-1;
+}

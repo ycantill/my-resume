@@ -13,10 +13,9 @@ export interface LocalizedHighlights {
 }
 
 export interface BasicLocation {
-  city?: string;
-  region?: LocalizedText;
   country?: LocalizedText;
   countryCode?: string;
+  timezone?: string;
 }
 
 export interface PersonalInfo {
@@ -95,7 +94,6 @@ export interface Skill {
 }
 
 export interface ResumeData {
-  name: string;              // Person identifier
   basics: ResumeBasics;
   work: WorkEntry[];
   education: Education[];
@@ -111,25 +109,14 @@ export interface UsePersonDataResult {
 }
 
 export interface MyResumeProps {
-  initialPerson?: string;
   initialLanguage: Language;
 }
 
 // Router-related types
-export interface AppRouterProps {
-  // Optional initial person from VITE_PERSON env variable
-  initialPerson?: string;
-}
+export interface AppRouterProps {}
 
-export interface MyResumeProps {
-  initialPerson?: string;
-  initialLanguage: Language;
-}
 
-// Firebase specific types
-export interface FirebasePeopleData {
-  people: ResumeData[];      // Changed: now it's an array instead of object
-}
+
 
 // Utility types for component props
 export interface DateRange {
@@ -231,9 +218,8 @@ export const SUPPORTED_LANGUAGES: readonly Language[] = ['en', 'es'] as const;
 
 // Error types for better error handling
 export interface ResumeDataError {
-  code: 'PERSON_NOT_FOUND' | 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA' | 'FETCH_ERROR';
+  code: 'FIREBASE_ERROR' | 'NETWORK_ERROR' | 'INVALID_DATA' | 'FETCH_ERROR';
   message: string;
-  personId?: string;
   originalError?: Error;
 }
 
@@ -242,10 +228,6 @@ export interface ResumeDataError {
  */
 export const formatErrorMessage = (error: ResumeDataError, language: Language): string => {
   const messages = {
-    PERSON_NOT_FOUND: {
-      en: `Person not found: ${error.personId || 'unknown'}`,
-      es: `Persona no encontrada: ${error.personId || 'desconocida'}`
-    },
     FIREBASE_ERROR: {
       en: 'Firebase connection error. Please check your internet connection.',
       es: 'Error de conexión a Firebase. Por favor verifica tu conexión a internet.'
