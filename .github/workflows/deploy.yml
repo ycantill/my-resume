@@ -25,9 +25,9 @@ concurrency:
 
 env:
   # Setting an environment variable with the value of a configuration variable
-  PERSON: ${{ vars.VITE_PERSON }}
-  SHOW_PRIVATE_INFO: ${{ vars.VITE_SHOW_PRIVATE_INFO }}
   DATABASE_URL: ${{ vars.VITE_DATABASE_URL }}
+  FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+  FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -48,7 +48,7 @@ jobs:
         run: npm ci
 
       - name: Build application
-        run: VITE_SHOW_PRIVATE_INFO=$SHOW_PRIVATE_INFO VITE_PERSON=$PERSON VITE_DATABASE_URL=$DATABASE_URL npm run build:github
+        run: VITE_DATABASE_URL=$DATABASE_URL VITE_FIREBASE_API_KEY=$FIREBASE_API_KEY VITE_FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN npm run build:github
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
