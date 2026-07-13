@@ -368,8 +368,23 @@ public/
 
 ```json
 private/
-├── phone: "+1 234 567 8900"
-└── location: { country, countryCode, timezone }
+├── email: "person@example.com"
+└── locations: [
+      {
+        "en": "Spain",
+        "es": "España",
+        "code": "ES",
+        "timezone": "GMT+2",
+        "phone": "+34662042004"
+      },
+      {
+        "en": "Colombia",
+        "es": "Colombia",
+        "code": "COT",
+        "timezone": "GMT-5",
+        "phone": "+573004977509"
+      }
+    ]
 ```
 
 **REST API Endpoint**: `https://[PROJECT_ID].firebaseio.com/private.json`
@@ -377,10 +392,23 @@ private/
 **Key Points:**
 
 - **Single Person**: Database holds exactly one person's data
+- **Multiple Locations**: A person can list several `locations`, each with its own phone and timezone
 - **Separated Data**: Public resume info vs private contact details
 - **Bilingual Content**: All user-facing text uses `{ "en": "...", "es": "..." }` format (LocalizedText interface)
 - **Static UI Text**: Translated via JSON files in `src/locales/`
-- **Location**: `country` (LocalizedText), `countryCode` (ISO), `timezone` (e.g. `GMT-5`)
+- **Location**: each entry has `en`/`es` names, `code` (ISO-ish country code), `timezone` (e.g. `GMT-5`), `phone`
+
+#### Location URLs
+
+The displayed location is selected from the URL, using a slug derived from the location's `en` name (lowercased, non-alphanumeric characters replaced with `-`):
+
+```
+https://ycantill.github.io/my-resume/#/en/spain
+https://ycantill.github.io/my-resume/#/en/colombia
+https://ycantill.github.io/my-resume/#/es/colombia
+```
+
+If the location segment is omitted (e.g. `#/en`) or doesn't match any entry in `locations`, the first location in the array is shown.
 
 ### Privacy & Contact Information
 

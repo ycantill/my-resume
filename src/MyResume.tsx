@@ -17,7 +17,7 @@ import {
   PersonalContact
 } from './components/index.ts';
 
-const MyResume = ({ initialLanguage }: MyResumeProps) => {
+const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
   const { t } = useTranslation();
 
   // Get state from Zustand store
@@ -26,6 +26,7 @@ const MyResume = ({ initialLanguage }: MyResumeProps) => {
   const error = useAppStore(selectError);
   const language = useAppStore(state => state.language);
   const setLanguage = useAppStore(state => state.setLanguage);
+  const setLocationSlug = useAppStore(state => state.setLocationSlug);
 
   // Initialize Firebase auth listener
   useAuth();
@@ -34,6 +35,11 @@ const MyResume = ({ initialLanguage }: MyResumeProps) => {
   useEffect(() => {
     setLanguage(initialLanguage);
   }, [initialLanguage, setLanguage]);
+
+  // Sync URL location with store
+  useEffect(() => {
+    setLocationSlug(initialLocation ?? null);
+  }, [initialLocation, setLocationSlug]);
 
   // Fetch resume data (updates store)
   usePersonData();
