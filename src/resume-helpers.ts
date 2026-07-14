@@ -1,5 +1,5 @@
 // Helper functions for date formatting and durations used by the resume component
-import type { WorkEntry, GroupedWorkEntry, BasicLocation, Language, DateRange, LocalizedText } from './types.ts';
+import type { WorkEntry, GroupedWorkEntry, LocationInfo, Language, DateRange, LocalizedText } from './types.ts';
 import enTranslations from './locales/en.json';
 import esTranslations from './locales/es.json';
 
@@ -123,24 +123,34 @@ export function normalizePhone(phone: string | null | undefined): string {
 }
 
 // Build a single human-readable label for a location
-export function formatLocationLabel(loc: BasicLocation | null | undefined, lang: Language): string {
+export function formatLocationLabel(loc: LocationInfo | null | undefined, lang: Language): string {
   if (!loc) return '';
-  const country = loc.country && typeof loc.country === 'object'
-    ? (loc.country[lang] || loc.country.en || '')
-    : (loc.country || countryNameFromCode(loc.countryCode, lang) || '');
-  return country;
+  return loc[lang] || loc.en || '';
 }
 
-// Map ISO country codes to localized names (fallback if country not provided)
-export function countryNameFromCode(code: string | null | undefined, lang: Language): string {
-  if (!code) return '';
-  const map = {
-    ES: { en: 'Spain', es: 'España' },
-    CO: { en: 'Colombia', es: 'Colombia' },
-  };
-  const rec = map[code.toUpperCase() as keyof typeof map];
-  if (!rec) return '';
-  return lang === 'es' ? rec.es : rec.en;
+// Turns a location's English name into a URL-safe slug, e.g. "Spain" -> "spain"
+export function slugifyLocationName(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// Resolves the location matching a URL slug (derived from its "en" name),
+// falling back to the first location when the slug is missing or unknown
+export function findLocationBySlug(
+  locations: LocationInfo[] | null | undefined,
+  slug: string | null | undefined
+): LocationInfo | null {
+  if (!locations || locations.length === 0) return null;
+  if (slug) {
+    const match = locations.find(loc => slugifyLocationName(loc.en) === slug.toLowerCase());
+    if (match) return match;
+  }
+  return locations[0];
 }
 
 // Group multiple work entries by company name; returns a list where

@@ -18,10 +18,17 @@ export interface BasicLocation {
   timezone?: string;
 }
 
+export interface LocationInfo {
+  en: string;
+  es: string;
+  code: string;
+  timezone?: string;
+  phone?: string;
+}
+
 export interface PersonalInfo {
   email: string;
-  phone: string;
-  location: BasicLocation;
+  locations: LocationInfo[];
 }
 
 export interface ContactProfile {
@@ -110,6 +117,7 @@ export interface UsePersonDataResult {
 
 export interface MyResumeProps {
   initialLanguage: Language;
+  initialLocation?: string;
 }
 
 // Router-related types

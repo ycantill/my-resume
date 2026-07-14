@@ -23,10 +23,16 @@ const AppRouter: React.FC<AppRouterProps> = () => {
           element={<Navigate to={`/${defaultLanguage}`} replace />} 
         />
 
-        {/* Language-only route - shows resume if person is provided, fallback otherwise */}
-        <Route 
-          path="/:language" 
-          element={<LanguageRoute />} 
+        {/* Language-only route - shows resume with the default location */}
+        <Route
+          path="/:language"
+          element={<LanguageRoute />}
+        />
+
+        {/* Language + location route, e.g. #/en/colombia, #/en/spain */}
+        <Route
+          path="/:language/:location"
+          element={<LanguageRoute />}
         />
 
         {/* Catch all - redirect to default language */}
@@ -40,9 +46,9 @@ const AppRouter: React.FC<AppRouterProps> = () => {
 };
 
 
-// Component that handles language-only routes
+// Component that handles /:language and /:language/:location routes
 const LanguageRoute: React.FC = () => {
-  const { language } = useParams<{ language: string }>();
+  const { language, location } = useParams<{ language: string; location?: string }>();
 
   // Validate language
   if (!language || !isValidLanguage(language)) {
@@ -52,7 +58,7 @@ const LanguageRoute: React.FC = () => {
 
   const validatedLanguage = language as Language;
 
-  return <MyResume initialLanguage={validatedLanguage} />;
+  return <MyResume initialLanguage={validatedLanguage} initialLocation={location} />;
 };
 
 export default AppRouter;

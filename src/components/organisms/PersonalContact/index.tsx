@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import type { PersonalContactProps } from '../../../types.ts';
-import { formatLocationLabel, normalizePhone } from '../../../resume-helpers.ts';
+import { findLocationBySlug, formatLocationLabel, normalizePhone } from '../../../resume-helpers.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { useAppStore, selectAuthToken, selectContactData } from '../../../store/useAppStore';
+import { useAppStore, selectAuthToken, selectContactData, selectLocationSlug } from '../../../store/useAppStore';
 import { getPersonContactData } from '../../../api-service';
 import { signOutUser } from '../../../firebase-auth';
 import PhoneAuth from '../PhoneAuth';
@@ -12,6 +12,7 @@ const PersonalContact: React.FC<PersonalContactProps> = () => {
   const { t, language } = useTranslation();
   const authToken = useAppStore(selectAuthToken);
   const contactData = useAppStore(selectContactData);
+  const locationSlug = useAppStore(selectLocationSlug);
   const setContactData = useAppStore(state => state.setContactData);
   const setAuthToken = useAppStore(state => state.setAuthToken);
 
@@ -27,7 +28,7 @@ const PersonalContact: React.FC<PersonalContactProps> = () => {
     setAuthToken(null);
   };
 
-  const location = contactData?.location;
+  const location = findLocationBySlug(contactData?.locations, locationSlug);
 
   return (
     <div className={styles['personal-contact']}>
@@ -36,18 +37,18 @@ const PersonalContact: React.FC<PersonalContactProps> = () => {
         {authToken ? (
           /* ── Authenticated: show contact info ── */
           <>
-            {contactData?.phone && (
+            {location?.phone && (
               <div className={styles['personal-contact__item']}>
                 <span className={styles['personal-contact__icon']} aria-hidden="true">📞</span>
-                <a href={`tel:${normalizePhone(contactData.phone)}`} className={styles['personal-contact__link']}>
-                  {contactData.phone}
+                <a href={`tel:${normalizePhone(location.phone)}`} className={styles['personal-contact__link']}>
+                  {location.phone}
                 </a>
               </div>
             )}
 
             {location && (
               <>
-                {contactData?.phone && <span className={styles['personal-contact__divider']}>•</span>}
+                {location?.phone && <span className={styles['personal-contact__divider']}>•</span>}
                 <div className={styles['personal-contact__item']}>
                   <span className={styles['personal-contact__icon']} aria-hidden="true">📍</span>
                   <span className={styles['personal-contact__location']}>{formatLocationLabel(location, language)}</span>
