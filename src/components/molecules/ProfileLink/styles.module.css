@@ -14,3 +14,7 @@
 .url {
   @apply text-blue-600 hover:text-blue-800 font-medium truncate max-w-xs sm:max-w-none;
 }
+
+.remove {
+  @apply text-gray-400 hover:text-red-600 text-xs w-8 h-8 rounded-full hover:bg-red-50 transition-colors print:hidden;
+}

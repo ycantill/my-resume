@@ -134,7 +134,7 @@ const PhoneAuth: React.FC = () => {
 
       ) : (
         <button onClick={() => setStep('phone')} className={styles['phone-auth__trigger']}>
-          📞 {t('contact.viewContact')}
+          {t('contact.viewContact')}
         </button>
       )}
     </>

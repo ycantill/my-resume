@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useAppStore } from './store/useAppStore';
+import { getFreshIdToken } from './firebase-auth';
 import type { ResumeData, PersonalInfo, ResumeDataError } from './types';
 
 /**
@@ -43,7 +44,30 @@ async function fetchPersonData(): Promise<ResumeData> {
     throw new Error(`Invalid data structure in database`);
   }
   
-  return data as ResumeData;
+  return normalizeResumeData(data);
+}
+
+/**
+ * Fill in the sections Firebase leaves out.
+ *
+ * A Realtime Database node with no children does not exist, so a section the
+ * editor empties comes back missing rather than as [], and a list whose keys
+ * are not contiguous comes back with null holes. Both would crash the render.
+ */
+function normalizeResumeData(data: Record<string, unknown>): ResumeData {
+  const list = <T,>(value: unknown): T[] =>
+    Array.isArray(value) ? (value.filter(Boolean) as T[]) : [];
+
+  const basics = (data.basics ?? {}) as ResumeData['basics'];
+
+  return {
+    ...(data as object),
+    basics: { ...basics, profiles: list(basics.profiles) },
+    work: list(data.work),
+    education: list(data.education),
+    languages: list(data.languages),
+    skills: list(data.skills),
+  } as ResumeData;
 }
 
 /**
@@ -130,5 +154,39 @@ export async function getPersonContactData(authToken: string): Promise<PersonalI
   } catch (error) {
     console.error('Error fetching contact data:', error);
     return null;
+  }
+}
+
+/**
+ * Write a single resume section back to /public
+ *
+ * Uses PATCH so the other sections are left untouched; Firebase replaces the
+ * named child wholesale, so removing an item from the JSON removes it for real.
+ * Writes are rejected by the database rules unless the signed-in user owns the resume.
+ */
+export async function saveResumeSection<K extends keyof ResumeData>(
+  section: K,
+  value: ResumeData[K]
+): Promise<void> {
+  const authToken = await getFreshIdToken();
+
+  if (!authToken) {
+    throw new Error('You must be signed in to save changes');
+  }
+
+  const baseUrl = getDatabaseUrl();
+  const url = `${baseUrl}/public.json?auth=${authToken}`;
+
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ [section]: value }),
+  });
+
+  if (!response.ok) {
+    if (response.status === 401 || response.status === 403) {
+      throw new Error('Not authorized to write. Check the database rules for /public.');
+    }
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
 }

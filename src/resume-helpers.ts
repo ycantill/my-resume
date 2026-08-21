@@ -1,5 +1,21 @@
 // Helper functions for date formatting and durations used by the resume component
-import type { WorkEntry, GroupedWorkEntry, LocationInfo, Language, DateRange, LocalizedText } from './types.ts';
+import type {
+  WorkEntry,
+  WorkItem,
+  WorkGroupEntry,
+  WorkPath,
+  WorkRole,
+  GroupedWorkEntry,
+  LocationInfo,
+  Language,
+  DateRange,
+  LocalizedText,
+  LocalizedHighlights,
+  ContactProfile,
+  Education,
+  LanguageEntry,
+  Skill,
+} from './types.ts';
 import enTranslations from './locales/en.json';
 import esTranslations from './locales/es.json';
 
@@ -147,41 +163,144 @@ export function findLocationBySlug(
   return locations[0];
 }
 
-// Group multiple work entries by company name; returns a list where
-// companies with multiple entries become a single item with roles[]
-export function groupWorkEntries(work: WorkEntry[] = []): GroupedWorkEntry[] {
-  const order: string[] = [];
-  const groups = new Map<string, { name: string; items: WorkEntry[] }>();
-  for (const item of work) {
-    const key = item && item.name ? item.name : '__unknown__';
-    if (!groups.has(key)) {
-      groups.set(key, { name: item.name, items: [] });
-      order.push(key);
-    }
-    const g = groups.get(key)!;
-    g.items.push(item);
-  }
+// True when an entry stores its roles nested instead of being one flat role
+export function isWorkGroup(item: WorkItem): item is WorkGroupEntry {
+  return Array.isArray((item as WorkGroupEntry).roles);
+}
 
+// Lifts a flat entry into a role, used when two entries share a company name
+function toRole(entry: GroupedWorkEntry): WorkRole {
+  const empty: LocalizedText = { en: '', es: '' };
+  return {
+    sourcePath: entry.sourcePath,
+    position: entry.position ?? empty,
+    startDate: entry.startDate ?? '',
+    endDate: entry.endDate,
+    location: entry.location ?? empty,
+    summary: entry.summary ?? empty,
+    highlights: entry.highlights ?? { en: [], es: [] },
+    stack: entry.stack,
+  };
+}
+
+// Normalizes the work list for display. The database holds two shapes: a flat
+// entry per role, and a company with its roles nested. Both come out as one
+// list of companies, and every role carries the path it has to be written back
+// to — the inline editor addresses the stored data, not this view of it.
+export function groupWorkEntries(work: WorkItem[] = []): GroupedWorkEntry[] {
   const result: GroupedWorkEntry[] = [];
-  for (const key of order) {
-    const g = groups.get(key);
-    if (!g || g.items.length === 0) continue;
-    if (g.items.length === 1) {
-      // Single item: keep as-is
-      result.push(g.items[0]);
-    } else {
-      // Build roles array from items
-      const roles = g.items.map(it => ({
-        position: it.position,
-        startDate: it.startDate,
-        endDate: it.endDate,
-        location: it.location,
-        summary: it.summary,
-        highlights: it.highlights,
-        stack: it.stack,
-      }));
-      result.push({ name: g.items[0].name, roles });
+  const positionByName = new Map<string, number>();
+
+  work.forEach((item, index) => {
+    if (!item) return;
+    const path: WorkPath = { entry: index };
+
+    // Already grouped in the database
+    if (isWorkGroup(item)) {
+      result.push({
+        name: item.name,
+        sourcePath: path,
+        sourcePaths: [path],
+        roles: (item.roles ?? []).map((role, roleIndex) => ({
+          ...role,
+          sourcePath: { entry: index, role: roleIndex },
+        })),
+      });
+      return;
     }
-  }
+
+    const seenAt = item.name ? positionByName.get(item.name) : undefined;
+
+    if (seenAt === undefined) {
+      if (item.name) positionByName.set(item.name, result.length);
+      result.push({ ...item, sourcePath: path, sourcePaths: [path] });
+      return;
+    }
+
+    // A second flat entry for a company already listed: fold both into roles
+    const existing = result[seenAt];
+    const roles = existing.roles ?? [toRole(existing)];
+    result[seenAt] = {
+      name: existing.name,
+      sourcePaths: [...(existing.sourcePaths ?? []), path],
+      roles: [...roles, toRole({ ...item, sourcePath: path })],
+    };
+  });
+
   return result;
+}
+
+// Builds the localized value for the language being edited, leaving the other
+// language untouched — you edit the resume in the language you are reading it in
+export function withLocalized(
+  current: LocalizedText | undefined,
+  language: Language,
+  value: string
+): LocalizedText {
+  return { en: '', es: '', ...current, [language]: value };
+}
+
+export function withLocalizedList(
+  current: LocalizedHighlights | undefined,
+  language: Language,
+  value: string[]
+): LocalizedHighlights {
+  return { en: [], es: [], ...current, [language]: value };
+}
+
+// The current month in the "YYYY-MM" shape the resume stores dates in
+export function currentYearMonth(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
+// Splits a profile URL into the network/username fields stored alongside it,
+// so adding a link by pasting its URL still produces a complete profile
+export function profileFromUrl(url: string): ContactProfile {
+  let network = '';
+  let username = '';
+  try {
+    const parsed = new URL(url.startsWith('http') ? url : `https://${url}`);
+    network = parsed.hostname.replace(/^www\./, '').split('.')[0];
+    username = parsed.pathname.split('/').filter(Boolean).pop() ?? '';
+  } catch {
+    // A half-typed URL is fine; the fields fill in once it parses
+  }
+  return { network, url, username };
+}
+
+// Blank entries used by the "add" controls in edit mode
+export function createWorkEntry(): WorkEntry {
+  return {
+    name: '',
+    position: { en: '', es: '' },
+    startDate: currentYearMonth(),
+    location: { en: '', es: '' },
+    summary: { en: '', es: '' },
+    highlights: { en: [], es: [] },
+    stack: [],
+  };
+}
+
+export function createEducationEntry(): Education {
+  return {
+    institution: '',
+    studyType: { en: '', es: '' },
+    area: { en: '', es: '' },
+    location: '',
+  };
+}
+
+export function createLanguageEntry(): LanguageEntry {
+  return {
+    language: { en: '', es: '' },
+    fluency: { en: '', es: '' },
+  };
+}
+
+export function createSkillEntry(): Skill {
+  return {
+    name: '',
+    keywords: [],
+  };
 }

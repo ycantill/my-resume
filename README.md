@@ -429,13 +429,14 @@ VITE_SHOW_PRIVATE_INFO=true npm run dev
 ```json
 {
   "rules": {
-    "public": { ".read": true, ".write": false },
-    "private": { ".read": false, ".write": false }
+    "public": { ".read": true, ".write": "auth.uid === 'YOUR_UID'" },
+    "private": { ".read": "auth.uid === 'YOUR_UID'", ".write": "auth.uid === 'YOUR_UID'" }
   }
 }
 ```
 
-These rules block `private` access at database level. The environment variable is for development only.
+`private` is readable only by the signed-in owner, and only the owner can write. Replace
+`YOUR_UID` with the UID of your phone-auth user (Firebase Console → Authentication → Users).
 
 ### Environment Variables
 
@@ -448,6 +449,50 @@ VITE_SHOW_PRIVATE_INFO=false
 ```
 
 See `.env.example` for template with placeholder values.
+
+## ✏️ Editing the resume from the browser
+
+The resume can be edited in place on the deployed site — from a phone — with no
+rebuild and no redeploy.
+
+1. Sign in with the phone number registered in Firebase Auth (the same flow that reveals
+   contact info).
+2. An **Edit** button appears in the action bar and turns the resume itself into the editor.
+3. Tap any text to edit it: name, title, summary, company, position, location, highlights,
+   tech stack, schools, languages, skills. The field keeps the typography around it, so the
+   page never reflows as you type.
+4. Dates use the native month picker, and an open end date is expressed by the
+   **current role** checkbox — matching how the data stores it.
+5. Add, delete and reorder controls appear next to each entry and list.
+6. Every change saves on its own, straight to `/public`. The action bar shows saving, saved,
+   or an error.
+
+Notes:
+
+- **Edits apply to the language you are viewing.** Editing at `#/es` writes the Spanish text
+  and leaves the English untouched; switch languages to edit the other one.
+- Writes are authorized by the database rules above, not by the presence of the button. A
+  visitor who forges the UI still cannot write.
+- A failed write rolls the page back to what the database still holds, so the resume never
+  shows a change that did not save.
+- The ID token is refreshed immediately before each write, so a long editing session does not
+  fail on an expired token.
+- Contact data under `/private` is not editable here; edit it in the Firebase Console.
+
+### Work entry shapes
+
+`work` accepts two shapes side by side, and the editor handles both:
+
+```jsonc
+// One flat entry per role
+{ "name": "Company", "position": {...}, "startDate": "2024-01", "highlights": {...} }
+
+// Or a company with its roles nested
+{ "name": "Company", "roles": [ { "position": {...}, "startDate": "2020-05" }, ... ] }
+```
+
+Consecutive flat entries sharing a company name are displayed as one company with several
+roles, the same as a nested entry.
 
 ## 🖨️ Printing
 
@@ -490,17 +535,19 @@ Apply these rules to protect private data:
   "rules": {
     "public": {
       ".read": true, // Anyone can read public data
-      ".write": false // No one can write
+      ".write": "auth.uid === 'YOUR_UID'" // Only the owner can edit
     },
     "private": {
-      ".read": false, // No one can read private data
-      ".write": false // No one can write
+      ".read": "auth.uid === 'YOUR_UID'", // Only the owner can read contact info
+      ".write": "auth.uid === 'YOUR_UID'" // Only the owner can edit
     }
   }
 }
 ```
 
-**Important**: With these rules, `private` is completely inaccessible from the client. The `VITE_SHOW_PRIVATE_INFO` flag is for development only with appropriate Firebase rules.
+**Important**: `private` is unreadable to anyone who is not signed in as the owner, and the
+rules — not the UI — are what authorize every write. Replace `YOUR_UID` with the UID of your
+phone-auth user, found in Firebase Console → Authentication → Users.
 
 ### Environment Variables
 

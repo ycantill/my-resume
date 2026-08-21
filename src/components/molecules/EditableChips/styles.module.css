@@ -1,0 +1,12 @@
+/* EditableChips — molecule */
+.slot {
+  @apply inline-flex items-center gap-1;
+}
+
+.remove {
+  @apply text-gray-400 hover:text-red-600 text-xs w-8 h-8 rounded-full hover:bg-red-50 transition-colors print:hidden;
+}
+
+.add {
+  @apply inline-block text-sm text-blue-600 hover:bg-blue-50 border border-dashed border-blue-300 rounded-full px-4 min-h-[2.75rem] transition-colors print:hidden;
+}

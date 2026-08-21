@@ -1,5 +1,7 @@
 // Atoms
 export { default as Chip } from './atoms/Chip';
+export { default as EditableText } from './atoms/EditableText';
+export { default as EditableDate } from './atoms/EditableDate';
 
 // Molecules
 export { default as ProfileLink } from './molecules/ProfileLink';
@@ -7,6 +9,11 @@ export { default as LanguageItem } from './molecules/LanguageItem';
 export { default as SkillCategory } from './molecules/SkillCategory';
 export { default as EducationCard } from './molecules/EducationCard';
 export { default as WorkRoleCard } from './molecules/WorkRoleCard';
+export { default as EditModeToggle } from './molecules/EditModeToggle';
+export { default as EditableList } from './molecules/EditableList';
+export { default as EditableChips } from './molecules/EditableChips';
+export { default as EntryActions } from './molecules/EntryActions';
+export { default as SaveIndicator } from './molecules/SaveIndicator';
 
 // Organisms
 export { default as ActionBar } from './organisms/ActionBar';

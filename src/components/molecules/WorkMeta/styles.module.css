@@ -1,0 +1,28 @@
+/* WorkMeta — molecule */
+.root {
+  @apply flex flex-col gap-2 text-sm text-gray-600 font-medium sm:flex-row sm:flex-wrap sm:items-center sm:gap-3;
+}
+
+.dates {
+  @apply flex items-center gap-2;
+}
+
+.dash {
+  @apply text-gray-400;
+}
+
+.present {
+  @apply text-gray-500 italic;
+}
+
+.toggle {
+  @apply flex items-center gap-2 min-h-[2.75rem] cursor-pointer select-none;
+}
+
+.checkbox {
+  @apply w-5 h-5 accent-blue-600;
+}
+
+.location {
+  @apply flex-1 min-w-[8rem];
+}

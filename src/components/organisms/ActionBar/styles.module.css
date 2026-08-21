@@ -7,3 +7,11 @@
 .action-bar__inner {
   @apply max-w-4xl mx-auto px-6 py-3 flex flex-wrap items-center justify-end gap-3 min-h-[3.25rem];
 }
+
+.action-bar__hint {
+  @apply max-w-4xl mx-auto px-6 pb-3 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs text-gray-500 border-t border-gray-100 pt-2;
+}
+
+.action-bar__hint-detail {
+  @apply text-gray-400;
+}

@@ -48,7 +48,17 @@ export interface WorkEntry {
   stack?: string[];
 }
 
+// Address of an editable role within ResumeData['work']: a top-level entry,
+// or a role nested inside a company that stores several of them
+export interface WorkPath {
+  entry: number;
+  role?: number;
+}
+
 export interface WorkRole {
+  // Where this role came from, so the inline editor can write back through
+  // the regrouping done for display
+  sourcePath?: WorkPath;
   position: LocalizedText;
   startDate: string;
   endDate?: string;
@@ -58,8 +68,20 @@ export interface WorkRole {
   stack?: string[];
 }
 
+// A company that stores its roles nested, as opposed to one flat entry per role.
+// Both shapes live side by side in the database.
+export interface WorkGroupEntry {
+  name: string;
+  roles: WorkRole[];
+}
+
+export type WorkItem = WorkEntry | WorkGroupEntry;
+
 export interface GroupedWorkEntry {
   name: string;
+  // Every entry this company covers, so renaming it moves them together
+  sourcePath?: WorkPath;
+  sourcePaths?: WorkPath[];
   // For grouped entries (multiple roles at same company)
   roles?: WorkRole[];
   // For single entries (single role at company)  
@@ -94,7 +116,7 @@ export interface Skill {
 
 export interface ResumeData {
   basics: ResumeBasics;
-  work: WorkEntry[];
+  work: WorkItem[];
   education: Education[];
   languages: LanguageEntry[];
   skills: Skill[];
@@ -104,6 +126,9 @@ export interface MyResumeProps {
   initialLanguage: Language;
   initialLocation?: string;
 }
+
+// Inline editor save lifecycle, surfaced in the action bar
+export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 // Router-related types
 export interface AppRouterProps {}
@@ -126,7 +151,7 @@ export interface SummaryProps {
 }
 
 export interface WorkExperienceProps {
-  workItems: (WorkEntry | GroupedWorkEntry)[];
+  workItems: GroupedWorkEntry[];
 }
 
 export interface EducationSectionProps {

@@ -1,0 +1,8 @@
+/* SaveIndicator — molecule */
+.status {
+  @apply text-xs text-gray-500;
+}
+
+.error {
+  @apply text-xs text-red-600 font-medium max-w-[12rem] truncate;
+}
