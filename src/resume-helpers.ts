@@ -122,12 +122,6 @@ export function normalizePhone(phone: string | null | undefined): string {
   return String(phone).replace(/\s+/g, '');
 }
 
-// Build a single human-readable label for a location
-export function formatLocationLabel(loc: LocationInfo | null | undefined, lang: Language): string {
-  if (!loc) return '';
-  return loc[lang] || loc.en || '';
-}
-
 // Turns a location's English name into a URL-safe slug, e.g. "Spain" -> "spain"
 export function slugifyLocationName(name: string): string {
   return name

@@ -9,6 +9,7 @@ export { default as EducationCard } from './molecules/EducationCard';
 export { default as WorkRoleCard } from './molecules/WorkRoleCard';
 
 // Organisms
+export { default as ActionBar } from './organisms/ActionBar';
 export { default as BasicInfo } from './organisms/BasicInfo';
 export { default as Summary } from './organisms/Summary';
 export { default as WorkExperience } from './organisms/WorkExperience';

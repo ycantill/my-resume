@@ -1,0 +1,9 @@
+/* ActionBar — organism */
+.action-bar {
+  @apply sticky top-0 z-10 mb-6 border-b border-gray-200 bg-white/90 backdrop-blur print:hidden;
+}
+
+/* Aligned with .resume-container so actions sit above the sheet edge */
+.action-bar__inner {
+  @apply max-w-4xl mx-auto px-6 py-3 flex flex-wrap items-center justify-end gap-3 min-h-[3.25rem];
+}

@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
 import type { ConfirmationResult, RecaptchaVerifier } from 'firebase/auth';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { useAppStore, selectAuthToken } from '../../../store/useAppStore';
 import {
   isAuthConfigured,
   createRecaptchaVerifier,
   sendPhoneCode,
   confirmPhoneCode,
+  signOutUser,
 } from '../../../firebase-auth';
 import styles from './styles.module.css';
 
@@ -13,6 +15,10 @@ type Step = 'idle' | 'phone' | 'code';
 
 const PhoneAuth: React.FC = () => {
   const { t } = useTranslation();
+
+  const authToken = useAppStore(selectAuthToken);
+  const setContactData = useAppStore(state => state.setContactData);
+  const setAuthToken = useAppStore(state => state.setAuthToken);
 
   const [step, setStep] = useState<Step>('idle');
   const [phone, setPhone] = useState('');
@@ -24,6 +30,12 @@ const PhoneAuth: React.FC = () => {
   const confirmationRef = useRef<ConfirmationResult | null>(null);
 
   if (!isAuthConfigured()) return null;
+
+  const handleSignOut = async () => {
+    await signOutUser();
+    setContactData(null);
+    setAuthToken(null);
+  };
 
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +78,12 @@ const PhoneAuth: React.FC = () => {
       {/* Invisible reCAPTCHA anchor */}
       <div id="recaptcha-container" />
 
-      {step === 'phone' ? (
+      {authToken ? (
+        <button onClick={handleSignOut} className={styles['phone-auth__sign-out']}>
+          {t('contact.signOut')}
+        </button>
+
+      ) : step === 'phone' ? (
         <form onSubmit={handleSendCode} className={styles['phone-auth__form']}>
           <input
             type="tel"

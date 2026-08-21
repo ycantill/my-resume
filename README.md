@@ -373,15 +373,11 @@ private/
       {
         "en": "Spain",
         "es": "España",
-        "code": "ES",
-        "timezone": "GMT+2",
         "phone": "+34662042004"
       },
       {
         "en": "Colombia",
         "es": "Colombia",
-        "code": "COT",
-        "timezone": "GMT-5",
         "phone": "+573004977509"
       }
     ]
@@ -392,11 +388,11 @@ private/
 **Key Points:**
 
 - **Single Person**: Database holds exactly one person's data
-- **Multiple Locations**: A person can list several `locations`, each with its own phone and timezone
+- **Multiple Locations**: A person can list several `locations`, each with its own phone
 - **Separated Data**: Public resume info vs private contact details
 - **Bilingual Content**: All user-facing text uses `{ "en": "...", "es": "..." }` format (LocalizedText interface)
 - **Static UI Text**: Translated via JSON files in `src/locales/`
-- **Location**: each entry has `en`/`es` names, `code` (ISO-ish country code), `timezone` (e.g. `GMT-5`), `phone`
+- **Location**: each entry has `en`/`es` names and `phone`
 
 #### Location URLs
 
@@ -425,7 +421,7 @@ If the location segment is omitted (e.g. `#/en`) or doesn't match any entry in `
 VITE_SHOW_PRIVATE_INFO=true npm run dev
 ```
 
-- ✅ Shows phone and location (country + timezone) in gray container
+- ✅ Shows phone and location in gray container
 - ⚠️ **NEVER** enable in production
 
 #### Firebase Security Rules
@@ -481,7 +477,7 @@ VITE_SHOW_PRIVATE_INFO=true npm run dev
 When enabled:
 
 - ✅ Fetches data from `private` in Firebase
-    - ✅ Displays phone and location (country + timezone)
+    - ✅ Displays phone and location
 - ✅ Shows in a subtle gray container below basic info
 - ⚠️ Should **NEVER** be enabled in production builds
 

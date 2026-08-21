@@ -12,17 +12,9 @@ export interface LocalizedHighlights {
   es: string[];
 }
 
-export interface BasicLocation {
-  country?: LocalizedText;
-  countryCode?: string;
-  timezone?: string;
-}
-
 export interface LocationInfo {
   en: string;
   es: string;
-  code: string;
-  timezone?: string;
   phone?: string;
 }
 
@@ -108,13 +100,6 @@ export interface ResumeData {
   skills: Skill[];
 }
 
-export interface UsePersonDataResult {
-  data: ResumeData | null;
-  loading: boolean;
-  error: ResumeDataError | null;
-  refetch: () => Promise<void>;
-}
-
 export interface MyResumeProps {
   initialLanguage: Language;
   initialLocation?: string;
@@ -123,18 +108,10 @@ export interface MyResumeProps {
 // Router-related types
 export interface AppRouterProps {}
 
-
-
-
 // Utility types for component props
 export interface DateRange {
   startDate: string;
   endDate?: string;
-}
-
-export interface LocationDisplayProps {
-  location: BasicLocation;
-  language: Language;
 }
 
 // Component props interfaces - language obtained from useTranslation hook
@@ -173,41 +150,6 @@ export interface LoadingStateProps {
 export interface ErrorStateProps {
   error: ResumeDataError | null;
   language: Language;
-}
-
-// Skill level type for better type safety
-export type SkillLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
-export type SkillLevelLocalized = {
-  en: SkillLevel;
-  es: 'Principiante' | 'Intermedio' | 'Avanzado' | 'Experto';
-};
-
-// Language fluency type for better type safety
-export type LanguageFluency = 'Native' | 'Fluent' | 'Advanced' | 'Intermediate' | 'Basic';
-export type LanguageFluencyLocalized = {
-  en: LanguageFluency;
-  es: 'Nativo' | 'Fluido' | 'Avanzado' | 'Intermedio' | 'Básico';
-};
-
-// Country codes type for better validation
-export type CountryCode = 'CO' | 'ES' | 'US' | 'CA' | 'MX' | 'AR' | 'BR' | 'CL' | 'PE' | 'EC';
-
-// Network types for social profiles
-export type SocialNetwork = 'LinkedIn' | 'GitHub' | 'Twitter' | 'Website' | 'Portfolio';
-
-// Available persons type - any string is valid
-export type PersonId = string;
-
-// Date format type (YYYY-MM)
-export type DateString = `${number}-${string}`;
-
-// Enhanced interfaces with more specific types
-export interface EnhancedContactProfile extends ContactProfile {
-  network: SocialNetwork;
-}
-
-export interface EnhancedBasicLocation extends BasicLocation {
-  countryCode?: CountryCode;
 }
 
 // Type guards for runtime validation
