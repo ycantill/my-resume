@@ -1,0 +1,7 @@
+/* EditableDate — atom */
+.field {
+  @apply inline-block bg-blue-50/60 border-b-2 border-blue-400 rounded-sm px-1 py-0.5 min-h-[2.25rem] focus:outline-none focus:ring-2 focus:ring-blue-400;
+  font: inherit;
+  color: inherit;
+  font-size: max(16px, 1em);
+}

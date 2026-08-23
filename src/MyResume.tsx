@@ -8,6 +8,7 @@ import type { MyResumeProps, ResumeDataError } from './types.ts';
 import {
   LoadingState,
   ErrorState,
+  ActionBar,
   BasicInfo,
   Summary,
   WorkExperience,
@@ -78,7 +79,8 @@ const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
   const workItems = groupWorkEntries(data.work);
 
   return (
-    <div className="min-h-screen bg-gray-50">      
+    <div className="min-h-screen bg-gray-50">
+      <ActionBar />
       <div className="resume-container shadow-lg">
         <div className="section-spacing">
           <BasicInfo basics={data.basics} />

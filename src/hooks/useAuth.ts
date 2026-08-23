@@ -10,6 +10,7 @@ import { useAppStore } from '../store/useAppStore';
 export function useAuth() {
   const setAuthToken = useAppStore(state => state.setAuthToken);
   const setContactData = useAppStore(state => state.setContactData);
+  const setEditMode = useAppStore(state => state.setEditMode);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -19,9 +20,10 @@ export function useAuth() {
       } else {
         setAuthToken(null);
         setContactData(null);
+        setEditMode(false);
       }
     });
 
     return unsubscribe;
-  }, [setAuthToken, setContactData]);
+  }, [setAuthToken, setContactData, setEditMode]);
 }

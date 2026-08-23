@@ -19,6 +19,10 @@
   @apply text-sm text-gray-500 hover:text-gray-800 transition-colors cursor-pointer border border-gray-200 hover:border-gray-400 rounded-md px-3 py-1.5 bg-white;
 }
 
+.phone-auth__sign-out {
+  @apply text-xs text-gray-400 hover:text-gray-600 transition-colors cursor-pointer underline-offset-2 hover:underline;
+}
+
 .phone-auth__error {
   @apply text-red-500 text-xs w-full text-center;
 }

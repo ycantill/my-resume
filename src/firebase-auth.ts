@@ -43,3 +43,14 @@ export async function signOutUser(): Promise<void> {
 export function isAuthConfigured(): boolean {
   return !!import.meta.env.VITE_FIREBASE_API_KEY && !!import.meta.env.VITE_FIREBASE_AUTH_DOMAIN;
 }
+
+/**
+ * Current user's ID token, refreshed by the SDK when it is close to expiry.
+ * Writes must always ask for it fresh: the token cached in the store is
+ * minted at sign-in and Firebase rejects it about an hour later.
+ */
+export async function getFreshIdToken(): Promise<string | null> {
+  const user = auth.currentUser;
+  if (!user) return null;
+  return user.getIdToken();
+}

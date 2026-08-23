@@ -10,3 +10,7 @@
 .chips {
   @apply flex flex-wrap gap-3 mt-4;
 }
+
+.header {
+  @apply flex items-start justify-between gap-2;
+}

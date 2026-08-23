@@ -1,14 +1,6 @@
 /* PersonalContact — organism */
 .personal-contact {
-  @apply mt-2;
-}
-
-.personal-contact__wrapper {
-  @apply flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-6 text-sm sm:text-base flex-wrap px-4 py-2;
-}
-
-.personal-contact__item {
-  @apply flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center sm:justify-start;
+  @apply mt-2 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base;
 }
 
 .personal-contact__icon {
@@ -16,21 +8,5 @@
 }
 
 .personal-contact__link {
-  @apply text-blue-600 hover:text-blue-800 font-medium truncate max-w-xs sm:max-w-none;
-}
-
-.personal-contact__divider {
-  @apply text-gray-300 hidden sm:inline;
-}
-
-.personal-contact__location {
-  @apply font-medium text-gray-700;
-}
-
-.personal-contact__timezone {
-  @apply text-gray-500 text-xs sm:text-sm ml-1;
-}
-
-.personal-contact__sign-out {
-  @apply text-xs text-gray-400 hover:text-gray-600 transition-colors cursor-pointer underline-offset-2 hover:underline;
+  @apply text-blue-600 hover:text-blue-800 font-medium;
 }

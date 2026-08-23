@@ -1,0 +1,12 @@
+/* EditableList — molecule */
+.remove {
+  @apply ml-2 align-middle text-gray-400 hover:text-red-600 text-sm w-8 h-8 rounded-full hover:bg-red-50 transition-colors print:hidden;
+}
+
+.addRow {
+  @apply list-none -ml-4 mt-2 print:hidden;
+}
+
+.add {
+  @apply text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md px-3 min-h-[2.75rem] transition-colors;
+}

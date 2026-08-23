@@ -1,0 +1,12 @@
+/* EntryActions — molecule */
+.root {
+  @apply flex items-center gap-1 shrink-0 print:hidden;
+}
+
+.button {
+  @apply w-11 h-11 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors;
+}
+
+.remove {
+  @apply w-11 h-11 flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors;
+}
