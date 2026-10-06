@@ -1,0 +1,75 @@
+/* PreviewDiff — organism */
+.diff {
+  @apply max-w-4xl mx-auto mb-6 px-6 py-4 bg-white border border-amber-200 rounded-lg shadow-sm text-sm print:hidden;
+}
+
+.diff__summary {
+  @apply cursor-pointer font-semibold text-amber-900 select-none;
+}
+
+.diff__group {
+  @apply mt-4;
+}
+
+.diff__heading {
+  @apply text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2;
+}
+
+.diff__entry {
+  @apply normal-case tracking-normal text-gray-700;
+}
+
+.diff__list {
+  @apply space-y-2;
+}
+
+.diff__item {
+  @apply flex gap-3;
+}
+
+.diff__body {
+  @apply min-w-0 flex-1;
+}
+
+.diff__field {
+  @apply text-xs text-gray-500;
+}
+
+.diff__value {
+  @apply text-gray-800 break-words whitespace-pre-wrap;
+}
+
+.added {
+  @apply bg-green-100 text-green-900 no-underline rounded-sm;
+}
+
+.removed {
+  @apply bg-red-100 text-red-800 line-through rounded-sm;
+}
+
+.note {
+  @apply text-gray-500 italic;
+}
+
+.symbol--added,
+.symbol--removed,
+.symbol--changed,
+.symbol--reordered {
+  @apply shrink-0 w-5 h-5 mt-0.5 rounded flex items-center justify-center text-xs font-bold;
+}
+
+.symbol--added {
+  @apply bg-green-100 text-green-700;
+}
+
+.symbol--removed {
+  @apply bg-red-100 text-red-700;
+}
+
+.symbol--changed {
+  @apply bg-amber-100 text-amber-700;
+}
+
+.symbol--reordered {
+  @apply bg-gray-100 text-gray-600;
+}

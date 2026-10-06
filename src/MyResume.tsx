@@ -21,7 +21,8 @@ import {
   EducationSection,
   Languages,
   Skills,
-  PersonalContact
+  PersonalContact,
+  PreviewDiff,
 } from './components/index.ts';
 
 const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
@@ -89,6 +90,7 @@ const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <ActionBar />
+      <PreviewDiff />
       <div className="resume-container shadow-lg">
         <div className="section-spacing">
           <BasicInfo basics={data.basics} />

@@ -26,6 +26,7 @@ export { default as Languages } from './organisms/Languages';
 export { default as Skills } from './organisms/Skills';
 export { default as PersonalContact } from './organisms/PersonalContact';
 export { default as PhoneAuth } from './organisms/PhoneAuth';
+export { default as PreviewDiff } from './organisms/PreviewDiff';
 
 // Pages
 export { default as LoadingState } from './pages/LoadingState';
