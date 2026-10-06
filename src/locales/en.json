@@ -47,6 +47,9 @@
     "techStack": "Tech stack",
     "in": "in"
   },
+  "location": {
+    "remote": "Remote"
+  },
   "education": {
     "label": "Education"
   },

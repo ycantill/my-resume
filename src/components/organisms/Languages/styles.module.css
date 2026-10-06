@@ -1,10 +1,10 @@
 /* Languages — organism */
 .card {
-  @apply border-l-4 border-indigo-500;
+  @apply border-l-4 border-indigo-500 print:border-0;
 }
 
 .gridLayout {
-  @apply grid gap-4 sm:grid-cols-2;
+  @apply grid gap-4 sm:grid-cols-2 print:gap-1;
 }
 
 .add {

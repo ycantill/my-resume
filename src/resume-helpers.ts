@@ -163,6 +163,30 @@ export function findLocationBySlug(
   return locations[0];
 }
 
+// Country names for the location routes, shown in the header even without a
+// session, when the private locations are not loaded
+const ROUTE_LOCATIONS: Record<string, LocationInfo> = {
+  colombia: { en: 'Colombia', es: 'Colombia' },
+  spain: { en: 'Spain', es: 'España' },
+};
+
+// The route a bare /:language URL stands for
+const DEFAULT_LOCATION_SLUG = 'colombia';
+
+// The location named by a URL slug: the private entry when they are loaded,
+// else the known route names, else the slug itself in title case
+export function resolveRouteLocation(
+  locations: LocationInfo[] | null | undefined,
+  slug: string | null | undefined
+): LocationInfo | null {
+  // Same pick as the phone number when the private locations are loaded
+  if (locations && locations.length > 0) return findLocationBySlug(locations, slug);
+  const key = (slug || DEFAULT_LOCATION_SLUG).toLowerCase();
+  if (ROUTE_LOCATIONS[key]) return ROUTE_LOCATIONS[key];
+  const name = key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return { en: name, es: name };
+}
+
 // True when an entry stores its roles nested instead of being one flat role
 export function isWorkGroup(item: WorkItem): item is WorkGroupEntry {
   return Array.isArray((item as WorkGroupEntry).roles);

@@ -24,7 +24,6 @@ const LanguageItem: React.FC<LanguageItemProps> = ({ entry, index, total }) => {
   return (
     <div className={clsx(styles.root, baseline && !prev && 'diff-added-block')}>
       <span className={styles.name}>
-        <span className={styles.icon}>🌐</span>
         <EditableText
           value={t(entry.language)}
           previous={prev ? t(prev.language) : undefined}
