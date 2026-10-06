@@ -58,11 +58,12 @@ const browser = await chromium.launch({
 const files = [];
 
 try {
-  const page = await browser.newPage();
-
   for (const language of LANGUAGES) {
     for (const location of LOCATIONS) {
       const file = `${slug(name)}-cv-${language}-${location}.pdf`;
+      // A fresh page per route: on a reused one, a goto that only changes the
+      // hash returns at once and could print the previous route
+      const page = await browser.newPage();
       await page.goto(`${baseUrl}#/${language}/${location}`, { waitUntil: 'networkidle' });
       await page.waitForSelector('.resume-container', { timeout: 30_000 });
       await page.evaluate(() => document.fonts.ready);
@@ -73,6 +74,7 @@ try {
         preferCSSPageSize: true,
         printBackground: true,
       });
+      await page.close();
 
       files.push({ language, location, file });
       console.log(`Printed ${file}`);
