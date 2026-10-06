@@ -168,6 +168,20 @@ export async function saveResumeSection<K extends keyof ResumeData>(
   section: K,
   value: ResumeData[K]
 ): Promise<void> {
+  await patchPublic({ [section]: value });
+}
+
+/**
+ * Write every resume section to /public in one request, as when saving a
+ * previewed JSON file. Each section is replaced wholesale; any other children
+ * of /public are left alone.
+ */
+export async function saveResumeData(data: ResumeData): Promise<void> {
+  const { basics, work, education, languages, skills } = data;
+  await patchPublic({ basics, work, education, languages, skills });
+}
+
+async function patchPublic(patch: Partial<ResumeData>): Promise<void> {
   const authToken = await getFreshIdToken();
 
   if (!authToken) {
@@ -180,7 +194,7 @@ export async function saveResumeSection<K extends keyof ResumeData>(
   const response = await fetch(url, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ [section]: value }),
+    body: JSON.stringify(patch),
   });
 
   if (!response.ok) {

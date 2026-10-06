@@ -117,11 +117,14 @@
       "discard": "Discard preview",
       "dismiss": "Dismiss",
       "showing": "Previewing",
-      "notSaved": "Nothing has been saved. Inline editing is off until you discard the preview.",
+      "notSaved": "Not saved yet. Inline editing is off while previewing; save it to Firebase or discard it.",
       "invalidJson": "The file is not valid JSON.",
       "invalidShape": "The file does not look like the resume: expected a full database export with \"public\", or the \"public\" node with \"basics\".",
       "invalidData": "The file does not match the resume structure:",
-      "moreErrors": "…and {count} more"
+      "moreErrors": "…and {count} more",
+      "save": "Save to Firebase",
+      "confirmSave": "Replace the resume in Firebase with {file}? Every section (basics, work, education, languages, skills) will be overwritten. Contact data in \"private\" is not changed.",
+      "saveFailed": "The file was not saved to Firebase:"
     }
   }
 }

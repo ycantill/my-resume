@@ -23,3 +23,7 @@
 .preview-loader__details {
   @apply mt-1 list-disc pl-4 font-mono break-all;
 }
+
+.preview-loader--save {
+  @apply text-sm text-white bg-amber-600 hover:bg-amber-700 disabled:opacity-60 transition-colors cursor-pointer border border-amber-600 rounded-md px-3 py-1.5;
+}

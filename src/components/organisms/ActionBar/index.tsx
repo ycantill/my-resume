@@ -24,7 +24,7 @@ const ActionBar: React.FC = () => {
       {editMode && preview && (
         <div className={styles['action-bar__preview']} role="status">
           {/* The page below is the file, not the database; inline editing is off */}
-          <span>
+          <span className={styles['action-bar__preview-file']}>
             {t('editor.preview.showing')} <strong>{preview.fileName}</strong>
           </span>
           <span className={styles['action-bar__preview-detail']}>{t('editor.preview.notSaved')}</span>

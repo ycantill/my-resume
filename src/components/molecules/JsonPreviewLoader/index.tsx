@@ -2,15 +2,20 @@ import React, { useRef, useState } from 'react';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useAppStore, selectEditModeOn, selectPreview } from '../../../store/useAppStore';
 import { parseResumeJson, ResumeImportError } from '../../../resume-import';
+import { saveResumeData } from '../../../api-service';
 import styles from './styles.module.css';
 
 // Loads a resume JSON file in edit mode to see it on the page before anything
-// reaches the database. The preview lives in the store only and is never saved.
+// reaches the database. The preview lives in the store only until the owner
+// explicitly saves it, after a confirmation.
 const JsonPreviewLoader: React.FC = () => {
   const { t } = useTranslation();
   const editMode = useAppStore(selectEditModeOn);
   const preview = useAppStore(selectPreview);
   const setPreview = useAppStore(state => state.setPreview);
+  const setResumeData = useAppStore(state => state.setResumeData);
+  const setSaveState = useAppStore(state => state.setSaveState);
+  const [saving, setSaving] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<{ message: string; details: string[] } | null>(null);
 
@@ -36,6 +41,29 @@ const JsonPreviewLoader: React.FC = () => {
     }
   };
 
+  // Replaces the resume sections in /public with the previewed file. The
+  // private node is not written: contact data is still edited in the console.
+  const handleSave = async () => {
+    if (!preview || saving) return;
+    if (!window.confirm(t('editor.preview.confirmSave').replace('{file}', preview.fileName))) return;
+
+    setSaving(true);
+    try {
+      await saveResumeData(preview.data);
+      setResumeData(preview.data);
+      setPreview(null);
+      setSaveState('saved');
+      setError(null);
+    } catch (err) {
+      setError({
+        message: t('editor.preview.saveFailed'),
+        details: [err instanceof Error ? err.message : String(err)],
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <>
       <input
@@ -55,6 +83,17 @@ const JsonPreviewLoader: React.FC = () => {
       {preview && (
         <button
           type="button"
+          onClick={handleSave}
+          disabled={saving}
+          className={styles['preview-loader--save']}
+        >
+          {saving ? t('editor.saving') : t('editor.preview.save')}
+        </button>
+      )}
+      {preview && (
+        <button
+          type="button"
+          disabled={saving}
           onClick={() => setPreview(null)}
           className={styles['preview-loader--discard']}
         >

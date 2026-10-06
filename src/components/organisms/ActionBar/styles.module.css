@@ -23,3 +23,7 @@
 .action-bar__preview-detail {
   @apply text-amber-700;
 }
+
+.action-bar__preview-file {
+  @apply shrink-0 whitespace-nowrap;
+}

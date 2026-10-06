@@ -489,8 +489,12 @@ of the database copy, so you can check a rewrite before touching Firebase.
   phone number from `private`.
 - The file is checked with the same validation the editor uses before a save; anything that
   does not match is listed by path (e.g. `work[0].startDate`) and the page stays as it was.
-- **Nothing is written to Firebase.** While a preview is shown, inline editing is off, and a
+- Loading a file writes nothing. While a preview is shown, inline editing is off, and a
   banner names the file. **Discard preview** or **Done** goes back to the database copy.
+- **Save to Firebase** asks for confirmation, then replaces the five resume sections in
+  `/public` with the file in one request. The `private` node is never written; contact data
+  is still edited in the Firebase Console. A failed write leaves the preview open and the
+  database untouched.
 
 ### Work entry shapes
 
