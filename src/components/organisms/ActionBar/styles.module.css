@@ -15,3 +15,11 @@
 .action-bar__hint-detail {
   @apply text-gray-400;
 }
+
+.action-bar__preview {
+  @apply max-w-4xl mx-auto px-6 py-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs text-amber-900 bg-amber-50 border-t border-amber-200;
+}
+
+.action-bar__preview-detail {
+  @apply text-amber-700;
+}

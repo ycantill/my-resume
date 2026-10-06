@@ -479,6 +479,19 @@ Notes:
   fail on an expired token.
 - Contact data under `/private` is not editable here; edit it in the Firebase Console.
 
+### Previewing a JSON file
+
+In edit mode, **Load JSON** reads a file from your device and shows it on the page in place
+of the database copy, so you can check a rewrite before touching Firebase.
+
+- It accepts the same structure Firebase holds: either a full database export (`{ "public": …,
+  "private": … }`) or just the contents of the `public` node. A full export also previews the
+  phone number from `private`.
+- The file is checked with the same validation the editor uses before a save; anything that
+  does not match is listed by path (e.g. `work[0].startDate`) and the page stays as it was.
+- **Nothing is written to Firebase.** While a preview is shown, inline editing is off, and a
+  banner names the file. **Discard preview** or **Done** goes back to the database copy.
+
 ### Work entry shapes
 
 `work` accepts two shapes side by side, and the editor handles both:

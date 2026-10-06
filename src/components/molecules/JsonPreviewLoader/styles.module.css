@@ -1,0 +1,25 @@
+/* JsonPreviewLoader — molecule */
+.preview-loader {
+  @apply text-sm text-gray-500 hover:text-gray-800 transition-colors cursor-pointer border border-gray-200 hover:border-gray-400 rounded-md px-3 py-1.5 bg-white;
+}
+
+.preview-loader--discard {
+  @apply text-sm text-amber-800 hover:text-amber-900 transition-colors cursor-pointer border border-amber-300 hover:border-amber-500 rounded-md px-3 py-1.5 bg-amber-50;
+}
+
+/* Full row under the actions, so long validation paths stay readable */
+.preview-loader__error {
+  @apply basis-full order-last text-xs text-red-700 bg-red-50 border border-red-200 rounded-md px-3 py-2;
+}
+
+.preview-loader__error-head {
+  @apply flex items-start justify-between gap-3;
+}
+
+.preview-loader__close {
+  @apply text-red-400 hover:text-red-700 cursor-pointer;
+}
+
+.preview-loader__details {
+  @apply mt-1 list-disc pl-4 font-mono break-all;
+}

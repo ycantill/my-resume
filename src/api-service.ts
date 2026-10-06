@@ -54,7 +54,7 @@ async function fetchPersonData(): Promise<ResumeData> {
  * editor empties comes back missing rather than as [], and a list whose keys
  * are not contiguous comes back with null holes. Both would crash the render.
  */
-function normalizeResumeData(data: Record<string, unknown>): ResumeData {
+export function normalizeResumeData(data: Record<string, unknown>): ResumeData {
   const list = <T,>(value: unknown): T[] =>
     Array.isArray(value) ? (value.filter(Boolean) as T[]) : [];
 

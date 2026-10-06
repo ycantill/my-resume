@@ -1,13 +1,20 @@
 import React, { useEffect } from 'react';
 import type { PersonalContactProps } from '../../../types.ts';
 import { findLocationBySlug, normalizePhone } from '../../../resume-helpers.ts';
-import { useAppStore, selectAuthToken, selectContactData, selectLocationSlug } from '../../../store/useAppStore';
+import {
+  useAppStore,
+  selectAuthToken,
+  selectContactData,
+  selectLocationSlug,
+  selectPreview,
+} from '../../../store/useAppStore';
 import { getPersonContactData } from '../../../api-service';
 import styles from './styles.module.css';
 
 const PersonalContact: React.FC<PersonalContactProps> = () => {
   const authToken = useAppStore(selectAuthToken);
-  const contactData = useAppStore(selectContactData);
+  const storedContact = useAppStore(selectContactData);
+  const preview = useAppStore(selectPreview);
   const locationSlug = useAppStore(selectLocationSlug);
   const setContactData = useAppStore(state => state.setContactData);
 
@@ -16,6 +23,9 @@ const PersonalContact: React.FC<PersonalContactProps> = () => {
     if (!authToken) return;
     getPersonContactData(authToken).then(data => setContactData(data));
   }, [authToken, setContactData]);
+
+  // A previewed full export brings its own private node
+  const contactData = preview?.contact ?? storedContact;
 
   // The location slug in the URL decides which phone number to show
   const phone = findLocationBySlug(contactData?.locations, locationSlug)?.phone;

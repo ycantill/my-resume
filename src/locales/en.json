@@ -110,6 +110,18 @@
     "fluency": "Fluency",
     "skillName": "Category",
     "keyword": "Skill",
-    "techStack": "Tech stack"
+    "techStack": "Tech stack",
+    "preview": {
+      "load": "Load JSON",
+      "loadAnother": "Load another JSON",
+      "discard": "Discard preview",
+      "dismiss": "Dismiss",
+      "showing": "Previewing",
+      "notSaved": "Nothing has been saved. Inline editing is off until you discard the preview.",
+      "invalidJson": "The file is not valid JSON.",
+      "invalidShape": "The file does not look like the resume: expected a full database export with \"public\", or the \"public\" node with \"basics\".",
+      "invalidData": "The file does not match the resume structure:",
+      "moreErrors": "…and {count} more"
+    }
   }
 }

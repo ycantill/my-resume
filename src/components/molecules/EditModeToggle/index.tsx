@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { useAppStore, selectAuthToken, selectEditMode } from '../../../store/useAppStore';
+import { useAppStore, selectAuthToken, selectEditModeOn } from '../../../store/useAppStore';
 import styles from './styles.module.css';
 
 // Only the signed-in owner sees this; the database rules are what actually
@@ -8,7 +8,7 @@ import styles from './styles.module.css';
 const EditModeToggle: React.FC = () => {
   const { t } = useTranslation();
   const authToken = useAppStore(selectAuthToken);
-  const editMode = useAppStore(selectEditMode);
+  const editMode = useAppStore(selectEditModeOn);
   const setEditMode = useAppStore(state => state.setEditMode);
 
   if (!authToken) return null;
