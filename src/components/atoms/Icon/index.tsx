@@ -1,6 +1,14 @@
 import React from 'react';
 
-export type IconName = 'mail' | 'phone' | 'github' | 'linkedin' | 'link' | 'pin';
+export type IconName =
+  | 'mail'
+  | 'phone'
+  | 'github'
+  | 'linkedin'
+  | 'link'
+  | 'pin'
+  | 'download'
+  | 'share';
 
 // Outline paths on a 24×24 grid. Icons are SVG rather than emoji so that
 // PDF text extraction (ATS parsers) only sees the contact values themselves.
@@ -34,6 +42,21 @@ const PATHS: Record<IconName, React.ReactNode> = {
     <>
       <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z" />
       <circle cx="12" cy="10" r="3" />
+    </>
+  ),
+  download: (
+    <>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <path d="m7 10 5 5 5-5" />
+      <path d="M12 15V3" />
+    </>
+  ),
+  share: (
+    <>
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" />
     </>
   ),
 };

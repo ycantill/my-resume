@@ -138,5 +138,20 @@
       "reordered": "Same items, new order",
       "basics": "Basic info"
     }
+  },
+  "downloads": {
+    "title": "Resume PDFs",
+    "subtitle": "Download or share a ready-made PDF of each version.",
+    "loading": "Loading PDFs...",
+    "empty": "No PDFs have been generated yet. They are created when the site is deployed.",
+    "updated": "Updated {date}",
+    "download": "Download",
+    "share": "Share",
+    "copied": "Link copied",
+    "viewOnline": "View online",
+    "languages": {
+      "en": "English",
+      "es": "Spanish"
+    }
   }
 }

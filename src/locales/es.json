@@ -138,5 +138,20 @@
       "reordered": "Mismos elementos, nuevo orden",
       "basics": "Datos básicos"
     }
+  },
+  "downloads": {
+    "title": "Currículum en PDF",
+    "subtitle": "Descarga o comparte el PDF listo de cada versión.",
+    "loading": "Cargando PDFs...",
+    "empty": "Todavía no hay PDFs generados. Se crean al desplegar el sitio.",
+    "updated": "Actualizado el {date}",
+    "download": "Descargar",
+    "share": "Compartir",
+    "copied": "Enlace copiado",
+    "viewOnline": "Ver en la web",
+    "languages": {
+      "en": "Inglés",
+      "es": "Español"
+    }
   }
 }
