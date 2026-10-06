@@ -125,6 +125,15 @@
       "save": "Guardar en Firebase",
       "confirmSave": "¿Reemplazar el currículum en Firebase con {file}? Se sobrescriben todas las secciones (basics, work, education, languages, skills). Los datos de contacto en \"private\" no se modifican.",
       "saveFailed": "No se guardó el archivo en Firebase:"
+    },
+    "diff": {
+      "title": "{count} cambios frente a Firebase",
+      "none": "Sin cambios: el archivo es igual a lo que hay en Firebase.",
+      "added": "Agregado",
+      "removed": "Eliminado",
+      "changed": "Modificado",
+      "reordered": "Mismos elementos, nuevo orden",
+      "basics": "Datos básicos"
     }
   }
 }

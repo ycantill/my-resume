@@ -3,13 +3,17 @@ import type { WorkExperienceProps } from '../../../types.ts';
 import { withLocalized, withLocalizedList, createWorkEntry } from '../../../resume-helpers.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useResumeEdit } from '../../../hooks/useResumeEdit';
+import { usePreviewBaseline, baselineWorkAt } from '../../../hooks/usePreviewBaseline';
 import { useAppStore, selectEditMode, selectResumeData } from '../../../store/useAppStore';
 import WorkRoleCard from '../../molecules/WorkRoleCard';
 import WorkMeta from '../../molecules/WorkMeta';
 import EditableText from '../../atoms/EditableText';
+import DiffText from '../../atoms/DiffText';
 import EditableList from '../../molecules/EditableList';
 import EditableChips from '../../molecules/EditableChips';
 import EntryActions from '../../molecules/EntryActions';
+import RemovedEntries from '../../molecules/RemovedEntries';
+import { clsx } from 'clsx';
 import styles from './styles.module.css';
 
 const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
@@ -17,6 +21,8 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
   const editMode = useAppStore(selectEditMode);
   const resumeData = useAppStore(selectResumeData);
   const { updateWork, addWork, renameCompany, removeWork, moveWork } = useResumeEdit();
+  const baseline = usePreviewBaseline();
+  const previewWork = useAppStore(state => state.preview?.data.work);
 
   // Companies are a view over the stored list; edits address the stored paths
   const storedCount = resumeData?.work?.length ?? 0;
@@ -32,15 +38,29 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
 
         const commitCompanyName = (name: string) => renameCompany(paths, name);
 
+        // While previewing: the stored entry this company starts at, by position
+        const prevCompany = baselineWorkAt(baseline, paths[0]);
+
         if (roles.length > 0) {
+          // Roles a nested company had in Firebase and the file drops
+          const storedRoles = prevCompany?.roles ?? [];
+          const removedRoles =
+            paths.length === 1 && roles[0]?.sourcePath?.role !== undefined
+              ? storedRoles.slice(roles.length)
+              : [];
+
           return (
-            <div key={jobIndex} className={styles.entry}>
+            <div
+              key={jobIndex}
+              className={clsx(styles.entry, baseline && !prevCompany && 'diff-added-block')}
+            >
               <div className={styles.companyHeader}>
                 <div className={styles.companyRow}>
                   <EditableText
                     as="h3"
                     className={styles.companyName}
                     value={job.name}
+                    previous={prevCompany ? prevCompany.name ?? '' : undefined}
                     label={t('editor.company')}
                     placeholder={t('editor.company')}
                     onCommit={commitCompanyName}
@@ -63,6 +83,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                     />
                   );
                 })}
+                <RemovedEntries entries={removedRoles} />
               </div>
             </div>
           );
@@ -71,9 +92,14 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
         if (!path) return null;
 
         const stack = job.stack ?? [];
+        const prev = baselineWorkAt(baseline, path);
+        const diff = baseline !== null && prev !== undefined;
 
         return (
-          <div key={jobIndex} className={styles.entry}>
+          <div
+            key={jobIndex}
+            className={clsx(styles.entry, baseline && !prev && 'diff-added-block')}
+          >
             <div className={styles.simpleHeader}>
               <div className={styles.header}>
                 <div className={styles.titleRow}>
@@ -97,7 +123,16 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                     </h3>
                   ) : (
                     <h3 className={styles.title}>
-                      {job.name} – {job.position && t(job.position)}
+                      {diff ? (
+                        <DiffText
+                          before={`${prev.name ?? ''} – ${t(prev.position ?? '')}`}
+                          after={`${job.name} – ${job.position ? t(job.position) : ''}`}
+                        />
+                      ) : (
+                        <>
+                          {job.name} – {job.position && t(job.position)}
+                        </>
+                      )}
                     </h3>
                   )}
                   {isCurrent && !editMode && (
@@ -118,6 +153,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                   endDate={job.endDate}
                   location={job.location}
                   className={styles.metaText}
+                  previous={diff ? prev : undefined}
                 />
               </div>
               <div className={styles.description}>
@@ -125,6 +161,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                   as="p"
                   className={styles.descriptionText}
                   value={job.summary ? t(job.summary) : ''}
+                  previous={diff ? t(prev.summary ?? '') : undefined}
                   multiline
                   label={t('editor.summary')}
                   placeholder={t('editor.summary')}
@@ -136,6 +173,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
               <div className={styles.highlights}>
                 <EditableList
                   items={job.highlights?.[language] ?? []}
+                  previous={diff ? prev.highlights?.[language] ?? [] : undefined}
                   className={styles.highlightsList}
                   itemClassName={styles.highlightsItem}
                   onChange={next =>
@@ -151,6 +189,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
                   <div className={styles.chips}>
                     <EditableChips
                       items={stack}
+                      previous={diff ? prev.stack ?? [] : undefined}
                       label={t('editor.techStack')}
                       onChange={next => updateWork(path, { stack: next })}
                     />
@@ -161,6 +200,7 @@ const WorkExperience: React.FC<WorkExperienceProps> = ({ workItems }) => {
           </div>
         );
       })}
+      <RemovedEntries entries={baseline && previewWork ? baseline.work.slice(previewWork.length) : []} />
       {editMode && (
         <button
           type="button"

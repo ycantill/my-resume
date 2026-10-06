@@ -125,6 +125,15 @@
       "save": "Save to Firebase",
       "confirmSave": "Replace the resume in Firebase with {file}? Every section (basics, work, education, languages, skills) will be overwritten. Contact data in \"private\" is not changed.",
       "saveFailed": "The file was not saved to Firebase:"
+    },
+    "diff": {
+      "title": "{count} changes compared with Firebase",
+      "none": "No changes: the file matches what Firebase holds.",
+      "added": "Added",
+      "removed": "Removed",
+      "changed": "Changed",
+      "reordered": "Same items, new order",
+      "basics": "Basic info"
     }
   }
 }

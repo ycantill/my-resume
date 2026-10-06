@@ -489,6 +489,12 @@ of the database copy, so you can check a rewrite before touching Firebase.
   phone number from `private`.
 - The file is checked with the same validation the editor uses before a save; anything that
   does not match is listed by path (e.g. `work[0].startDate`) and the page stays as it was.
+- The changes are marked on the resume itself: edited text shows the removed words struck
+  through and the new ones highlighted, added bullets, chips, links and entries are
+  highlighted, and removed ones appear struck through where they were. List entries are
+  matched by position. Printing a preview prints the file without the marks.
+- A collapsible panel above the resume lists the same changes as a summary, grouped by
+  section and entry, including lists that only changed order.
 - Loading a file writes nothing. While a preview is shown, inline editing is off, and a
   banner names the file. **Discard preview** or **Done** goes back to the database copy.
 - **Save to Firebase** asks for confirmation, then replaces the five resume sections in
