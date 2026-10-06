@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Language } from '../../../types.ts';
+import { SUPPORTED_LANGUAGES } from '../../../types.ts';
 import { resolveRouteLocation } from '../../../resume-helpers.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useAppStore } from '../../../store/useAppStore';
@@ -90,15 +91,18 @@ const PdfDownloads: React.FC<PdfDownloadsProps> = ({ initialLanguage }) => {
     }
   };
 
-  // The version in the language being viewed comes first
-  const files = [...(manifest?.files ?? [])].sort(
-    (a, b) => Number(b.language === language) - Number(a.language === language)
-  );
+  // One group per language, the one being viewed first
+  const groups = [language, ...SUPPORTED_LANGUAGES.filter((lang) => lang !== language)]
+    .map((lang) => ({
+      lang,
+      files: (manifest?.files ?? []).filter((entry) => entry.language === lang),
+    }))
+    .filter((group) => group.files.length > 0);
 
   const updated =
     manifest &&
     new Date(manifest.generatedAt).toLocaleString(language, {
-      dateStyle: 'long',
+      dateStyle: 'medium',
       timeStyle: 'short',
     });
 
@@ -113,40 +117,66 @@ const PdfDownloads: React.FC<PdfDownloadsProps> = ({ initialLanguage }) => {
         )}
       </header>
 
-      {status === 'loading' && <p className={styles.message}>{t('downloads.loading')}</p>}
+      {status === 'loading' && (
+        <div className={styles.skeletons} aria-label={t('downloads.loading')} role="status">
+          {[0, 1].map((i) => (
+            <div key={i} className={styles.skeleton} />
+          ))}
+        </div>
+      )}
       {status === 'empty' && <p className={styles.message}>{t('downloads.empty')}</p>}
 
-      <ul className={styles.list}>
-        {files.map(({ language: fileLanguage, location, file }) => {
-          const place = resolveRouteLocation(null, location);
-          const title = `${t(`downloads.languages.${fileLanguage}`)} · ${place ? t(place) : location}`;
+      {groups.map((group) => (
+        <section key={group.lang} className={styles.group}>
+          <h2 className={styles.groupTitle}>{t(`downloads.languages.${group.lang}`)}</h2>
+          <ul className={styles.list}>
+            {group.files.map(({ language: fileLanguage, location, file }) => {
+              const place = resolveRouteLocation(null, location);
+              const country = place ? t(place) : location;
+              const title = `${t(`downloads.languages.${fileLanguage}`)} · ${country}`;
+              const size = blobs[file] && `${Math.round(blobs[file].size / 1024)} KB`;
 
-          return (
-            <li key={file} className={styles.card}>
-              <div className={styles.cardText}>
-                <p className={styles.cardTitle}>{title}</p>
-                <Link to={`/${fileLanguage}/${location}`} className={styles.online}>
-                  {t('downloads.viewOnline')}
-                </Link>
-              </div>
-              <div className={styles.actions}>
-                <a href={`${PDF_DIR}${file}`} download={file} className={styles.button}>
-                  <Icon name="download" />
-                  {t('downloads.download')}
-                </a>
-                <button
-                  type="button"
-                  onClick={() => share(file, title)}
-                  className={`${styles.button} ${styles.buttonPrimary}`}
-                >
-                  <Icon name="share" />
-                  {copied === file ? t('downloads.copied') : t('downloads.share')}
-                </button>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+              return (
+                <li key={file} className={styles.card}>
+                  <div className={styles.cardHead}>
+                    <span className={styles.badge} aria-hidden="true">
+                      PDF
+                    </span>
+                    <div className={styles.cardText}>
+                      <p className={styles.cardTitle}>{country}</p>
+                      <p className={styles.cardMeta}>
+                        {size && <span>{size} · </span>}
+                        <Link to={`/${fileLanguage}/${location}`} className={styles.online}>
+                          {t('downloads.viewOnline')}
+                        </Link>
+                      </p>
+                    </div>
+                  </div>
+                  <div className={styles.actions}>
+                    <button
+                      type="button"
+                      onClick={() => share(file, title)}
+                      className={`${styles.button} ${styles.buttonPrimary}`}
+                    >
+                      <Icon name="share" />
+                      {copied === file ? t('downloads.copied') : t('downloads.share')}
+                    </button>
+                    <a
+                      href={`${PDF_DIR}${file}`}
+                      download={file}
+                      className={styles.button}
+                      aria-label={`${t('downloads.download')} ${title}`}
+                    >
+                      <Icon name="download" />
+                      {t('downloads.download')}
+                    </a>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
     </main>
   );
 };

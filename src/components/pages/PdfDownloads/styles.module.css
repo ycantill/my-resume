@@ -1,38 +1,63 @@
-/* PdfDownloads — page */
+/* PdfDownloads — page. Mobile first: base styles target phones, sm: widens. */
 .root {
-  @apply min-h-screen bg-gray-50 px-4 py-8 sm:py-12;
+  @apply min-h-screen bg-gray-50 px-4 pt-6 sm:pt-12;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
 }
 
 .header {
-  @apply max-w-2xl mx-auto mb-6 text-center;
+  @apply max-w-xl mx-auto mb-6 sm:mb-8 sm:text-center;
 }
 
 .title {
-  @apply text-2xl sm:text-3xl font-bold text-gray-900;
+  @apply text-2xl sm:text-3xl font-bold text-gray-900 leading-tight;
 }
 
 .name {
-  @apply mt-1 text-lg text-gray-700;
+  @apply mt-1 text-base sm:text-lg text-gray-700;
 }
 
 .subtitle {
-  @apply mt-3 text-gray-600;
+  @apply mt-3 text-sm sm:text-base text-gray-600;
 }
 
 .updated {
-  @apply mt-1 text-sm text-gray-500;
+  @apply mt-1 text-xs sm:text-sm text-gray-500;
 }
 
 .message {
-  @apply max-w-2xl mx-auto text-center text-gray-600;
+  @apply max-w-xl mx-auto text-gray-600;
+}
+
+.skeletons {
+  @apply max-w-xl mx-auto flex flex-col gap-3;
+}
+
+.skeleton {
+  @apply h-36 rounded-2xl bg-gray-200 animate-pulse;
+}
+
+.group {
+  @apply max-w-xl mx-auto mb-6;
+}
+
+.groupTitle {
+  @apply mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-gray-500;
 }
 
 .list {
-  @apply max-w-2xl mx-auto flex flex-col gap-3;
+  @apply flex flex-col gap-3;
 }
 
 .card {
-  @apply flex flex-col sm:flex-row sm:items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100;
+  @apply bg-white rounded-2xl p-4 shadow-sm border border-gray-100;
+}
+
+.cardHead {
+  @apply flex items-center gap-3 mb-4;
+}
+
+.badge {
+  @apply flex-shrink-0 w-11 h-11 rounded-xl bg-red-50 text-red-600 text-xs font-bold flex items-center justify-center;
 }
 
 .cardText {
@@ -40,21 +65,27 @@
 }
 
 .cardTitle {
-  @apply font-semibold text-gray-900;
+  @apply text-base font-semibold text-gray-900;
+}
+
+.cardMeta {
+  @apply text-sm text-gray-500;
 }
 
 .online {
-  @apply text-sm text-blue-600 hover:text-blue-800;
+  @apply text-blue-600 hover:text-blue-800 underline-offset-2 hover:underline;
 }
 
+/* Two thumb-sized buttons side by side, each at least 48px tall */
 .actions {
-  @apply flex gap-2;
+  @apply grid grid-cols-2 gap-2;
 }
 
 .button {
-  @apply flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors;
+  @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-3 text-sm font-medium text-gray-800 transition-colors active:bg-gray-100 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .buttonPrimary {
-  @apply border-blue-600 bg-blue-600 text-white hover:bg-blue-700;
+  @apply border-blue-600 bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800;
 }
