@@ -32,3 +32,4 @@ export { default as PreviewDiff } from './organisms/PreviewDiff';
 export { default as LoadingState } from './pages/LoadingState';
 export { default as ErrorState } from './pages/ErrorState';
 export { default as PersonRequiredFallback } from './pages/PersonRequiredFallback';
+export { default as PdfDownloads } from './pages/PdfDownloads';

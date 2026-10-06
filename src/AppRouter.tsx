@@ -1,6 +1,7 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import MyResume from './MyResume';
+import { PdfDownloads } from './components/index.ts';
 import type { AppRouterProps, Language } from './types';
 import { isValidLanguage, SUPPORTED_LANGUAGES } from './types';
 
@@ -27,6 +28,12 @@ const AppRouter: React.FC<AppRouterProps> = () => {
         <Route
           path="/:language"
           element={<LanguageRoute />}
+        />
+
+        {/* Generated PDFs of every version, e.g. #/es/pdfs; ranks above :location */}
+        <Route
+          path="/:language/pdfs"
+          element={<PdfRoute />}
         />
 
         {/* Language + location route, e.g. #/en/colombia, #/en/spain */}
@@ -59,6 +66,17 @@ const LanguageRoute: React.FC = () => {
   const validatedLanguage = language as Language;
 
   return <MyResume initialLanguage={validatedLanguage} initialLocation={location} />;
+};
+
+// Component that handles the /:language/pdfs route
+const PdfRoute: React.FC = () => {
+  const { language } = useParams<{ language: string }>();
+
+  if (!language || !isValidLanguage(language)) {
+    return <Navigate to={`/${SUPPORTED_LANGUAGES[0]}/pdfs`} replace />;
+  }
+
+  return <PdfDownloads initialLanguage={language as Language} />;
 };
 
 export default AppRouter;

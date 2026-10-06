@@ -1,0 +1,60 @@
+/* PdfDownloads — page */
+.root {
+  @apply min-h-screen bg-gray-50 px-4 py-8 sm:py-12;
+}
+
+.header {
+  @apply max-w-2xl mx-auto mb-6 text-center;
+}
+
+.title {
+  @apply text-2xl sm:text-3xl font-bold text-gray-900;
+}
+
+.name {
+  @apply mt-1 text-lg text-gray-700;
+}
+
+.subtitle {
+  @apply mt-3 text-gray-600;
+}
+
+.updated {
+  @apply mt-1 text-sm text-gray-500;
+}
+
+.message {
+  @apply max-w-2xl mx-auto text-center text-gray-600;
+}
+
+.list {
+  @apply max-w-2xl mx-auto flex flex-col gap-3;
+}
+
+.card {
+  @apply flex flex-col sm:flex-row sm:items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100;
+}
+
+.cardText {
+  @apply flex-1 min-w-0;
+}
+
+.cardTitle {
+  @apply font-semibold text-gray-900;
+}
+
+.online {
+  @apply text-sm text-blue-600 hover:text-blue-800;
+}
+
+.actions {
+  @apply flex gap-2;
+}
+
+.button {
+  @apply flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors;
+}
+
+.buttonPrimary {
+  @apply border-blue-600 bg-blue-600 text-white hover:bg-blue-700;
+}

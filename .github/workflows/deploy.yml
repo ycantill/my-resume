@@ -51,6 +51,14 @@ jobs:
       - name: Build application
         run: VITE_DATABASE_URL=$DATABASE_URL VITE_FIREBASE_API_KEY=$FIREBASE_API_KEY VITE_FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN npm run build:github
 
+      - name: Install Chromium for PDF printing
+        run: npx playwright install --with-deps chromium
+
+      # Prints every language/location version to dist/pdfs (served at #/:language/pdfs).
+      # pdf-refresh.yml re-runs this workflow when the database changes.
+      - name: Generate PDFs
+        run: VITE_DATABASE_URL=$DATABASE_URL npm run pdfs
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 

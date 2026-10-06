@@ -519,6 +519,21 @@ roles, the same as a nested entry.
 
 ## 🖨️ Printing
 
+### Ready-made PDFs
+
+Every deploy prints each language/location version (`en`/`es` × `colombia`/`spain`) to PDF and
+publishes them next to the site, listed at `#/:language/pdfs`
+(e.g. https://ycantill.github.io/my-resume/#/es/pdfs) with a download and a share button each.
+The files keep stable URLs such as `pdfs/yohany-cantillo-cv-en-colombia.pdf`.
+
+- `npm run pdfs` (after `npm run build:github`, with `VITE_DATABASE_URL` set) serves `dist`,
+  prints each route with Playwright and writes `dist/pdfs/*.pdf` plus `dist/pdfs/manifest.json`.
+  Set `PDF_CHROMIUM_PATH` to use a local Chromium instead of `npx playwright install chromium`.
+- The pages are printed without a session, so phone numbers from `/private` never reach them.
+- `.github/workflows/pdf-refresh.yml` runs every 15 minutes, compares a hash of `/public` with the
+  one recorded in the deployed manifest and re-runs the deploy on the last deployed branch when the
+  data changed. It runs from `main` only (scheduled workflows use the default branch).
+
 ### Privacy & Contact Information
 
 #### Public Mode (Default)
