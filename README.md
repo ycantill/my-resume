@@ -522,8 +522,8 @@ roles, the same as a nested entry.
 ### Ready-made PDFs
 
 Every deploy prints each language/location version (`en`/`es` × `colombia`/`spain`) to PDF and
-publishes them next to the site, listed at `#/:language/pdfs`
-(e.g. https://ycantill.github.io/my-resume/#/es/pdfs) with a download and a share button each.
+publishes them next to the site, listed at https://ycantill.github.io/my-resume/#downloads (in the
+browser language) with a download and a share button each. The old `#/:language/pdfs` redirects there.
 The files keep stable URLs such as `pdfs/yohany-cantillo-cv-en-colombia.pdf`.
 
 - `npm run pdfs` (after `npm run build:github`, with `VITE_DATABASE_URL` set) serves `dist`,
