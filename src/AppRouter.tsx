@@ -30,10 +30,16 @@ const AppRouter: React.FC<AppRouterProps> = () => {
           element={<LanguageRoute />}
         />
 
-        {/* Generated PDFs of every version, e.g. #/es/pdfs; ranks above :location */}
+        {/* Generated PDFs of every version, in the browser language: #downloads */}
+        <Route
+          path="/downloads"
+          element={<PdfDownloads initialLanguage={defaultLanguage} />}
+        />
+
+        {/* Former address of the downloads page */}
         <Route
           path="/:language/pdfs"
-          element={<PdfRoute />}
+          element={<Navigate to="/downloads" replace />}
         />
 
         {/* Language + location route, e.g. #/en/colombia, #/en/spain */}
@@ -66,17 +72,6 @@ const LanguageRoute: React.FC = () => {
   const validatedLanguage = language as Language;
 
   return <MyResume initialLanguage={validatedLanguage} initialLocation={location} />;
-};
-
-// Component that handles the /:language/pdfs route
-const PdfRoute: React.FC = () => {
-  const { language } = useParams<{ language: string }>();
-
-  if (!language || !isValidLanguage(language)) {
-    return <Navigate to={`/${SUPPORTED_LANGUAGES[0]}/pdfs`} replace />;
-  }
-
-  return <PdfDownloads initialLanguage={language as Language} />;
 };
 
 export default AppRouter;
