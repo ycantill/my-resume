@@ -14,6 +14,7 @@ export { default as EditableList } from './molecules/EditableList';
 export { default as EditableChips } from './molecules/EditableChips';
 export { default as EntryActions } from './molecules/EntryActions';
 export { default as SaveIndicator } from './molecules/SaveIndicator';
+export { default as JsonPreviewLoader } from './molecules/JsonPreviewLoader';
 
 // Organisms
 export { default as ActionBar } from './organisms/ActionBar';

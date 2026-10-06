@@ -3,7 +3,13 @@ import { usePersonData, isDatabaseConfigured } from './api-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
 import { useTranslation } from './hooks/useTranslation.ts';
 import { useAuth } from './hooks/useAuth.ts';
-import { useAppStore, selectResumeData, selectLoading, selectError } from './store/useAppStore.ts';
+import {
+  useAppStore,
+  selectResumeData,
+  selectLoading,
+  selectError,
+  selectPreview,
+} from './store/useAppStore.ts';
 import type { MyResumeProps, ResumeDataError } from './types.ts';
 import {
   LoadingState,
@@ -25,6 +31,7 @@ const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
   const resumeData = useAppStore(selectResumeData);
   const loading = useAppStore(selectLoading);
   const error = useAppStore(selectError);
+  const preview = useAppStore(selectPreview);
   const language = useAppStore(state => state.language);
   const setLanguage = useAppStore(state => state.setLanguage);
   const setLocationSlug = useAppStore(state => state.setLocationSlug);
@@ -74,8 +81,9 @@ const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
     return <ErrorState error={error} language={language} />;
   }
 
-  // Main render with data
-  const data = resumeData;
+  // Main render with data. A JSON file loaded in edit mode takes the place of
+  // the database copy until it is discarded.
+  const data = preview?.data ?? resumeData;
   const workItems = groupWorkEntries(data.work);
 
   return (

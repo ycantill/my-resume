@@ -127,6 +127,14 @@ export interface MyResumeProps {
   initialLocation?: string;
 }
 
+// A resume loaded from a JSON file to preview it before touching the database
+export interface ResumePreview {
+  fileName: string;
+  data: ResumeData;
+  // Only present when the file is a full export carrying the private node
+  contact: PersonalInfo | null;
+}
+
 // Inline editor save lifecycle, surfaced in the action bar
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 

@@ -110,6 +110,21 @@
     "fluency": "Nivel",
     "skillName": "Categoría",
     "keyword": "Habilidad",
-    "techStack": "Stack técnico"
+    "techStack": "Stack técnico",
+    "preview": {
+      "load": "Cargar JSON",
+      "loadAnother": "Cargar otro JSON",
+      "discard": "Descartar vista previa",
+      "dismiss": "Cerrar",
+      "showing": "Vista previa de",
+      "notSaved": "Aún no se ha guardado. La edición en línea está desactivada durante la vista previa; guárdala en Firebase o descártala.",
+      "invalidJson": "El archivo no es un JSON válido.",
+      "invalidShape": "El archivo no parece el currículum: se esperaba un export completo de la base de datos con \"public\", o el nodo \"public\" con \"basics\".",
+      "invalidData": "El archivo no coincide con la estructura del currículum:",
+      "moreErrors": "…y {count} más",
+      "save": "Guardar en Firebase",
+      "confirmSave": "¿Reemplazar el currículum en Firebase con {file}? Se sobrescriben todas las secciones (basics, work, education, languages, skills). Los datos de contacto en \"private\" no se modifican.",
+      "saveFailed": "No se guardó el archivo en Firebase:"
+    }
   }
 }
