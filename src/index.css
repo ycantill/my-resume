@@ -31,6 +31,21 @@
     @apply mb-6 break-inside-avoid;
   }
   
+  /* An entry the previewed file adds, outlined so it stands out in place */
+  .diff-added-block {
+    @apply outline outline-2 outline-offset-4 outline-green-300 rounded-sm bg-green-50/60 print:outline-0 print:bg-transparent;
+  }
+
+  /* A bullet, chip or link the previewed file adds */
+  .diff-added-inline {
+    @apply bg-green-100 rounded-sm print:bg-transparent;
+  }
+
+  /* A bullet, chip or link the previewed file removes */
+  .diff-removed-inline {
+    @apply bg-red-100 text-red-700 line-through rounded-sm print:hidden;
+  }
+
   .resume-card {
     @apply bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4;
   }

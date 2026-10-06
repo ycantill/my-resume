@@ -170,6 +170,12 @@ export function diffResume(
   return groups;
 }
 
+// One line naming an entry (a job, a school, a language, a profile), used when
+// a whole entry is added or removed
+export function summarizeEntry(value: unknown, language: Language): string {
+  return summarize(value, language);
+}
+
 export type WordDiffPart = { type: 'same' | 'added' | 'removed'; text: string };
 
 /**

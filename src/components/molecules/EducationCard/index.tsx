@@ -2,6 +2,7 @@ import React from 'react';
 import type { Education } from '../../../types.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useResumeEdit } from '../../../hooks/useResumeEdit';
+import { usePreviewBaseline } from '../../../hooks/usePreviewBaseline';
 import { withLocalized } from '../../../resume-helpers.ts';
 import EditableText from '../../atoms/EditableText';
 import EntryActions from '../EntryActions';
@@ -17,14 +18,18 @@ interface EducationCardProps {
 const EducationCard: React.FC<EducationCardProps> = ({ education, index, total }) => {
   const { t, language } = useTranslation();
   const { updateItem, removeItem, moveItem } = useResumeEdit();
+  const baseline = usePreviewBaseline();
+  // While previewing: the school Firebase holds at this position, if any
+  const prev = baseline ? baseline.education[index] : undefined;
 
   return (
-    <div className={clsx('section-card', styles.root)}>
+    <div className={clsx('section-card', styles.root, baseline && !prev && 'diff-added-block')}>
       <div className={styles.header}>
         <EditableText
           as="h3"
           className={styles.institution}
           value={education.institution}
+          previous={prev?.institution}
           label={t('editor.institution')}
           placeholder={t('editor.institution')}
           onCommit={next => updateItem('education', index, { institution: next })}
@@ -42,6 +47,7 @@ const EducationCard: React.FC<EducationCardProps> = ({ education, index, total }
       <p className={styles.degree}>
         <EditableText
           value={t(education.studyType)}
+          previous={prev ? t(prev.studyType) : undefined}
           label={t('editor.studyType')}
           placeholder={t('editor.studyType')}
           onCommit={next =>
@@ -53,6 +59,7 @@ const EducationCard: React.FC<EducationCardProps> = ({ education, index, total }
         {' '}{t('work.in')}{' '}
         <EditableText
           value={t(education.area)}
+          previous={prev ? t(prev.area) : undefined}
           label={t('editor.area')}
           placeholder={t('editor.area')}
           onCommit={next =>
@@ -64,6 +71,7 @@ const EducationCard: React.FC<EducationCardProps> = ({ education, index, total }
         <span className={styles.locationIcon}>📍</span>
         <EditableText
           value={education.location}
+          previous={prev?.location}
           label={t('editor.location')}
           placeholder={t('editor.location')}
           onCommit={next => updateItem('education', index, { location: next })}

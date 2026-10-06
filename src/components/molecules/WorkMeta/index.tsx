@@ -11,6 +11,7 @@ import { useResumeEdit } from '../../../hooks/useResumeEdit';
 import { useAppStore, selectEditMode } from '../../../store/useAppStore';
 import EditableText from '../../atoms/EditableText';
 import EditableDate from '../../atoms/EditableDate';
+import DiffText from '../../atoms/DiffText';
 import styles from './styles.module.css';
 
 interface WorkMetaProps {
@@ -19,6 +20,8 @@ interface WorkMetaProps {
   endDate?: string;
   location?: LocalizedText;
   className?: string;
+  /** While previewing: the dates and location Firebase holds for this role */
+  previous?: { startDate?: string; endDate?: string; location?: LocalizedText };
 }
 
 /**
@@ -34,6 +37,7 @@ const WorkMeta: React.FC<WorkMetaProps> = ({
   endDate,
   location,
   className,
+  previous,
 }) => {
   const { t, language } = useTranslation();
   const editMode = useAppStore(selectEditMode);
@@ -43,11 +47,21 @@ const WorkMeta: React.FC<WorkMetaProps> = ({
   const duration = hasDates ? formatDuration({ startDate, endDate }, language) : '';
 
   if (!editMode) {
+    const line = (start?: string, end?: string, place?: LocalizedText) =>
+      `${start !== undefined ? formatDateRange({ startDate: start, endDate: end }, language) : ''} | ${
+        place ? t(place) : ''
+      }`;
+    const current = line(startDate, endDate, location);
+    const before = previous && line(previous.startDate, previous.endDate, previous.location);
+
     return (
       <p className={className}>
-        {hasDates ? formatDateRange({ startDate, endDate }, language) : ''}
-        {' | '}
-        {location && t(location)} · {duration}
+        {before !== undefined && before !== current ? (
+          <DiffText before={before} after={current} />
+        ) : (
+          current
+        )}{' '}
+        · {duration}
       </p>
     );
   }

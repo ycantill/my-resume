@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { useAppStore, selectEditMode } from '../../../store/useAppStore';
+import DiffText from '../DiffText';
 import styles from './styles.module.css';
 
 interface EditableTextProps {
@@ -12,6 +13,8 @@ interface EditableTextProps {
   multiline?: boolean;
   placeholder?: string;
   label?: string;
+  /** What Firebase holds while a file is previewed; marks the words that differ */
+  previous?: string;
 }
 
 /**
@@ -29,6 +32,7 @@ const EditableText: React.FC<EditableTextProps> = ({
   multiline = false,
   placeholder,
   label,
+  previous,
 }) => {
   const editMode = useAppStore(selectEditMode);
   const [editing, setEditing] = useState(false);
@@ -49,6 +53,13 @@ const EditableText: React.FC<EditableTextProps> = ({
   }, [editing, draft, multiline]);
 
   if (!editMode) {
+    if (previous !== undefined && previous !== value) {
+      return (
+        <Tag className={className}>
+          <DiffText before={previous} after={value} />
+        </Tag>
+      );
+    }
     return <Tag className={className}>{value}</Tag>;
   }
 

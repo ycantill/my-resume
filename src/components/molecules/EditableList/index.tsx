@@ -9,6 +9,8 @@ interface EditableListProps {
   onChange: (next: string[]) => void;
   className?: string;
   itemClassName?: string;
+  /** The bullets Firebase holds while a file is previewed */
+  previous?: string[];
 }
 
 /**
@@ -20,6 +22,7 @@ const EditableList: React.FC<EditableListProps> = ({
   onChange,
   className,
   itemClassName,
+  previous,
 }) => {
   const { t } = useTranslation();
   const editMode = useAppStore(selectEditMode);
@@ -29,11 +32,16 @@ const EditableList: React.FC<EditableListProps> = ({
 
   const removeAt = (index: number) => onChange(items.filter((_, i) => i !== index));
 
+  // Bullets are matched by text: an edited bullet reads as one removed, one added
+  const removed = previous ? previous.filter(item => !items.includes(item)) : [];
+  const isAdded = (item: string) => previous !== undefined && !previous.includes(item);
+
   return (
     <ul className={className}>
       {items.map((item, index) => (
         <li key={index} className={itemClassName}>
           <EditableText
+            className={isAdded(item) ? 'diff-added-inline' : undefined}
             value={item}
             multiline
             placeholder={t('editor.highlightPlaceholder')}
@@ -50,6 +58,11 @@ const EditableList: React.FC<EditableListProps> = ({
               ✕
             </button>
           )}
+        </li>
+      ))}
+      {removed.map((item, index) => (
+        <li key={`removed-${index}`} className={`${itemClassName ?? ''} print:hidden`}>
+          <span className="diff-removed-inline">{item}</span>
         </li>
       ))}
       {editMode && (
