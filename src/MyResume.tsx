@@ -88,10 +88,10 @@ const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
   const workItems = groupWorkEntries(data.work);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 print:min-h-0 print:bg-white">
       <ActionBar />
       <PreviewDiff />
-      <div className="resume-container shadow-lg">
+      <div className="resume-container shadow-lg print:shadow-none">
         <div className="section-spacing">
           <BasicInfo basics={data.basics} />
           <PersonalContact />

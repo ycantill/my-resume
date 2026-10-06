@@ -1,12 +1,12 @@
 /* PersonalContact — organism */
 .personal-contact {
-  @apply mt-2 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base;
+  @apply mt-2 print:mt-1 print:gap-1.5 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base;
 }
 
 .personal-contact__icon {
-  @apply text-lg sm:text-xl flex-shrink-0;
+  @apply text-base sm:text-lg text-gray-500 flex-shrink-0 print:text-sm;
 }
 
 .personal-contact__link {
-  @apply text-blue-600 hover:text-blue-800 font-medium;
+  @apply text-blue-600 hover:text-blue-800 font-medium print:font-normal;
 }

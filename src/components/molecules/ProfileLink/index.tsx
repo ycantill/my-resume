@@ -5,6 +5,7 @@ import { useTranslation } from '../../../hooks/useTranslation';
 import { useAppStore, selectEditMode } from '../../../store/useAppStore';
 import EditableText from '../../atoms/EditableText';
 import DiffText from '../../atoms/DiffText';
+import Icon from '../../atoms/Icon';
 import styles from './styles.module.css';
 
 interface ProfileLinkProps {
@@ -24,11 +25,7 @@ const ProfileLink: React.FC<ProfileLinkProps> = ({ profile, onCommit, onRemove, 
 
   return (
     <div className={styles.root}>
-      {isLinkedIn
-        ? <span className={styles.iconLinkedin} aria-hidden="true">in</span>
-        : isGitHub
-        ? <span className={styles.icon} aria-hidden="true">{'💻'}</span>
-        : <span className={styles.icon} aria-hidden="true">🔗</span>}
+      <Icon name={isLinkedIn ? 'linkedin' : isGitHub ? 'github' : 'link'} className={styles.icon} />
       {editMode && onCommit ? (
         <>
           {/* The full URL is what gets edited; the link text is only a display trim */}

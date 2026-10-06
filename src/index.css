@@ -6,15 +6,15 @@
 @layer components {
   /* Main layout containers */
   .resume-container {
-    @apply max-w-4xl mx-auto px-6 py-8 bg-white min-h-screen print:px-0 print:py-0;
+    @apply max-w-4xl mx-auto px-6 py-8 bg-white min-h-screen print:px-0 print:py-0 print:min-h-0 print:max-w-none;
   }
   
   .section-spacing {
-    @apply mb-12 print:mb-6;
+    @apply mb-12 print:mb-3;
   }
   
   .section-title {
-    @apply text-2xl font-bold text-gray-900 mb-6 mt-0 border-b-2 border-gray-200 pb-3 print:text-xl print:mb-3 print:pb-2;
+    @apply text-2xl font-bold text-gray-900 mb-6 mt-0 border-b-2 border-gray-200 pb-3 print:text-base print:uppercase print:tracking-wide print:border-b print:border-gray-300 print:mb-2 print:pb-0.5;
   }
   
   /* Prevent education section title from breaking */
@@ -23,7 +23,7 @@
   }
   
   .section-card {
-    @apply bg-white rounded-xl p-6 mb-6 shadow-sm border border-gray-100 print:shadow-none print:border-0 print:mb-3 print:p-3;
+    @apply bg-white rounded-xl p-6 mb-6 shadow-sm border border-gray-100 print:shadow-none print:border-0 print:rounded-none print:mb-0 print:p-0;
   }
   
   /* Legacy classes for compatibility */
@@ -56,6 +56,11 @@
   @page {
     margin: 0.5in;
     size: letter;
+  }
+
+  /* Smaller root size: every rem-based font size and spacing scales with it */
+  html {
+    font-size: 12px;
   }
   
   body {

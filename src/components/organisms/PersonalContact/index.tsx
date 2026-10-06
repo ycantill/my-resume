@@ -9,6 +9,7 @@ import {
   selectPreview,
 } from '../../../store/useAppStore';
 import { getPersonContactData } from '../../../api-service';
+import Icon from '../../atoms/Icon';
 import styles from './styles.module.css';
 
 const PersonalContact: React.FC<PersonalContactProps> = () => {
@@ -34,7 +35,7 @@ const PersonalContact: React.FC<PersonalContactProps> = () => {
 
   return (
     <div className={styles['personal-contact']}>
-      <span className={styles['personal-contact__icon']} aria-hidden="true">📞</span>
+      <Icon name="phone" className={styles['personal-contact__icon']} />
       <a href={`tel:${normalizePhone(phone)}`} className={styles['personal-contact__link']}>
         {phone}
       </a>

@@ -3,8 +3,15 @@ import type { BasicInfoProps } from '../../../types.ts';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useResumeEdit } from '../../../hooks/useResumeEdit';
 import { usePreviewBaseline, removedTail } from '../../../hooks/usePreviewBaseline';
-import { withLocalized, profileFromUrl } from '../../../resume-helpers.ts';
-import { useAppStore, selectEditMode } from '../../../store/useAppStore';
+import { withLocalized, profileFromUrl, resolveRouteLocation } from '../../../resume-helpers.ts';
+import {
+  useAppStore,
+  selectEditMode,
+  selectContactData,
+  selectLocationSlug,
+  selectPreview,
+} from '../../../store/useAppStore';
+import Icon from '../../atoms/Icon';
 import ProfileLink from '../../molecules/ProfileLink';
 import EditableText from '../../atoms/EditableText';
 import DiffText from '../../atoms/DiffText';
@@ -16,6 +23,16 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ basics }) => {
   const editMode = useAppStore(selectEditMode);
   const { updateBasics } = useResumeEdit();
   const baseline = usePreviewBaseline()?.basics;
+  const locationSlug = useAppStore(selectLocationSlug);
+  const storedContact = useAppStore(selectContactData);
+  const previewContact = useAppStore(selectPreview)?.contact;
+
+  // The country comes from the URL (/:language/colombia, /:language/spain), so
+  // it shows without a session too
+  const location = resolveRouteLocation(
+    (previewContact ?? storedContact)?.locations,
+    locationSlug
+  );
 
   const profiles = basics.profiles ?? [];
 
@@ -45,13 +62,19 @@ const BasicInfo: React.FC<BasicInfoProps> = ({ basics }) => {
           placeholder={t('editor.jobTitle')}
           onCommit={next => updateBasics({ label: withLocalized(basics.label, language, next) })}
         />
+        {location && (
+          <p className={styles.location}>
+            <Icon name="pin" className={styles.locationIcon} />
+            {t('location.remote')} · {t(location)}
+          </p>
+        )}
       </div>
 
       <div className={styles.contact}>
         <div className={styles.contactList}>
           {(basics.email || editMode) && (
             <div className={styles.contactItem}>
-              <span className={styles.contactIcon} aria-hidden="true">✉️</span>
+              <Icon name="mail" className={styles.contactIcon} />
               {editMode ? (
                 <EditableText
                   className={styles.contactLink}

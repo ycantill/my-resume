@@ -7,6 +7,7 @@ import { withLocalized } from '../../../resume-helpers.ts';
 import EditableText from '../../atoms/EditableText';
 import EntryActions from '../EntryActions';
 import { clsx } from 'clsx';
+import Icon from '../../atoms/Icon';
 import styles from './styles.module.css';
 
 interface EducationCardProps {
@@ -68,7 +69,7 @@ const EducationCard: React.FC<EducationCardProps> = ({ education, index, total }
         />
       </p>
       <p className={styles.location}>
-        <span className={styles.locationIcon}>📍</span>
+        <Icon name="pin" className={styles.locationIcon} />
         <EditableText
           value={education.location}
           previous={prev?.location}

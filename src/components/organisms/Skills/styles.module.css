@@ -1,6 +1,6 @@
 /* Skills — organism */
 .gridLayout {
-  @apply grid gap-6 md:grid-cols-2 print:gap-3;
+  @apply grid gap-6 md:grid-cols-2 print:grid-cols-2 print:gap-x-6 print:gap-y-2;
 }
 
 .add {

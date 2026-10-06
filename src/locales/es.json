@@ -47,6 +47,9 @@
     "techStack": "Stack técnico",
     "in": "en"
   },
+  "location": {
+    "remote": "Remoto"
+  },
   "education": {
     "label": "Educación"
   },
