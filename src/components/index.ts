@@ -10,6 +10,7 @@ export { default as SkillCategory } from './molecules/SkillCategory';
 export { default as EducationCard } from './molecules/EducationCard';
 export { default as WorkRoleCard } from './molecules/WorkRoleCard';
 export { default as EditModeToggle } from './molecules/EditModeToggle';
+export { default as DownloadPdfButton } from './molecules/DownloadPdfButton';
 export { default as EditableList } from './molecules/EditableList';
 export { default as EditableChips } from './molecules/EditableChips';
 export { default as EntryActions } from './molecules/EntryActions';
