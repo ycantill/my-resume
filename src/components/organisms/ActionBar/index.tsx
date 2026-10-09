@@ -3,6 +3,7 @@ import PhoneAuth from '../PhoneAuth';
 import EditModeToggle from '../../molecules/EditModeToggle';
 import SaveIndicator from '../../molecules/SaveIndicator';
 import JsonPreviewLoader from '../../molecules/JsonPreviewLoader';
+import DownloadPdfButton from '../../molecules/DownloadPdfButton';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useAppStore, selectEditModeOn, selectPreview } from '../../../store/useAppStore';
 import styles from './styles.module.css';
@@ -20,6 +21,7 @@ const ActionBar: React.FC = () => {
         <JsonPreviewLoader />
         <EditModeToggle />
         <PhoneAuth />
+        <DownloadPdfButton />
       </div>
       {editMode && preview && (
         <div className={styles['action-bar__preview']} role="status">

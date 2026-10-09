@@ -152,6 +152,7 @@
     "languages": {
       "en": "English",
       "es": "Spanish"
-    }
+    },
+    "downloadPdf": "Download PDF"
   }
 }

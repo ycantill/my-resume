@@ -171,7 +171,7 @@ const ROUTE_LOCATIONS: Record<string, LocationInfo> = {
 };
 
 // The route a bare /:language URL stands for
-const DEFAULT_LOCATION_SLUG = 'colombia';
+export const DEFAULT_LOCATION_SLUG = 'colombia';
 
 // The location named by a URL slug: the private entry when they are loaded,
 // else the known route names, else the slug itself in title case
