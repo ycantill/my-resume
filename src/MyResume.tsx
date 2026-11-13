@@ -3,7 +3,13 @@ import { usePersonData, isDatabaseConfigured } from './api-service.ts';
 import { groupWorkEntries } from './resume-helpers.ts';
 import { useTranslation } from './hooks/useTranslation.ts';
 import { useAuth } from './hooks/useAuth.ts';
-import { useAppStore, selectResumeData, selectLoading, selectError } from './store/useAppStore.ts';
+import {
+  useAppStore,
+  selectResumeData,
+  selectLoading,
+  selectError,
+  selectPreview,
+} from './store/useAppStore.ts';
 import type { MyResumeProps, ResumeDataError } from './types.ts';
 import {
   LoadingState,
@@ -15,7 +21,8 @@ import {
   EducationSection,
   Languages,
   Skills,
-  PersonalContact
+  PersonalContact,
+  PreviewDiff,
 } from './components/index.ts';
 
 const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
@@ -25,6 +32,7 @@ const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
   const resumeData = useAppStore(selectResumeData);
   const loading = useAppStore(selectLoading);
   const error = useAppStore(selectError);
+  const preview = useAppStore(selectPreview);
   const language = useAppStore(state => state.language);
   const setLanguage = useAppStore(state => state.setLanguage);
   const setLocationSlug = useAppStore(state => state.setLocationSlug);
@@ -74,14 +82,16 @@ const MyResume = ({ initialLanguage, initialLocation }: MyResumeProps) => {
     return <ErrorState error={error} language={language} />;
   }
 
-  // Main render with data
-  const data = resumeData;
+  // Main render with data. A JSON file loaded in edit mode takes the place of
+  // the database copy until it is discarded.
+  const data = preview?.data ?? resumeData;
   const workItems = groupWorkEntries(data.work);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 print:min-h-0 print:bg-white">
       <ActionBar />
-      <div className="resume-container shadow-lg">
+      <PreviewDiff />
+      <div className="resume-container shadow-lg print:shadow-none">
         <div className="section-spacing">
           <BasicInfo basics={data.basics} />
           <PersonalContact />

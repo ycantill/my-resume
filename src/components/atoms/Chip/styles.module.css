@@ -1,8 +1,8 @@
 /* Chip — atom */
 .chip {
-  @apply inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-200;
+  @apply inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 transition-colors hover:bg-gray-200 print:inline print:p-0 print:border-0 print:bg-transparent print:font-normal print:text-gray-700 print:text-[length:inherit];
 }
 
 .chipPurple {
-  @apply bg-purple-50 text-purple-700 border-purple-200;
+  @apply bg-purple-50 text-purple-700 border-purple-200 print:bg-transparent print:text-gray-700;
 }

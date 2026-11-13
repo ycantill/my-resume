@@ -1,0 +1,16 @@
+/* RemovedEntries — molecule */
+.root {
+  @apply my-3 space-y-2 print:hidden;
+}
+
+.entry {
+  @apply rounded-md border border-dashed border-red-300 bg-red-50 px-3 py-2 text-sm;
+}
+
+.label {
+  @apply font-semibold text-red-700;
+}
+
+.text {
+  @apply text-red-700;
+}

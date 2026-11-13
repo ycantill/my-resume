@@ -4,9 +4,10 @@ name: My Resume Workflow
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push events for the "main" and "develop" branches
+  # Triggers the workflow on push events for "main", "develop" and the "claude/" branches
+  # (the github-pages environment allows deployments from claude/* branches)
   push:
-    branches: ['main', 'develop']
+    branches: ['main', 'develop', 'claude/**']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -47,8 +48,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # A failing check stops the deploy before anything is built or published
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Run unit and component tests
+        run: npm test
+
+      # Also used below to print the PDFs
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      # Runs against the fixture resume, never the real database
+      - name: Run browser tests
+        run: npm run test:e2e
+
       - name: Build application
         run: VITE_DATABASE_URL=$DATABASE_URL VITE_FIREBASE_API_KEY=$FIREBASE_API_KEY VITE_FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN npm run build:github
+
+      # Prints every language/location version to dist/pdfs (served at #/:language/pdfs).
+      # pdf-refresh.yml re-runs this workflow when the database changes.
+      - name: Generate PDFs
+        run: VITE_DATABASE_URL=$DATABASE_URL npm run pdfs
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -86,13 +86,15 @@ Examples:
 
 ### Tech Stack
 
-- **React 18** + TypeScript
+- **React 19** + TypeScript
 - **Vite** (build tool)
 - **React Router** (URL routing)
 - **Firebase REST API** (Realtime Database access)
 - **Tailwind CSS** (styling)
 - **CSS Modules** (scoped component styles)
 - **clsx** (conditional class composition)
+- **Vitest** + **React Testing Library** (unit and component tests)
+- **Playwright** (browser tests and PDF printing)
 
 ### Key Principles
 
@@ -235,7 +237,43 @@ npm run lint                   # Run ESLint
 npm run lint:fix               # Run ESLint with auto-fix
 npm run format                 # Format code with Prettier
 npm run type-check             # TypeScript validation
+
+# Tests
+npm test                       # Unit and component tests (Vitest), once
+npm run test:watch             # Same, re-running on every change
+npm run test:e2e               # Browser tests (Playwright), starts its own dev server
 ```
+
+### Testing
+
+There are two suites, and neither touches the real database:
+
+- **Unit and component tests** (`src/**/*.test.ts(x)`, Vitest + jsdom + React
+  Testing Library). They cover the pure modules (`resume-helpers`,
+  `resume-validation`, `resume-import`, `resume-diff`) and components through
+  what the user sees: rendering per language and location, and the inline editor
+  saving or rolling back. `src/test/setup.ts` replaces `firebase-auth` with inert
+  stand-ins and resets the Zustand store after each test; component tests mock
+  `saveResumeSection` so nothing is written.
+- **Browser tests** (`e2e/*.spec.ts`, Playwright + Chromium). They run the real
+  app on a Vite dev server whose `VITE_DATABASE_URL` points to a fake host;
+  `e2e/fixtures.ts` answers `/public.json` with the fixture and blocks every
+  other outside request. They check languages, the location in the URL, that no
+  phone number appears without a session, the printed layout, routing
+  redirects and the database error state.
+
+Both use the fictional resume in `src/test/fixtures/resume.json`. Update it when
+the data shape changes.
+
+First run of the browser tests needs Chromium:
+
+```bash
+npx playwright install chromium
+```
+
+**CI:** `tests.yml` runs lint, type-check and both suites on every pull
+request. `deploy.yml` runs the same checks before building, so any failure stops
+the deploy. ESLint covers the TypeScript sources through `typescript-eslint`.
 
 ### Component Pattern
 
@@ -297,6 +335,10 @@ src/
 │   └── es.json               # Spanish translations
 ├── store/
 │   └── useAppStore.ts        # Zustand store (language, resumeData, loading, error)
+├── test/
+│   ├── setup.ts              # Vitest setup: jest-dom matchers, auth mock, store reset
+│   └── fixtures/resume.json  # Fictional resume shared by unit and browser tests
+├── *.test.ts(x)              # Tests live next to the code they cover
 ├── AppRouter.tsx             # Main routing with language detection
 ├── MyResume.tsx              # Container component, syncs URL → store
 ├── api-service.ts            # Firebase REST API integration (no SDK)
@@ -304,6 +346,10 @@ src/
 ├── types.ts                  # TypeScript definitions
 ├── index.css                 # Global Tailwind layers (section-card, section-title, etc.)
 └── main.tsx                  # Entry point
+
+e2e/
+├── fixtures.ts               # Serves the fixture resume, blocks outside requests
+└── resume.spec.ts            # Browser tests
 ```
 
 ## 🚀 Deployment
@@ -479,6 +525,29 @@ Notes:
   fail on an expired token.
 - Contact data under `/private` is not editable here; edit it in the Firebase Console.
 
+### Previewing a JSON file
+
+In edit mode, **Load JSON** reads a file from your device and shows it on the page in place
+of the database copy, so you can check a rewrite before touching Firebase.
+
+- It accepts the same structure Firebase holds: either a full database export (`{ "public": …,
+  "private": … }`) or just the contents of the `public` node. A full export also previews the
+  phone number from `private`.
+- The file is checked with the same validation the editor uses before a save; anything that
+  does not match is listed by path (e.g. `work[0].startDate`) and the page stays as it was.
+- The changes are marked on the resume itself: edited text shows the removed words struck
+  through and the new ones highlighted, added bullets, chips, links and entries are
+  highlighted, and removed ones appear struck through where they were. List entries are
+  matched by position. Printing a preview prints the file without the marks.
+- A collapsible panel above the resume lists the same changes as a summary, grouped by
+  section and entry, including lists that only changed order.
+- Loading a file writes nothing. While a preview is shown, inline editing is off, and a
+  banner names the file. **Discard preview** or **Done** goes back to the database copy.
+- **Save to Firebase** asks for confirmation, then replaces the five resume sections in
+  `/public` with the file in one request. The `private` node is never written; contact data
+  is still edited in the Firebase Console. A failed write leaves the preview open and the
+  database untouched.
+
 ### Work entry shapes
 
 `work` accepts two shapes side by side, and the editor handles both:
@@ -495,6 +564,21 @@ Consecutive flat entries sharing a company name are displayed as one company wit
 roles, the same as a nested entry.
 
 ## 🖨️ Printing
+
+### Ready-made PDFs
+
+Every deploy prints each language/location version (`en`/`es` × `colombia`/`spain`) to PDF and
+publishes them next to the site, listed at https://ycantill.github.io/my-resume/#downloads (in the
+browser language) with a download and a share button each. The old `#/:language/pdfs` redirects there.
+The files keep stable URLs such as `pdfs/yohany-cantillo-cv-en-colombia.pdf`.
+
+- `npm run pdfs` (after `npm run build:github`, with `VITE_DATABASE_URL` set) serves `dist`,
+  prints each route with Playwright and writes `dist/pdfs/*.pdf` plus `dist/pdfs/manifest.json`.
+  Set `PDF_CHROMIUM_PATH` to use a local Chromium instead of `npx playwright install chromium`.
+- The pages are printed without a session, so phone numbers from `/private` never reach them.
+- `.github/workflows/pdf-refresh.yml` runs every 15 minutes, compares a hash of `/public` with the
+  one recorded in the deployed manifest and re-runs the deploy on the last deployed branch when the
+  data changed. It runs from `main` only (scheduled workflows use the default branch).
 
 ### Privacy & Contact Information
 

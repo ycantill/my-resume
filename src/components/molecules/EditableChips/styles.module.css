@@ -1,6 +1,13 @@
 /* EditableChips — molecule */
 .slot {
-  @apply inline-flex items-center gap-1;
+  @apply inline-flex items-center gap-1 print:inline;
+}
+
+/* Printed, the chips read as a plain comma-separated line */
+@media print {
+  .slot:not(:last-of-type)::after {
+    content: ', ';
+  }
 }
 
 .remove {

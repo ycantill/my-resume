@@ -1,42 +1,42 @@
 /* WorkExperience — organism */
 .entry {
-  @apply mb-8 print:mb-4;
+  @apply mb-8 print:mb-3;
 }
 
 .companyHeader {
-  @apply border-l-4 border-blue-500 pl-6 mb-4;
+  @apply border-l-4 border-blue-500 pl-6 mb-4 print:border-0 print:pl-0 print:mb-1;
 }
 
 .companyName {
-  @apply text-xl font-bold text-gray-900 mb-1;
+  @apply text-xl font-bold text-gray-900 mb-1 print:text-lg print:mb-0;
 }
 
 .roles {
-  @apply space-y-8 print:space-y-4;
+  @apply space-y-8 print:space-y-2;
 }
 
 .simpleHeader {
-  @apply border-l-4 border-blue-500 pl-6;
+  @apply border-l-4 border-blue-500 pl-6 print:border-0 print:pl-0;
 }
 
 .header {
-  @apply mb-4;
+  @apply mb-4 print:mb-0;
 }
 
 .titleRow {
-  @apply flex flex-col sm:flex-row sm:items-center justify-between mb-3;
+  @apply flex flex-col sm:flex-row sm:items-center justify-between mb-3 print:mb-0;
 }
 
 .title {
-  @apply text-xl font-bold text-gray-900;
+  @apply text-xl font-bold text-gray-900 print:text-lg;
 }
 
 .badgeCurrent {
-  @apply inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-medium;
+  @apply inline-block bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-medium print:hidden;
 }
 
 .meta {
-  @apply mb-4;
+  @apply mb-4 print:mb-1;
 }
 
 .metaText {
@@ -44,35 +44,35 @@
 }
 
 .description {
-  @apply mb-5;
+  @apply mb-5 print:mb-1;
 }
 
 .descriptionText {
-  @apply text-gray-700 leading-relaxed text-justify;
+  @apply text-gray-700 leading-relaxed text-justify print:leading-snug print:text-left;
 }
 
 .highlights {
-  @apply mb-6;
+  @apply mb-6 print:mb-1;
 }
 
 .highlightsList {
-  @apply list-disc list-inside text-gray-700 space-y-2 ml-4;
+  @apply list-disc list-inside text-gray-700 space-y-2 ml-4 print:space-y-0.5 print:ml-1 print:list-outside print:pl-4;
 }
 
 .highlightsItem {
-  @apply leading-relaxed;
+  @apply leading-relaxed print:leading-snug;
 }
 
 .stack {
-  @apply mt-4;
+  @apply mt-4 print:mt-1 print:flex print:gap-1.5 print:items-baseline;
 }
 
 .stackLabel {
-  @apply text-sm font-medium text-gray-800 mb-3;
+  @apply text-sm font-medium text-gray-800 mb-3 print:mb-0 print:whitespace-nowrap;
 }
 
 .chips {
-  @apply flex flex-wrap gap-3 mt-4;
+  @apply flex flex-wrap gap-3 mt-4 print:block print:mt-0 print:text-sm;
 }
 
 .companyRow {

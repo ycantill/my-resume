@@ -1,0 +1,65 @@
+{
+  "basics": {
+    "name": "Ada Tester",
+    "email": "ada@example.com",
+    "label": { "en": "Frontend Engineer", "es": "Ingeniera Frontend" },
+    "summary": {
+      "en": "Frontend engineer who writes tests before shipping.",
+      "es": "Ingeniera frontend que escribe tests antes de publicar."
+    },
+    "profiles": [
+      { "network": "GitHub", "url": "https://github.com/ada-tester", "username": "ada-tester" }
+    ]
+  },
+  "work": [
+    {
+      "name": "Acme",
+      "position": { "en": "Senior Frontend Engineer", "es": "Ingeniera Frontend Senior" },
+      "startDate": "2024-02",
+      "location": { "en": "Remote", "es": "Remoto" },
+      "summary": { "en": "Design system for a retail site", "es": "Design system para una web de retail" },
+      "highlights": {
+        "en": ["Built a component library in React and TypeScript"],
+        "es": ["Construí una librería de componentes en React y TypeScript"]
+      },
+      "stack": ["React", "TypeScript"]
+    },
+    {
+      "name": "Globex",
+      "roles": [
+        {
+          "position": { "en": "Frontend Developer", "es": "Desarrolladora Frontend" },
+          "startDate": "2021-01",
+          "endDate": "2024-01",
+          "location": { "en": "Madrid, Spain", "es": "Madrid, España" },
+          "summary": { "en": "Banking app", "es": "App de banca" },
+          "highlights": { "en": ["Shipped features"], "es": ["Entregué funcionalidades"] },
+          "stack": ["Angular"]
+        },
+        {
+          "position": { "en": "Junior Developer", "es": "Desarrolladora Junior" },
+          "startDate": "2019-06",
+          "endDate": "2020-12",
+          "location": { "en": "Bogotá, Colombia", "es": "Bogotá, Colombia" },
+          "summary": { "en": "Chat tool", "es": "Herramienta de chat" },
+          "highlights": { "en": ["Fixed bugs"], "es": ["Corregí errores"] }
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Test University",
+      "studyType": { "en": "Bachelor's Degree", "es": "Grado" },
+      "area": { "en": "Computer Science", "es": "Informática" },
+      "location": "Barranquilla, Colombia"
+    }
+  ],
+  "languages": [
+    { "language": { "en": "Spanish", "es": "Español" }, "fluency": { "en": "Native", "es": "Nativo" } },
+    { "language": { "en": "English", "es": "Inglés" }, "fluency": { "en": "Upper Intermediate (B2)", "es": "Intermedio alto (B2)" } }
+  ],
+  "skills": [
+    { "name": "Frontend", "keywords": ["React", "TypeScript", "Angular"] }
+  ]
+}

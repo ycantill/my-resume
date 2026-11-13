@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { Language, ResumeData, PersonalInfo, ResumeDataError, SaveState } from '../types';
+import type {
+  Language,
+  ResumeData,
+  PersonalInfo,
+  ResumeDataError,
+  SaveState,
+  ResumePreview,
+} from '../types';
 
 interface AppState {
   // Estado
@@ -14,6 +21,9 @@ interface AppState {
   editMode: boolean;
   saveState: SaveState;
   saveError: string | null;
+  // A JSON file loaded in edit mode, shown instead of the database copy until
+  // discarded. Only ever held in memory: nothing here is written to Firebase.
+  preview: ResumePreview | null;
 
   // Acciones
   setLanguage: (language: Language) => void;
@@ -26,6 +36,7 @@ interface AppState {
   setAuthToken: (token: string | null) => void;
   setEditMode: (editMode: boolean) => void;
   setSaveState: (saveState: SaveState, saveError?: string | null) => void;
+  setPreview: (preview: ResumePreview | null) => void;
   reset: () => void;
 }
 
@@ -40,6 +51,7 @@ const initialState = {
   editMode: false,
   saveState: 'idle' as SaveState,
   saveError: null,
+  preview: null as ResumePreview | null,
 };
 
 export const useAppStore = create<AppState>()(
@@ -58,8 +70,13 @@ export const useAppStore = create<AppState>()(
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
       setAuthToken: (token) => set({ authToken: token }),
-      setEditMode: (editMode) => set({ editMode, saveState: 'idle', saveError: null }),
+      // Leaving edit mode drops a loaded preview, so the page never keeps
+      // showing unsaved data once the editor chrome that flags it is gone
+      setEditMode: (editMode) =>
+        set(editMode ? { editMode, saveState: 'idle', saveError: null }
+          : { editMode, saveState: 'idle', saveError: null, preview: null }),
       setSaveState: (saveState, saveError = null) => set({ saveState, saveError }),
+      setPreview: (preview) => set({ preview, saveState: 'idle', saveError: null }),
       reset: () => set(initialState),
     }),
     { name: 'AppStore' }
@@ -74,6 +91,11 @@ export const selectContactData = (state: AppState) => state.contactData;
 export const selectLoading = (state: AppState) => state.loading;
 export const selectError = (state: AppState) => state.error;
 export const selectAuthToken = (state: AppState) => state.authToken;
-export const selectEditMode = (state: AppState) => state.editMode;
+// Whether inline editing is live. Off while a preview is shown: the editor
+// writes whole sections back to Firebase, and a preview must never be saved.
+export const selectEditMode = (state: AppState) => state.editMode && !state.preview;
+// Whether the owner has edit mode switched on, preview or not
+export const selectEditModeOn = (state: AppState) => state.editMode;
+export const selectPreview = (state: AppState) => state.preview;
 export const selectSaveState = (state: AppState) => state.saveState;
 export const selectSaveError = (state: AppState) => state.saveError;

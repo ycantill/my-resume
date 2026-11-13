@@ -10,6 +10,8 @@ interface EditableChipsProps {
   onChange: (next: string[]) => void;
   variant?: 'default' | 'purple';
   label: string;
+  /** The chips Firebase holds while a file is previewed */
+  previous?: string[];
 }
 
 /**
@@ -21,6 +23,7 @@ const EditableChips: React.FC<EditableChipsProps> = ({
   onChange,
   variant = 'default',
   label,
+  previous,
 }) => {
   const { t } = useTranslation();
   const editMode = useAppStore(selectEditMode);
@@ -35,12 +38,16 @@ const EditableChips: React.FC<EditableChipsProps> = ({
         : items.map((item, i) => (i === index ? value : item))
     );
 
+  const removed = previous ? previous.filter(item => !items.includes(item)) : [];
+  const isAdded = (item: string) => previous !== undefined && !previous.includes(item);
+
   return (
     <>
       {visible.map((item, index) => (
         <span key={index} className={styles.slot}>
           <Chip variant={variant}>
             <EditableText
+              className={isAdded(item) ? 'diff-added-inline' : undefined}
               value={item}
               placeholder={t('editor.chipPlaceholder')}
               label={label}
@@ -57,6 +64,13 @@ const EditableChips: React.FC<EditableChipsProps> = ({
               ✕
             </button>
           )}
+        </span>
+      ))}
+      {removed.map((item, index) => (
+        <span key={`removed-${index}`} className={`${styles.slot} print:hidden`}>
+          <Chip variant={variant}>
+            <span className="diff-removed-inline">{item}</span>
+          </Chip>
         </span>
       ))}
       {editMode && (

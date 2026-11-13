@@ -1,0 +1,66 @@
+# Keeps the published PDFs in step with the database.
+#
+# Every few minutes it compares a hash of the live /public node with the one
+# the deployed PDFs were printed from (pdfs/manifest.json on the site). When
+# they differ, it re-runs the deploy workflow on the branch that deployed last,
+# which rebuilds the site and prints the PDFs again.
+#
+# Scheduled workflows only run from the default branch (main).
+
+name: Refresh PDFs
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  pages: read
+  contents: read
+
+concurrency:
+  group: pdf-refresh
+  cancel-in-progress: false
+
+env:
+  DATABASE_URL: ${{ vars.VITE_DATABASE_URL }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Redeploy when the database changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+
+          live_hash=$(curl -fsS "${DATABASE_URL%/}/public.json" | sha256sum | cut -d' ' -f1)
+
+          site_url=$(gh api "repos/$REPO/pages" --jq .html_url)
+          manifest=$(curl -fsS "${site_url%/}/pdfs/manifest.json?t=$(date +%s)" || echo '{}')
+          deployed_hash=$(echo "$manifest" | jq -r '.dataHash // empty')
+          ref=$(echo "$manifest" | jq -r '.ref // empty')
+          ref=${ref:-$DEFAULT_BRANCH}
+
+          echo "Live data:    $live_hash"
+          echo "In the PDFs:  ${deployed_hash:-none}"
+
+          if [ "$live_hash" = "$deployed_hash" ]; then
+            echo "PDFs are up to date."
+            exit 0
+          fi
+
+          # A deploy already queued or running will print the new data itself
+          busy=$(gh run list --repo "$REPO" --workflow deploy.yml --json status \
+            --jq '[.[] | select(.status != "completed")] | length')
+          if [ "$busy" -gt 0 ]; then
+            echo "A deploy is already in progress; leaving it to that run."
+            exit 0
+          fi
+
+          echo "Data changed: redeploying $ref"
+          gh workflow run deploy.yml --repo "$REPO" --ref "$ref"
