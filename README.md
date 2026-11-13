@@ -86,7 +86,7 @@ Examples:
 
 ### Tech Stack
 
-- **React 18** + TypeScript
+- **React 19** + TypeScript
 - **Vite** (build tool)
 - **React Router** (URL routing)
 - **Firebase REST API** (Realtime Database access)

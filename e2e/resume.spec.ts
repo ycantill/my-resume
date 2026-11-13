@@ -69,3 +69,23 @@ test('explains when the database cannot be read', async ({ page }) => {
 
   await expect(page.getByText('Error loading resume')).toBeVisible();
 });
+
+test('loads without console errors or React warnings', async ({ page }) => {
+  const problems: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error' || message.type() === 'warning') {
+      problems.push(`${message.type()}: ${message.text()}`);
+    }
+  });
+  page.on('pageerror', error => problems.push(`pageerror: ${error.message}`));
+
+  await page.goto('/#/en/spain');
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await page.goto('/#/es');
+  await expect(page.getByRole('heading', { name: 'Resumen' })).toBeVisible();
+
+  // Requests to Firebase Auth are blocked on purpose in these tests; their
+  // network errors are expected and say nothing about the app
+  const relevant = problems.filter(text => !/net::ERR_FAILED|Failed to load resource/.test(text));
+  expect(relevant).toEqual([]);
+});

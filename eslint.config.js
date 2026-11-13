@@ -7,7 +7,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 
 // Shared React rules for the app code, whether JavaScript or TypeScript
 const reactConfig = {
-  settings: { react: { version: '18.2' } },
+  settings: { react: { version: 'detect' } },
   plugins: {
     react,
     'react-hooks': reactHooks,
