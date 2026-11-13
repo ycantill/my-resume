@@ -25,6 +25,16 @@ const translations = {
   es: esTranslations,
 } as const;
 
+// Follows a dotted key ("sections.summary") through a locale file
+function lookupKey(tree: unknown, keys: string[]): unknown {
+  let value = tree;
+  for (const key of keys) {
+    if (typeof value !== 'object' || value === null || !(key in value)) return undefined;
+    value = (value as Record<string, unknown>)[key];
+  }
+  return value;
+}
+
 // Unified translation helper - handles both Firebase LocalizedText and static strings
 export function t(textOrKey: LocalizedText | string, lang: Language): string {
   // If it's a LocalizedText object (has 'en' property)
@@ -32,29 +42,15 @@ export function t(textOrKey: LocalizedText | string, lang: Language): string {
     return textOrKey[lang] || textOrKey.en || '';
   }
   
-  // If it's a string key, look it up in translations
+  // If it's a string key, look it up in translations, falling back to English
+  // and then to the key itself
   if (typeof textOrKey === 'string') {
     const keys = textOrKey.split('.');
-    let value: any = translations[lang];
-    
-    for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k];
-      } else {
-        // Fallback to English if key not found
-        value = translations.en;
-        for (const fallbackKey of keys) {
-          if (value && typeof value === 'object' && fallbackKey in value) {
-            value = value[fallbackKey];
-          } else {
-            return textOrKey; // Return key if not found
-          }
-        }
-        break;
-      }
-    }
-    
-    return typeof value === 'string' ? value : textOrKey;
+    const value = lookupKey(translations[lang], keys);
+    if (typeof value === 'string') return value;
+
+    const fallback = lookupKey(translations.en, keys);
+    return typeof fallback === 'string' ? fallback : textOrKey;
   }
   
   return '';

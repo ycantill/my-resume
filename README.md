@@ -271,8 +271,9 @@ First run of the browser tests needs Chromium:
 npx playwright install chromium
 ```
 
-**CI:** `tests.yml` runs both suites on every pull request. `deploy.yml` runs
-them before building, so a failing test stops the deploy.
+**CI:** `tests.yml` runs lint, type-check and both suites on every pull
+request. `deploy.yml` runs the same checks before building, so any failure stops
+the deploy. ESLint covers the TypeScript sources through `typescript-eslint`.
 
 ### Component Pattern
 

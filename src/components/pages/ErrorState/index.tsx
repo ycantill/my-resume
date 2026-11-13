@@ -1,12 +1,12 @@
 import React from 'react';
-import type { ErrorStateProps } from '../../../types.ts';
+import type { ErrorStateProps, LocalizedText } from '../../../types.ts';
 import { formatErrorMessage } from '../../../types.ts';
 import { t as translateFn } from '../../../resume-helpers.ts';
 import styles from './styles.module.css';
 
 const ErrorState: React.FC<ErrorStateProps> = ({ error, language }) => {
   // Use language from props (receives it from parent component)
-  const t = (textOrKey: any) => translateFn(textOrKey, language);
+  const t = (textOrKey: LocalizedText | string) => translateFn(textOrKey, language);
   
   // Detectar si el error es por falta de configuración de base de datos
   const isDatabaseConfigError = error?.message?.includes('VITE_DATABASE_URL') || 
@@ -110,7 +110,6 @@ VITE_PERSON=your_person_id`}
               <div className={styles.genericDetailsContent}>
                 <p><strong>{t('error.code')}</strong> <code className={styles.genericDetailsCode}>{error.code}</code></p>
                 <p><strong>{t('error.message')}</strong> {error.message}</p>
-                {error.personId && <p><strong>Person ID:</strong> <code className={styles.genericDetailsCode}>{error.personId}</code></p>}
               </div>
             </details>
           </div>

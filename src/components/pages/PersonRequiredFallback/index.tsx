@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Language } from '../../../types';
+import type { Language, LocalizedText } from '../../../types';
 import { t as translateFn } from '../../../resume-helpers';
 import styles from './styles.module.css';
 
@@ -9,7 +9,7 @@ interface PersonRequiredFallbackProps {
 
 const PersonRequiredFallback: React.FC<PersonRequiredFallbackProps> = ({ language }) => {
   // Use language from props (receives it from parent component)
-  const t = (textOrKey: any) => translateFn(textOrKey, language);
+  const t = (textOrKey: LocalizedText | string) => translateFn(textOrKey, language);
   
   return (
     <div className={styles.root}>

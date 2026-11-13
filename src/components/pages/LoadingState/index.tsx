@@ -1,11 +1,11 @@
 import React from 'react';
-import type { LoadingStateProps } from '../../../types.ts';
+import type { LoadingStateProps, LocalizedText } from '../../../types.ts';
 import { t as translateFn } from '../../../resume-helpers.ts';
 import styles from './styles.module.css';
 
 const LoadingState: React.FC<LoadingStateProps> = ({ language }) => {
   // Use language from props (receives it from parent component)
-  const t = (textOrKey: any) => translateFn(textOrKey, language);
+  const t = (textOrKey: LocalizedText | string) => translateFn(textOrKey, language);
   
   return (
     <div className={styles.root}>
