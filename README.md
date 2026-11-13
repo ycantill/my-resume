@@ -93,6 +93,8 @@ Examples:
 - **Tailwind CSS** (styling)
 - **CSS Modules** (scoped component styles)
 - **clsx** (conditional class composition)
+- **Vitest** + **React Testing Library** (unit and component tests)
+- **Playwright** (browser tests and PDF printing)
 
 ### Key Principles
 
@@ -235,7 +237,42 @@ npm run lint                   # Run ESLint
 npm run lint:fix               # Run ESLint with auto-fix
 npm run format                 # Format code with Prettier
 npm run type-check             # TypeScript validation
+
+# Tests
+npm test                       # Unit and component tests (Vitest), once
+npm run test:watch             # Same, re-running on every change
+npm run test:e2e               # Browser tests (Playwright), starts its own dev server
 ```
+
+### Testing
+
+There are two suites, and neither touches the real database:
+
+- **Unit and component tests** (`src/**/*.test.ts(x)`, Vitest + jsdom + React
+  Testing Library). They cover the pure modules (`resume-helpers`,
+  `resume-validation`, `resume-import`, `resume-diff`) and components through
+  what the user sees: rendering per language and location, and the inline editor
+  saving or rolling back. `src/test/setup.ts` replaces `firebase-auth` with inert
+  stand-ins and resets the Zustand store after each test; component tests mock
+  `saveResumeSection` so nothing is written.
+- **Browser tests** (`e2e/*.spec.ts`, Playwright + Chromium). They run the real
+  app on a Vite dev server whose `VITE_DATABASE_URL` points to a fake host;
+  `e2e/fixtures.ts` answers `/public.json` with the fixture and blocks every
+  other outside request. They check languages, the location in the URL, that no
+  phone number appears without a session, the printed layout, routing
+  redirects and the database error state.
+
+Both use the fictional resume in `src/test/fixtures/resume.json`. Update it when
+the data shape changes.
+
+First run of the browser tests needs Chromium:
+
+```bash
+npx playwright install chromium
+```
+
+**CI:** `tests.yml` runs both suites on every pull request. `deploy.yml` runs
+them before building, so a failing test stops the deploy.
 
 ### Component Pattern
 
@@ -297,6 +334,10 @@ src/
 │   └── es.json               # Spanish translations
 ├── store/
 │   └── useAppStore.ts        # Zustand store (language, resumeData, loading, error)
+├── test/
+│   ├── setup.ts              # Vitest setup: jest-dom matchers, auth mock, store reset
+│   └── fixtures/resume.json  # Fictional resume shared by unit and browser tests
+├── *.test.ts(x)              # Tests live next to the code they cover
 ├── AppRouter.tsx             # Main routing with language detection
 ├── MyResume.tsx              # Container component, syncs URL → store
 ├── api-service.ts            # Firebase REST API integration (no SDK)
@@ -304,6 +345,10 @@ src/
 ├── types.ts                  # TypeScript definitions
 ├── index.css                 # Global Tailwind layers (section-card, section-title, etc.)
 └── main.tsx                  # Entry point
+
+e2e/
+├── fixtures.ts               # Serves the fixture resume, blocks outside requests
+└── resume.spec.ts            # Browser tests
 ```
 
 ## 🚀 Deployment

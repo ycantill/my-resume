@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -18,5 +19,12 @@ export default defineConfig(({ mode }: { mode: string }) => ({
     manifest: true,
     // Ensure assets are properly handled
     assetsDir: 'assets'
+  },
+  // Unit and component tests (Vitest). Browser tests live in e2e/ and run
+  // with Playwright instead.
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    include: ['src/**/*.test.{ts,tsx}'],
   }
 }))
