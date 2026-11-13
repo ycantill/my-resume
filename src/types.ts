@@ -139,7 +139,7 @@ export interface ResumePreview {
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 // Router-related types
-export interface AppRouterProps {}
+export type AppRouterProps = Record<string, never>;
 
 // Utility types for component props
 export interface DateRange {

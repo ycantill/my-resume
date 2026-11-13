@@ -69,7 +69,7 @@ describe('normalizeResumeData', () => {
   });
 
   it('gives a resume without profiles an empty list', () => {
-    const { profiles: _profiles, ...basics } = fixture.basics;
+    const { profiles, ...basics } = fixture.basics;
     expect(normalizeResumeData({ basics }).basics.profiles).toEqual([]);
   });
 });
